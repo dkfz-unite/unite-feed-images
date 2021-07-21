@@ -5,6 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Unite.Data" Version="1.6.4" />
+    <PackageReference Include="Unite.Data" Version="1.7.2" />
   </ItemGroup>
 </Project>
