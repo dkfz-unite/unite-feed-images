@@ -15,7 +15,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "UNITE_SQL_HOST": "localhost",
-        "UNITE_SQL_DATABASE": "unite",
+        "UNITE_SQL_PORT": "5432",
         "UNITE_SQL_USER": "root",
         "UNITE_SQL_PASSWORD": "Long-p@55w0rd",
         "UNITE_ELASTIC_HOST": "http://localhost:9200",
@@ -33,10 +33,10 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "UNITE_SQL_HOST": "localhost",
-        "UNITE_SQL_DATABASE": "unite",
+        "UNITE_SQL_PORT": "5432",
         "UNITE_SQL_USER": "root",
         "UNITE_SQL_PASSWORD": "Long-p@55w0rd",
-        "UNITE_ELASTIC_HOST": "http://localhost:9200",
+        "UNITE_ELASTIC_HOST": "http://localhost:5108",
         "UNITE_ELASTIC_USER": "elastic",
         "UNITE_ELASTIC_PASSWORD": "Long-p@55w0rd",
         "UNITE_INDEXING_INTERVAL": "10",

@@ -5,7 +5,7 @@ using Unite.Indices.Services.Configuration.Options;
 using Unite.Radiology.Feed.Web.Configuration.Options;
 using Unite.Radiology.Feed.Web.Handlers;
 using Unite.Radiology.Feed.Web.HostedServices;
-using Unite.Radiology.Feed.Web.Models.Validation;
+using Unite.Radiology.Feed.Web.Services.Validation;
 using Unite.Radiology.Feed.Web.Services;
 
 namespace Unite.Radiology.Feed.Web.Configuration.Extensions
@@ -31,7 +31,7 @@ namespace Unite.Radiology.Feed.Web.Configuration.Extensions
 
         private static void AddDatabases(IServiceCollection services)
         {
-            services.AddTransient<UniteDbContext>();
+            services.AddTransient<DomainDbContext>();
         }
 
         private static void AddValidation(IServiceCollection services)
@@ -41,7 +41,7 @@ namespace Unite.Radiology.Feed.Web.Configuration.Extensions
 
         private static void AddServices(IServiceCollection services)
         {
-            services.AddTransient<TaskProcessingService>();
+            services.AddTransient<TasksProcessingService>();
         }
 
         private static void AddHostedServices(IServiceCollection services)

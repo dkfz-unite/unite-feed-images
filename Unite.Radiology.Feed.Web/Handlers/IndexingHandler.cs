@@ -6,12 +6,12 @@ namespace Unite.Radiology.Feed.Web.Handlers
 {
     public class IndexingHandler
     {
-        private readonly TaskProcessingService _taskProcessingService;
+        private readonly TasksProcessingService _taskProcessingService;
         private readonly ILogger _logger;
 
 
         public IndexingHandler(
-            TaskProcessingService taskProcessingService,
+            TasksProcessingService taskProcessingService,
             ILogger<IndexingHandler> logger)
         {
             _taskProcessingService = taskProcessingService;

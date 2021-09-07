@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Unite.Radiology.Feed.Web.Models.Validation
+namespace Unite.Radiology.Feed.Web.Services.Validation
 {
     public interface IValidationService
     {
