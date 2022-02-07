@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Unite.Data" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Unite.Data" Version="2.0.5" />
+  </ItemGroup>
+</Project>

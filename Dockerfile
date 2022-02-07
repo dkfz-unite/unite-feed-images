@@ -8,22 +8,22 @@ ARG USER
 ARG TOKEN
 WORKDIR /src
 RUN dotnet nuget add source https://nuget.pkg.github.com/dkfz-unite/index.json -n github -u ${USER} -p ${TOKEN} --store-password-in-clear-text
-COPY ["Unite.Radiology.Indices/Unite.Radiology.Indices.csproj", "Unite.Radiology.Indices/"]
-COPY ["Unite.Radiology.Feed/Unite.Radiology.Feed.csproj", "Unite.Radiology.Feed/"]
-COPY ["Unite.Radiology.Feed.Web/Unite.Radiology.Feed.Web.csproj", "Unite.Radiology.Feed.Web/"]
-RUN dotnet restore "Unite.Radiology.Indices/Unite.Radiology.Indices.csproj"
-RUN dotnet restore "Unite.Radiology.Feed/Unite.Radiology.Feed.csproj"
-RUN dotnet restore "Unite.Radiology.Feed.Web/Unite.Radiology.Feed.Web.csproj"
+COPY ["Unite.Images.Indices/Unite.Images.Indices.csproj", "Unite.Images.Indices/"]
+COPY ["Unite.Images.Feed/Unite.Images.Feed.csproj", "Unite.Images.Feed/"]
+COPY ["Unite.Images.Feed.Web/Unite.Images.Feed.Web.csproj", "Unite.Images.Feed.Web/"]
+RUN dotnet restore "Unite.Images.Indices/Unite.Images.Indices.csproj"
+RUN dotnet restore "Unite.Images.Feed/Unite.Images.Feed.csproj"
+RUN dotnet restore "Unite.Images.Feed.Web/Unite.Images.Feed.Web.csproj"
 
 FROM restore as build
 COPY . .
-WORKDIR "/src/Unite.Radiology.Feed.Web"
-RUN dotnet build --no-restore "Unite.Radiology.Feed.Web.csproj" -c Release
+WORKDIR "/src/Unite.Images.Feed.Web"
+RUN dotnet build --no-restore "Unite.Images.Feed.Web.csproj" -c Release
 
 FROM build AS publish
-RUN dotnet publish --no-build "Unite.Radiology.Feed.Web.csproj" -c Release -o /app/publish
+RUN dotnet publish --no-build "Unite.Images.Feed.Web.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Unite.Radiology.Feed.Web.dll"]
+ENTRYPOINT ["dotnet", "Unite.Images.Feed.Web.dll"]
