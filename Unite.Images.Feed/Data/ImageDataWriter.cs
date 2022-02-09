@@ -10,7 +10,7 @@ namespace Unite.Images.Feed.Data
     {
         private readonly DonorRepository _donorRepository;
         private readonly ImageRepository _imageRepository;
-        private readonly ImageSampleRepository _imageSampleRepository;
+        private readonly AnalysedImageRepository _analysedImageRepository;
         private readonly ParameterOccurrenceRepository _parameterOccurrenceRepository;
         private readonly FeatureOccurrenceRepository _featureOccurrenceRepository;
 
@@ -19,7 +19,7 @@ namespace Unite.Images.Feed.Data
         {
             _donorRepository = new DonorRepository(dbContext);
             _imageRepository = new ImageRepository(dbContext);
-            _imageSampleRepository = new ImageSampleRepository(dbContext);
+            _analysedImageRepository = new AnalysedImageRepository(dbContext);
             _parameterOccurrenceRepository = new ParameterOccurrenceRepository(dbContext);
             _featureOccurrenceRepository = new FeatureOccurrenceRepository(dbContext);
         }
@@ -55,16 +55,16 @@ namespace Unite.Images.Feed.Data
 
             if (model.Analysis != null)
             {
-                var sample = _imageSampleRepository.CreateOrUpdate(image.Id, model);
+                var analysedImage = _analysedImageRepository.CreateOrUpdate(image.Id, model);
 
                 if (model.Analysis.Parameters?.Any() == true)
                 {
-                    _parameterOccurrenceRepository.CreateOrUpdate(sample.Id, model.Analysis.Parameters);
+                    _parameterOccurrenceRepository.CreateOrUpdate(analysedImage.Id, model.Analysis.Parameters);
                 }
 
                 if (model.Analysis.Features?.Any() == true)
                 {
-                    _featureOccurrenceRepository.CreateOrUpdate(sample.Id, model.Analysis.Features);
+                    _featureOccurrenceRepository.CreateOrUpdate(analysedImage.Id, model.Analysis.Features);
                 }
 
                 audit.ImagesAnalysed++;

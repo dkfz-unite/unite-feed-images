@@ -20,34 +20,34 @@ namespace Unite.Images.Feed.Data.Repositories
         }
 
 
-        public FeatureOccurrence Find(int sampleId, FeatureModel model)
+        public FeatureOccurrence Find(int analysedImageId, FeatureModel model)
         {
             return _dbContext.Set<FeatureOccurrence>()
                 .Include(entity => entity.Feature)
                 .FirstOrDefault(entity =>
-                    entity.SampleId == sampleId &&
+                    entity.AnalysedImageId == analysedImageId &&
                     entity.Feature.Name == model.Name
             );
         }
 
-        public IEnumerable<FeatureOccurrence> CreateOrUpdate(int sampleId, IEnumerable<FeatureModel> models)
+        public IEnumerable<FeatureOccurrence> CreateOrUpdate(int analysedImageId, IEnumerable<FeatureModel> models)
         {
-            RemoveRedundant(sampleId, models);
+            RemoveRedundant(analysedImageId, models);
 
-            var created = CreateMissing(sampleId, models);
+            var created = CreateMissing(analysedImageId, models);
 
-            var updated = UpdateExisting(sampleId, models);
+            var updated = UpdateExisting(analysedImageId, models);
 
             return Enumerable.Concat(created, updated);
         }
 
-        public IEnumerable<FeatureOccurrence> CreateMissing(int sampleId, IEnumerable<FeatureModel> models)
+        public IEnumerable<FeatureOccurrence> CreateMissing(int analysedImageId, IEnumerable<FeatureModel> models)
         {
             var entitiesToAdd = new List<FeatureOccurrence>();
 
             foreach (var model in models)
             {
-                var entity = Find(sampleId, model);
+                var entity = Find(analysedImageId, model);
 
                 if (entity == null)
                 {
@@ -55,7 +55,7 @@ namespace Unite.Images.Feed.Data.Repositories
 
                     entity = new FeatureOccurrence()
                     {
-                        SampleId = sampleId,
+                        AnalysedImageId = analysedImageId,
                         FeatureId = featureId
                     };
 
@@ -74,13 +74,13 @@ namespace Unite.Images.Feed.Data.Repositories
             return entitiesToAdd;
         }
 
-        public IEnumerable<FeatureOccurrence> UpdateExisting(int sampleId, IEnumerable<FeatureModel> models)
+        public IEnumerable<FeatureOccurrence> UpdateExisting(int analysedImageId, IEnumerable<FeatureModel> models)
         {
             var entitiesToUpdate = new List<FeatureOccurrence>();
 
             foreach (var model in models)
             {
-                var entity = Find(sampleId, model);
+                var entity = Find(analysedImageId, model);
 
                 if (entity != null)
                 {
@@ -99,13 +99,13 @@ namespace Unite.Images.Feed.Data.Repositories
             return entitiesToUpdate;
         }
 
-        public void RemoveRedundant(int sampleId, IEnumerable<FeatureModel> models)
+        public void RemoveRedundant(int analysedImageId, IEnumerable<FeatureModel> models)
         {
             var featureNames = models.Select(model => model.Name);
 
             var entitiesToRemove = _dbContext.Set<FeatureOccurrence>()
                 .Include(entity => entity.Feature)
-                .Where(entity => entity.SampleId == sampleId && !featureNames.Contains(entity.Feature.Name))
+                .Where(entity => entity.AnalysedImageId == analysedImageId && !featureNames.Contains(entity.Feature.Name))
                 .ToArray();
 
             if (entitiesToRemove.Any())

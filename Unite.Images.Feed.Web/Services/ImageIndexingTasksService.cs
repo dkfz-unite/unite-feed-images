@@ -110,7 +110,7 @@ namespace Unite.Images.Feed.Web.Services
                 .ToArray();
 
             var mutationIds = _dbContext.Set<MutationOccurrence>()
-                .Where(occurrence => specimenIds.Contains(occurrence.Sample.SpecimenId))
+                .Where(occurrence => specimenIds.Contains(occurrence.AnalysedSample.Sample.SpecimenId))
                 .Select(occurrence => occurrence.MutationId)
                 .Distinct()
                 .ToArray();
@@ -133,7 +133,7 @@ namespace Unite.Images.Feed.Web.Services
                 .ToArray();
 
             var mutationIds = _dbContext.Set<MutationOccurrence>()
-                .Where(occurrence => specimenIds.Contains(occurrence.Sample.SpecimenId))
+                .Where(occurrence => specimenIds.Contains(occurrence.AnalysedSample.Sample.SpecimenId))
                 .Select(occurrence => occurrence.MutationId)
                 .Distinct()
                 .ToArray();

@@ -182,7 +182,7 @@ namespace Unite.Images.Indices.Services
         private Mutation[] LoadMutations(int specimenId)
         {
             var mutationIds = _dbContext.Set<MutationOccurrence>()
-                .Where(mutationOccurrence => mutationOccurrence.Sample.SpecimenId == specimenId)
+                .Where(mutationOccurrence => mutationOccurrence.AnalysedSample.Sample.SpecimenId == specimenId)
                 .Select(mutationOccurrence => mutationOccurrence.MutationId)
                 .Distinct()
                 .ToArray();

@@ -6,24 +6,24 @@ using Unite.Images.Feed.Data.Models;
 
 namespace Unite.Images.Feed.Data.Repositories
 {
-    public class ImageSampleRepository
+    public class AnalysedImageRepository
     {
         private readonly DomainDbContext _dbContext;
 
 
-        public ImageSampleRepository(DomainDbContext dbContext)
+        public AnalysedImageRepository(DomainDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
 
-        public Sample Find(int imageId, in ImageModel model)
+        public AnalysedImage Find(int imageId, in ImageModel model)
         {
             if (!string.IsNullOrWhiteSpace(model.Analysis.ReferenceId))
             {
                 var referenceId = model.Analysis.ReferenceId;
 
-                return _dbContext.Set<Sample>()
+                return _dbContext.Set<AnalysedImage>()
                     .Include(entity => entity.Analysis)
                     .FirstOrDefault(entity =>
                         entity.ImageId == imageId &&
@@ -34,18 +34,19 @@ namespace Unite.Images.Feed.Data.Repositories
             {
                 var analysisType = model.Analysis.Type;
 
-                return _dbContext.Set<Sample>()
+                return _dbContext.Set<AnalysedImage>()
                     .Include(entity => entity.Analysis)
                     .FirstOrDefault(entity =>
                         entity.ImageId == imageId &&
+                        entity.Analysis.ReferenceId == null &&
                         entity.Analysis.TypeId == analysisType
                     );
             }
         }
 
-        public Sample Create(int imageId, in ImageModel model)
+        public AnalysedImage Create(int imageId, in ImageModel model)
         {
-            var entity = new Sample()
+            var entity = new AnalysedImage()
             {
                 ImageId = imageId
             };
@@ -58,7 +59,7 @@ namespace Unite.Images.Feed.Data.Repositories
             return entity;
         }
 
-        public void Update(ref Sample entity, in ImageModel model)
+        public void Update(ref AnalysedImage entity, in ImageModel model)
         {
             Map(model, ref entity);
 
@@ -66,24 +67,24 @@ namespace Unite.Images.Feed.Data.Repositories
             _dbContext.SaveChanges();
         }
 
-        public Sample CreateOrUpdate(int imageId, in ImageModel model)
+        public AnalysedImage CreateOrUpdate(int imageId, in ImageModel model)
         {
-            var analysedImage = Find(imageId, model);
+            var entity = Find(imageId, model);
 
-            if (analysedImage == null)
+            if (entity == null)
             {
-                analysedImage = Create(imageId, model);
+                entity = Create(imageId, model);
             }
             else
             {
-                Update(ref analysedImage, model);
+                Update(ref entity, model);
             }
 
-            return analysedImage;
+            return entity;
         }
 
 
-        private void Map(in ImageModel model, ref Sample entity)
+        private void Map(in ImageModel model, ref AnalysedImage entity)
         {
             if (entity.Analysis == null)
             {
