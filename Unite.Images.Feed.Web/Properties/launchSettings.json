@@ -29,7 +29,7 @@
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api",
-      "applicationUrl": "http://localhost:5108",
+      "applicationUrl": "http://localhost:5106",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "UNITE_SQL_HOST": "localhost",
