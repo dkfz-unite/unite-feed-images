@@ -38,6 +38,8 @@ namespace Unite.Images.Feed.Web.Handlers
         {
             _taskProcessingService.Process(TaskType.Indexing, TaskTargetType.Image, bucketSize, (tasks) =>
             {
+                _logger.LogInformation($"Indexing {tasks.Length} images");
+
                 var indices = tasks.Select(task =>
                 {
                     var id = int.Parse(task.Target);
@@ -50,7 +52,7 @@ namespace Unite.Images.Feed.Web.Handlers
 
                 _indexingService.IndexMany(indices);
 
-                _logger.LogInformation($"Finished indexing of {tasks.Length} images");
+                _logger.LogInformation($"Indexing of {tasks.Length} images completed");
             });
         }
     }
