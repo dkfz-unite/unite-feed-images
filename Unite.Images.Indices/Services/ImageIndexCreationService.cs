@@ -5,6 +5,7 @@ using Unite.Data.Entities.Donors;
 using Unite.Data.Entities.Genome.Mutations;
 using Unite.Data.Entities.Images;
 using Unite.Data.Entities.Specimens;
+using Unite.Data.Entities.Specimens.Tissues.Enums;
 using Unite.Data.Services;
 using Unite.Data.Services.Extensions;
 using Unite.Images.Indices.Services.Mappers;
@@ -60,6 +61,19 @@ namespace Unite.Images.Indices.Services
             index.Donor = CreateDonorIndex(image.DonorId);
 
             index.Specimens = CreateSpecimenIndices(image.DonorId, diagnosisDate);
+
+            index.NumberOfGenes = index.Specimens
+                .SelectMany(specimen => specimen.Mutations.Where(mutation => mutation.AffectedTranscripts != null))
+                .SelectMany(mutation => mutation.AffectedTranscripts)
+                .Select(affectedTranscript => affectedTranscript.Transcript.Gene.Id)
+                .Distinct()
+                .Count();
+
+            index.NumberOfMutations = index.Specimens
+                .SelectMany(specimen => specimen.Mutations)
+                .Select(mutation => mutation.Id)
+                .Distinct()
+                .Count();
 
             return index;
         }
@@ -141,13 +155,14 @@ namespace Unite.Images.Indices.Services
 
         private Specimen[] LoadSpecimens(int donorId)
         {
+            // Images can be associated only with tumor tissues
             var specimens = _dbContext.Set<Specimen>()
                 .IncludeTissue()
-                .IncludeCellLine()
-                .IncludeOrganoid()
-                .IncludeXenograft()
                 .IncludeMolecularData()
-                .Where(specimen => specimen.DonorId == donorId)
+                .Where(specimen =>
+                    specimen.Tissue != null &&
+                    specimen.Tissue.TypeId == TissueType.Tumor &&
+                    specimen.DonorId == donorId)
                 .ToArray();
 
             return specimens;
