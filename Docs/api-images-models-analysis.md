@@ -1,4 +1,4 @@
-# Image Analysis Models
+# Image Analysis Data Model
 
 ## Analysis
 Includes data about image analysis
