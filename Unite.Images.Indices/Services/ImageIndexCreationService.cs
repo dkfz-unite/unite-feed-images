@@ -54,7 +54,7 @@ namespace Unite.Images.Indices.Services
         {
             var index = new ImageIndex();
 
-            var diagnosisDate = image.Donor.ClinicalData.DiagnosisDate;
+            var diagnosisDate = image.Donor.ClinicalData?.DiagnosisDate;
 
             _imageIndexMapper.Map(image, index, diagnosisDate);
 
