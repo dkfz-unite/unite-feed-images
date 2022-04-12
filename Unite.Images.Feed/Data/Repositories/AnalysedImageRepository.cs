@@ -33,13 +33,15 @@ namespace Unite.Images.Feed.Data.Repositories
             else
             {
                 var analysisType = model.Analysis.Type;
+                var analysisDate = model.Analysis.Date;
 
                 return _dbContext.Set<AnalysedImage>()
                     .Include(entity => entity.Analysis)
                     .FirstOrDefault(entity =>
                         entity.ImageId == imageId &&
                         entity.Analysis.ReferenceId == null &&
-                        entity.Analysis.TypeId == analysisType
+                        entity.Analysis.TypeId == analysisType &&
+                        entity.Analysis.Date == analysisDate
                     );
             }
         }
@@ -93,6 +95,7 @@ namespace Unite.Images.Feed.Data.Repositories
 
             entity.Analysis.ReferenceId = model.Analysis.ReferenceId;
             entity.Analysis.TypeId = model.Analysis.Type;
+            entity.Analysis.Date = model.Analysis.Date;
         }
     }
 }

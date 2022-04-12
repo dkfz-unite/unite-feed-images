@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Unite.Data.Entities.Images.Features.Enums;
 
 namespace Unite.Images.Feed.Data.Models
@@ -7,6 +8,7 @@ namespace Unite.Images.Feed.Data.Models
     {
         public string ReferenceId { get; set; }
         public AnalysisType? Type { get; set; }
+        public DateTime? Date { get; set; }
 
         public IEnumerable<ParameterModel> Parameters { get; set; }
         public IEnumerable<FeatureModel> Features { get; set; }

@@ -79,6 +79,7 @@ namespace Unite.Images.Feed.Web.Models.Images.Converters
 
             target.ReferenceId = source.Id;
             target.Type = source.Type;
+            target.Date = source.Date;
             target.Parameters = source.Parameters?.Select(parameter => GetParameterModel(parameter));
             target.Features = source.Features?.Select(feature => GetFeatureModel(feature));
 
