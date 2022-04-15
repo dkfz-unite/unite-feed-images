@@ -58,7 +58,7 @@ namespace Unite.Images.Feed.Web.Models.Images.Validators
     }
 
 
-    public class ImageModelsValidator : AbstractValidator<IEnumerable<ImageModel>>
+    public class ImageModelsValidator : AbstractValidator<ImageModel[]>
     {
         private readonly IValidator<ImageModel> _imageModelValidator;
 

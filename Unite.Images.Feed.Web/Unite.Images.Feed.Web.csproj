@@ -12,6 +12,7 @@
     <None Remove="Properties\" />
     <None Remove="FluentValidation" />
     <None Remove="Macross.Json.Extensions" />
+    <None Remove="FluentValidation.AspNetCore" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Handlers\" />
@@ -37,7 +38,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="10.3.6" />
     <PackageReference Include="Macross.Json.Extensions" Version="2.2.0" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="10.4.0" />
   </ItemGroup>
 </Project>
