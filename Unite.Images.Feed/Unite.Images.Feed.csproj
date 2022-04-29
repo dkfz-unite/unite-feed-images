@@ -8,6 +8,6 @@
     <None Remove="Unite.Data" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Unite.Data" Version="2.1.0" />
+    <PackageReference Include="Unite.Data" Version="2.1.1" />
   </ItemGroup>
 </Project>
