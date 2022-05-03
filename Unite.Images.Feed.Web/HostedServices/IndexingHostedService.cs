@@ -33,6 +33,15 @@ namespace Unite.Images.Feed.Web.HostedServices
             // Delay 5 seconds to let the web api start working
             await Task.Delay(5000, cancellationToken);
 
+            try
+            {
+                _handler.Prepare();
+            }
+            catch (Exception exception)
+            {
+                LogError(exception);
+            }
+
             while (!cancellationToken.IsCancellationRequested)
             {
                 try
@@ -41,17 +50,22 @@ namespace Unite.Images.Feed.Web.HostedServices
                 }
                 catch (Exception exception)
                 {
-                    _logger.LogError(exception.Message);
-
-                    if (exception.InnerException != null)
-                    {
-                        _logger.LogError(exception.InnerException.Message);
-                    }
+                    LogError(exception);
                 }
                 finally
                 {
                     await Task.Delay(_options.Interval, cancellationToken);
                 }
+            }
+        }
+
+        private void LogError(Exception exception)
+        {
+            _logger.LogError(exception.Message);
+
+            if (exception.InnerException != null)
+            {
+                _logger.LogError(exception.InnerException.Message);
             }
         }
     }
