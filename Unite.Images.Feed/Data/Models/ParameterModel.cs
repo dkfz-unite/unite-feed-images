@@ -1,8 +1,7 @@
-﻿namespace Unite.Images.Feed.Data.Models
+﻿namespace Unite.Images.Feed.Data.Models;
+
+public class ParameterModel
 {
-    public class ParameterModel
-    {
-        public string Name { get; set; }
-        public string Value { get; set; }
-    }
+    public string Name { get; set; }
+    public string Value { get; set; }
 }

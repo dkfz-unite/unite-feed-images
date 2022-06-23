@@ -1,21 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Unite.Indices" />
-    <None Remove="Unite.Data" />
-    <None Remove="Services\" />
-    <None Remove="Services\Mappers\" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Unite.Indices" Version="2.1.7" />
-    <PackageReference Include="Unite.Data" Version="2.1.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\" />
-    <Folder Include="Services\Mappers\" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Remove="Unite.Indices" />
+		<None Remove="Unite.Data" />
+		<None Remove="Services\" />
+		<None Remove="Services\Mappers\" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Unite.Indices" Version="2.1.7" />
+		<PackageReference Include="Unite.Data" Version="2.1.1" />
+	</ItemGroup>
+	<ItemGroup>
+		<Folder Include="Services\" />
+		<Folder Include="Services\Mappers\" />
+	</ItemGroup>
 </Project>

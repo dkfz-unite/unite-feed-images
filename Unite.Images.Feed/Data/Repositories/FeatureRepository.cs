@@ -1,36 +1,34 @@
-﻿using System.Linq;
-using Unite.Data.Entities.Images.Features;
+﻿using Unite.Data.Entities.Images.Features;
 using Unite.Data.Services;
 
-namespace Unite.Images.Feed.Data.Repositories
+namespace Unite.Images.Feed.Data.Repositories;
+
+public class FeatureRepository
 {
-    public class FeatureRepository
+    private readonly DomainDbContext _dbContext;
+
+
+    public FeatureRepository(DomainDbContext dbContext)
     {
-        private readonly DomainDbContext _dbContext;
+        _dbContext = dbContext;
+    }
 
 
-        public FeatureRepository(DomainDbContext dbContext)
+    public Feature FindOrCreate(string name)
+    {
+        var entity = _dbContext.Set<Feature>().FirstOrDefault(entity => entity.Name == name);
+
+        if (entity == null)
         {
-            _dbContext = dbContext;
-        }
-
-
-        public Feature FindOrCreate(string name)
-        {
-            var entity = _dbContext.Set<Feature>().FirstOrDefault(entity => entity.Name == name);
-
-            if (entity == null)
+            entity = new Feature()
             {
-                entity = new Feature()
-                {
-                    Name = name
-                };
+                Name = name
+            };
 
-                _dbContext.Add(entity);
-                _dbContext.SaveChanges();
-            }
-
-            return entity;
+            _dbContext.Add(entity);
+            _dbContext.SaveChanges();
         }
+
+        return entity;
     }
 }

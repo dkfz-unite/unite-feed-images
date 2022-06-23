@@ -1,124 +1,121 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Unite.Data.Entities.Images.Features;
 using Unite.Data.Services;
 using Unite.Images.Feed.Data.Models;
 
-namespace Unite.Images.Feed.Data.Repositories
+namespace Unite.Images.Feed.Data.Repositories;
+
+public class ParameterOccurrenceRepository
 {
-    public class ParameterOccurrenceRepository
+    private readonly DomainDbContext _dbContext;
+    private readonly ParameterRepository _parameterRepository;
+
+
+    public ParameterOccurrenceRepository(DomainDbContext dbContext)
     {
-        private readonly DomainDbContext _dbContext;
-        private readonly ParameterRepository _parameterRepository;
+        _dbContext = dbContext;
+        _parameterRepository = new ParameterRepository(dbContext);
+    }
 
 
-        public ParameterOccurrenceRepository(DomainDbContext dbContext)
+    public AnalysisParameterOccurrence Find(int analysisId, ParameterModel model)
+    {
+        return _dbContext.Set<AnalysisParameterOccurrence>()
+            .Include(entity => entity.Parameter)
+            .FirstOrDefault(entity =>
+                entity.AnalysisId == analysisId &&
+                entity.Parameter.Name == model.Name
+            );
+    }
+
+    public IEnumerable<AnalysisParameterOccurrence> CreateOrUpdate(int analysisId, IEnumerable<ParameterModel> models)
+    {
+        RemoveRedundant(analysisId, models);
+
+        var created = CreateMissing(analysisId, models);
+
+        var updated = UpdateExisting(analysisId, models);
+
+        return Enumerable.Concat(created, updated);
+    }
+
+    public IEnumerable<AnalysisParameterOccurrence> CreateMissing(int analysisId, IEnumerable<ParameterModel> models)
+    {
+        var entitiesToAdd = new List<AnalysisParameterOccurrence>();
+
+        foreach (var model in models)
         {
-            _dbContext = dbContext;
-            _parameterRepository = new ParameterRepository(dbContext);
-        }
+            var entity = Find(analysisId, model);
 
-
-        public AnalysisParameterOccurrence Find(int analysisId, ParameterModel model)
-        {
-            return _dbContext.Set<AnalysisParameterOccurrence>()
-                .Include(entity => entity.Parameter)
-                .FirstOrDefault(entity =>
-                    entity.AnalysisId == analysisId &&
-                    entity.Parameter.Name == model.Name
-                );
-        }
-
-        public IEnumerable<AnalysisParameterOccurrence> CreateOrUpdate(int analysisId, IEnumerable<ParameterModel> models)
-        {
-            RemoveRedundant(analysisId, models);
-
-            var created = CreateMissing(analysisId, models);
-
-            var updated = UpdateExisting(analysisId, models);
-
-            return Enumerable.Concat(created, updated);
-        }
-
-        public IEnumerable<AnalysisParameterOccurrence> CreateMissing(int analysisId, IEnumerable<ParameterModel> models)
-        {
-            var entitiesToAdd = new List<AnalysisParameterOccurrence>();
-
-            foreach (var model in models)
+            if (entity == null)
             {
-                var entity = Find(analysisId, model);
+                var parameterId = _parameterRepository.FindOrCreate(model.Name).Id;
 
-                if (entity == null)
+                entity = new AnalysisParameterOccurrence()
                 {
-                    var parameterId = _parameterRepository.FindOrCreate(model.Name).Id;
+                    AnalysisId = analysisId,
+                    ParameterId = parameterId
+                };
 
-                    entity = new AnalysisParameterOccurrence()
-                    {
-                        AnalysisId = analysisId,
-                        ParameterId = parameterId
-                    };
+                Map(model, ref entity);
 
-                    Map(model, ref entity);
-
-                    entitiesToAdd.Add(entity);
-                }
+                entitiesToAdd.Add(entity);
             }
-
-            if (entitiesToAdd.Any())
-            {
-                _dbContext.AddRange(entitiesToAdd);
-                _dbContext.SaveChanges();
-            }
-
-            return entitiesToAdd;
         }
 
-        public IEnumerable<AnalysisParameterOccurrence> UpdateExisting(int analysisId, IEnumerable<ParameterModel> models)
+        if (entitiesToAdd.Any())
         {
-            var entitiesToUpdate = new List<AnalysisParameterOccurrence>();
-
-            foreach (var model in models)
-            {
-                var entity = Find(analysisId, model);
-
-                if (entity != null)
-                {
-                    Map(model, ref entity);
-
-                    entitiesToUpdate.Add(entity);
-                }
-            }
-
-            if (entitiesToUpdate.Any())
-            {
-                _dbContext.UpdateRange(entitiesToUpdate);
-                _dbContext.SaveChanges();
-            }
-
-            return entitiesToUpdate;
+            _dbContext.AddRange(entitiesToAdd);
+            _dbContext.SaveChanges();
         }
 
-        public void RemoveRedundant(int analysisId, IEnumerable<ParameterModel> models)
+        return entitiesToAdd;
+    }
+
+    public IEnumerable<AnalysisParameterOccurrence> UpdateExisting(int analysisId, IEnumerable<ParameterModel> models)
+    {
+        var entitiesToUpdate = new List<AnalysisParameterOccurrence>();
+
+        foreach (var model in models)
         {
-            var parameterNames = models.Select(model => model.Name);
+            var entity = Find(analysisId, model);
 
-            var entitiesToRemove = _dbContext.Set<AnalysisParameterOccurrence>()
-                .Include(entity => entity.Parameter)
-                .Where(entity => entity.AnalysisId == analysisId && !parameterNames.Contains(entity.Parameter.Name))
-                .ToArray();
-
-            if (entitiesToRemove.Any())
+            if (entity != null)
             {
-                _dbContext.RemoveRange(entitiesToRemove);
-                _dbContext.SaveChanges();
+                Map(model, ref entity);
+
+                entitiesToUpdate.Add(entity);
             }
         }
 
-
-        private void Map(in ParameterModel model, ref AnalysisParameterOccurrence entity)
+        if (entitiesToUpdate.Any())
         {
-            entity.Value = model.Value;
+            _dbContext.UpdateRange(entitiesToUpdate);
+            _dbContext.SaveChanges();
         }
+
+        return entitiesToUpdate;
+    }
+
+    public void RemoveRedundant(int analysisId, IEnumerable<ParameterModel> models)
+    {
+        var parameterNames = models.Select(model => model.Name);
+
+        var entitiesToRemove = _dbContext.Set<AnalysisParameterOccurrence>()
+            .Include(entity => entity.Parameter)
+            .Where(entity => entity.AnalysisId == analysisId && !parameterNames.Contains(entity.Parameter.Name))
+            .ToArray();
+
+        if (entitiesToRemove.Any())
+        {
+            _dbContext.RemoveRange(entitiesToRemove);
+            _dbContext.SaveChanges();
+        }
+    }
+
+
+    private void Map(in ParameterModel model, ref AnalysisParameterOccurrence entity)
+    {
+        entity.Value = model.Value;
     }
 }

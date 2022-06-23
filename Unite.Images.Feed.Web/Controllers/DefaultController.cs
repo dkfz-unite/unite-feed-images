@@ -1,16 +1,14 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Unite.Images.Feed.Web.Controllers
+namespace Unite.Images.Feed.Web.Controllers;
+
+[Route("api/")]
+public class DefaultController : Controller
 {
-    [Route("api/")]
-    public class DefaultController : Controller
+    public IActionResult Get()
     {
-        public IActionResult Get()
-        {
-            var date = DateTime.UtcNow;
+        var date = DateTime.UtcNow;
 
-            return Json(date);
-        }
+        return Json(date);
     }
 }
