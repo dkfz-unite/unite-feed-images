@@ -6,7 +6,7 @@ public class AnalysisModel
 {
     public string Id { get; set; }
     public AnalysisType? Type { get; set; }
-    public DateOnly? Date { get; set; }
+    public DateTime? Date { get; set; }
 
     public IDictionary<string, string> Parameters { get; set; }
     public IDictionary<string, string> Features { get; set; }

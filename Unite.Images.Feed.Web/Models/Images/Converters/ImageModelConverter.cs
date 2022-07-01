@@ -6,7 +6,7 @@ public class ImageModelConverter
     {
         var target = GetImageModel(source);
 
-        target.ScanningDate = source.ScanningDate;
+        target.ScanningDate = FromDateTime(source.ScanningDate);
         target.ScanningDay = source.ScanningDay;
         target.Donor = GetDonorModel(source.DonorId);
         target.Analysis = GetAnalysisModel(source.Analysis);
@@ -75,7 +75,7 @@ public class ImageModelConverter
 
         target.ReferenceId = source.Id;
         target.Type = source.Type;
-        target.Date = source.Date;
+        target.Date = FromDateTime(source.Date);
         target.Parameters = source.Parameters?.Select(parameter => GetParameterModel(parameter));
         target.Features = source.Features?.Select(feature => GetFeatureModel(feature));
 
@@ -100,5 +100,13 @@ public class ImageModelConverter
         target.Value = source.Value;
 
         return target;
+    }
+
+
+    private static DateOnly? FromDateTime(DateTime? date)
+    {
+        return date != null
+             ? DateOnly.FromDateTime(date.Value)
+             : null;
     }
 }

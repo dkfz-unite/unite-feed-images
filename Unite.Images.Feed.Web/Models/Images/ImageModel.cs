@@ -4,7 +4,7 @@ public class ImageModel
 {
     public string Id { get; set; }
     public string DonorId { get; set; }
-    public DateOnly? ScanningDate { get; set; }
+    public DateTime? ScanningDate { get; set; }
     public int? ScanningDay { get; set; }
 
     public MriImageModel MriImage { get; set; }
