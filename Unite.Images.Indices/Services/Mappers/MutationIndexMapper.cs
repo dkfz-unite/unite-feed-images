@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Unite.Data.Entities.Genome;
+﻿using Unite.Data.Entities.Genome;
 using Unite.Data.Entities.Genome.Mutations;
 using Unite.Data.Extensions;
 using Unite.Data.Utilities.Mutations;

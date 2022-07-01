@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Unite.Data.Entities.Donors;
+﻿using Unite.Data.Entities.Donors;
 using Unite.Data.Entities.Donors.Clinical;
 using Unite.Data.Extensions;
 using Unite.Indices.Entities.Basic.Donors;
@@ -52,7 +49,7 @@ namespace Unite.Images.Indices.Services.Mappers
             return index;
         }
 
-        private static TreatmentIndex[] CreateFrom(in IEnumerable<Treatment> treatments, DateTime? diagnosisDate)
+        private static TreatmentIndex[] CreateFrom(in IEnumerable<Treatment> treatments, DateOnly? diagnosisDate)
         {
             if (treatments == null || !treatments.Any())
             {

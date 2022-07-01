@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using Unite.Indices.Entities.Images;
 using Unite.Indices.Services;
 using Unite.Indices.Services.Configuration.Options;

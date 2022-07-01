@@ -1,5 +1,4 @@
-﻿using System;
-using Unite.Data.Entities.Images;
+﻿using Unite.Data.Entities.Images;
 using Unite.Data.Extensions;
 using Unite.Indices.Entities.Basic.Images;
 
@@ -7,7 +6,7 @@ namespace Unite.Images.Indices.Services.Mappers
 {
     internal class ImageIndexMapper
     {
-        internal void Map(in Image image, ImageIndex index, DateTime? diagnosisDate)
+        internal void Map(in Image image, ImageIndex index, DateOnly? diagnosisDate)
         {
             if (image == null)
             {

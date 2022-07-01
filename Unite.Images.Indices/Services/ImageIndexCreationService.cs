@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Unite.Data.Entities.Donors;
 using Unite.Data.Entities.Genome.Mutations;
 using Unite.Data.Entities.Images;
@@ -126,7 +124,7 @@ namespace Unite.Images.Indices.Services
         }
 
 
-        private SpecimenIndex[] CreateSpecimenIndices(int donorId, DateTime? diagnosisDate)
+        private SpecimenIndex[] CreateSpecimenIndices(int donorId, DateOnly? diagnosisDate)
         {
             var specimens = LoadSpecimens(donorId);
 
@@ -142,7 +140,7 @@ namespace Unite.Images.Indices.Services
             return indices;
         }
 
-        private SpecimenIndex CreateSpecimenIndex(Specimen specimen, DateTime? diagnosisDate)
+        private SpecimenIndex CreateSpecimenIndex(Specimen specimen, DateOnly? diagnosisDate)
         {
             var index = new SpecimenIndex();
 
