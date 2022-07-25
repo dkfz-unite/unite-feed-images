@@ -157,6 +157,7 @@ namespace Unite.Images.Indices.Services
             var specimens = _dbContext.Set<Specimen>()
                 .IncludeTissue()
                 .IncludeMolecularData()
+                .IncludeDrugScreeningData()
                 .Where(specimen =>
                     specimen.Tissue != null &&
                     specimen.Tissue.TypeId == TissueType.Tumor &&
