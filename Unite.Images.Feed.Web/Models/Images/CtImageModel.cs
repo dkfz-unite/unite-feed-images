@@ -2,8 +2,4 @@
 
 public class CtImageModel
 {
-    public void Sanitise()
-    {
-
-    }
 }

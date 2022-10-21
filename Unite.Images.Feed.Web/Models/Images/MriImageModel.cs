@@ -17,10 +17,4 @@ public class MriImageModel
     public double? MedianMttTumor { get; set; }
     public double? MedianMttCe { get; set; }
     public double? MedianMttEdema { get; set; }
-
-
-    public void Sanitise()
-    {
-
-    }
 }

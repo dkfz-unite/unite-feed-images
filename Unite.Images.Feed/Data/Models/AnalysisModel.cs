@@ -7,7 +7,7 @@ public class AnalysisModel
     public string ReferenceId { get; set; }
     public AnalysisType? Type { get; set; }
     public DateOnly? Date { get; set; }
+    public Dictionary<string, string> Parameters { get; set; }
 
-    public IEnumerable<ParameterModel> Parameters { get; set; }
     public IEnumerable<FeatureModel> Features { get; set; }
 }

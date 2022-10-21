@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
-using Unite.Data.Extensions;
+﻿using Microsoft.AspNetCore.Mvc;
 using Unite.Images.Feed.Data;
 using Unite.Images.Feed.Web.Models.Images;
 using Unite.Images.Feed.Web.Models.Images.Converters;
@@ -33,8 +31,6 @@ public class ImagesController : Controller
 
     public IActionResult Post([FromBody] ImageModel[] models)
     {
-        models.ForEach(model => model.Sanitise());
-
         var dataModels = models.Select(model => _converter.Convert(model));
 
         _dataWriter.SaveData(dataModels, out var audit);

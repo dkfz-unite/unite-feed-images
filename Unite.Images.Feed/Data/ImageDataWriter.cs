@@ -10,7 +10,6 @@ public class ImageDataWriter : DataWriter<ImageModel, ImagesUploadAudit>
     private readonly DonorRepository _donorRepository;
     private readonly ImageRepository _imageRepository;
     private readonly AnalysedImageRepository _analysedImageRepository;
-    private readonly ParameterOccurrenceRepository _parameterOccurrenceRepository;
     private readonly FeatureOccurrenceRepository _featureOccurrenceRepository;
 
 
@@ -19,7 +18,6 @@ public class ImageDataWriter : DataWriter<ImageModel, ImagesUploadAudit>
         _donorRepository = new DonorRepository(dbContext);
         _imageRepository = new ImageRepository(dbContext);
         _analysedImageRepository = new AnalysedImageRepository(dbContext);
-        _parameterOccurrenceRepository = new ParameterOccurrenceRepository(dbContext);
         _featureOccurrenceRepository = new FeatureOccurrenceRepository(dbContext);
     }
 
@@ -55,11 +53,6 @@ public class ImageDataWriter : DataWriter<ImageModel, ImagesUploadAudit>
         if (model.Analysis != null)
         {
             var analysedImage = _analysedImageRepository.CreateOrUpdate(image.Id, model);
-
-            if (model.Analysis.Parameters?.Any() == true)
-            {
-                _parameterOccurrenceRepository.CreateOrUpdate(analysedImage.Id, model.Analysis.Parameters);
-            }
 
             if (model.Analysis.Features?.Any() == true)
             {

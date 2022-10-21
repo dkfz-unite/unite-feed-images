@@ -42,7 +42,7 @@ public class IndexingHandler
     {
         var stopwatch = new Stopwatch();
 
-        _taskProcessingService.Process(TaskType.Indexing, TaskTargetType.Image, bucketSize, (tasks) =>
+        _taskProcessingService.Process(IndexingTaskType.Image, bucketSize, (tasks) =>
         {
             _logger.LogInformation($"Indexing {tasks.Length} images");
 

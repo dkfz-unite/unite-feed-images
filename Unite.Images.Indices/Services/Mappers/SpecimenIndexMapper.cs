@@ -9,6 +9,8 @@ using Unite.Indices.Entities.Basic.Specimens;
 using OrganoidIntervention = Unite.Data.Entities.Specimens.Organoids.Intervention;
 using XenograftIntervention = Unite.Data.Entities.Specimens.Xenografts.Intervention;
 
+namespace Unite.Images.Indices.Services.Mappers;
+
 internal class SpecimenIndexMapper
 {
     internal void Map(in Specimen specimen, SpecimenIndex index, DateOnly? diagnosisDate)

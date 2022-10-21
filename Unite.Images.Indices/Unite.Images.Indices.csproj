@@ -11,8 +11,8 @@
 		<None Remove="Services\Mappers\" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Unite.Indices" Version="3.2.3" />
-		<PackageReference Include="Unite.Data" Version="3.2.4" />
+		<PackageReference Include="Unite.Indices" Version="3.3.3" />
+		<PackageReference Include="Unite.Data" Version="3.4.12" />
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="Services\" />

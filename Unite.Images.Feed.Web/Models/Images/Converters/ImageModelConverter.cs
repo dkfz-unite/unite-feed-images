@@ -76,7 +76,7 @@ public class ImageModelConverter
         target.ReferenceId = source.Id;
         target.Type = source.Type;
         target.Date = FromDateTime(source.Date);
-        target.Parameters = source.Parameters?.Select(parameter => GetParameterModel(parameter));
+        target.Parameters = source.Parameters;
         target.Features = source.Features?.Select(feature => GetFeatureModel(feature));
 
         return target;

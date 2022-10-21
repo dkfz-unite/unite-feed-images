@@ -4,19 +4,20 @@ namespace Unite.Images.Feed.Web.Models.Images;
 
 public class AnalysisModel
 {
-    public string Id { get; set; }
-    public AnalysisType? Type { get; set; }
-    public DateTime? Date { get; set; }
+    private string _id;
+    private AnalysisType? _type;
+    private DateTime? _date;
+    private Dictionary<string, string> _parameters;
+    private Dictionary<string, string> _features;
 
-    public IDictionary<string, string> Parameters { get; set; }
-    public IDictionary<string, string> Features { get; set; }
+    public string Id { get => _id?.Trim(); set => _id = value; }
+    public AnalysisType? Type { get => _type; set => _type = value; }
+    public DateTime? Date { get => _date; set => _date = value; }
+    public Dictionary<string, string> Parameters { get => Trim(_parameters); set => _parameters = value; }
+    public Dictionary<string, string> Features { get => Trim(_features); set => _features = value; }
 
-
-    public void Sanitise()
+    private static Dictionary<string, string> Trim(Dictionary<string, string> dictionary)
     {
-        Id = Id?.Trim();
-
-        Parameters = Parameters?.ToDictionary(parameter => parameter.Key.Trim(), parameter => parameter.Value.Trim());
-        Features = Features?.ToDictionary(feature => feature.Key.Trim(), feature => feature.Value.Trim());
+        return dictionary?.ToDictionary(entry => entry.Key.Trim(), entry => entry.Value.Trim());
     }
 }

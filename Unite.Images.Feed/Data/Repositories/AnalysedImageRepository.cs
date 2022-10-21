@@ -95,5 +95,6 @@ public class AnalysedImageRepository
         entity.Analysis.ReferenceId = model.Analysis.ReferenceId;
         entity.Analysis.TypeId = model.Analysis.Type;
         entity.Analysis.Date = model.Analysis.Date;
+        entity.Analysis.Parameters = model.Analysis.Parameters;
     }
 }

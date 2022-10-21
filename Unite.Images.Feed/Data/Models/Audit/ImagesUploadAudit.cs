@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace Unite.Images.Feed.Data.Models.Audit;
+﻿namespace Unite.Images.Feed.Data.Models.Audit;
 
 public class ImagesUploadAudit
 {
@@ -20,13 +18,13 @@ public class ImagesUploadAudit
 
     public override string ToString()
     {
-        var message = new StringBuilder();
+        var messages = new List<string>();
 
-        message.AppendLine($"{DonorsCreated} donors created");
-        message.AppendLine($"{ImagesCreated} images created");
-        message.AppendLine($"{ImagesUpdated} images updated");
-        message.AppendLine($"{ImagesAnalysed} image analysed");
+        messages.Add($"{DonorsCreated} donors created");
+        messages.Add($"{ImagesCreated} images created");
+        messages.Add($"{ImagesUpdated} images updated");
+        messages.Add($"{ImagesAnalysed} image analysed");
 
-        return message.ToString();
+        return string.Join(Environment.NewLine, messages);
     }
 }
