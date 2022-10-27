@@ -64,31 +64,6 @@ namespace Unite.Images.Indices.Services
 
             index.Specimens = CreateSpecimenIndices(image.DonorId, diagnosisDate);
 
-            index.NumberOfGenes += index.Specimens
-                .SelectMany(specimen => specimen.Variants.Where(variant => variant.AffectedTranscripts != null))
-                .SelectMany(variant => variant.AffectedTranscripts)
-                .Select(affectedTranscript => affectedTranscript.Gene.Id)
-                .Distinct()
-                .Count();
-
-            index.NumberOfMutations = index.Specimens
-                .SelectMany(specimen => specimen.Variants)
-                .Where(variant => variant.Mutation != null)
-                .DistinctBy(variant => variant.Id)
-                .Count();
-
-            index.NumberOfCopyNumberVariants = index.Specimens
-                .SelectMany(specimen => specimen.Variants)
-                .Where(variant => variant.CopyNumberVariant != null)
-                .DistinctBy(variant => variant.Id)
-                .Count();
-
-            index.NumberOfStructuralVariants = index.Specimens
-                .SelectMany(specimen => specimen.Variants)
-                .Where(variant => variant.StructuralVariant != null)
-                .DistinctBy(variant => variant.Id)
-                .Count();
-
             return index;
         }
 
