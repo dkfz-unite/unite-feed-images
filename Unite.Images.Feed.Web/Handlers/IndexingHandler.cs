@@ -42,6 +42,13 @@ public class IndexingHandler
     {
         var stopwatch = new Stopwatch();
 
+        var shouldWait = _taskProcessingService.HasAnnotationTasks();
+
+        if (shouldWait)
+        {
+            return;
+        }
+
         _taskProcessingService.Process(IndexingTaskType.Image, bucketSize, (tasks) =>
         {
             _logger.LogInformation($"Indexing {tasks.Length} images");
