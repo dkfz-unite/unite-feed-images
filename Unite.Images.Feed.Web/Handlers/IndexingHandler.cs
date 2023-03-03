@@ -42,15 +42,13 @@ public class IndexingHandler
     {
         var stopwatch = new Stopwatch();
 
-        var shouldWait = _taskProcessingService.HasAnnotationTasks();
-
-        if (shouldWait)
-        {
-            return;
-        }
-
         _taskProcessingService.Process(IndexingTaskType.Image, bucketSize, (tasks) =>
         {
+            if (_taskProcessingService.HasSubmissionTasks() || _taskProcessingService.HasAnnotationTasks())
+            {
+                return false;
+            }
+
             _logger.LogInformation($"Indexing {tasks.Length} images");
 
             stopwatch.Restart();
@@ -72,6 +70,8 @@ public class IndexingHandler
             stopwatch.Stop();
 
             _logger.LogInformation($"Indexing of {tasks.Length} images completed in {Math.Round(stopwatch.Elapsed.TotalSeconds, 2)}s");
+
+            return true;
         });
     }
 }
