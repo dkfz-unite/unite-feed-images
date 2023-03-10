@@ -5,9 +5,6 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 	<ItemGroup>
-		<None Remove="Unite.Data" />
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="Unite.Data" Version="4.5.0" />
+		<PackageReference Include="Unite.Data" Version="4.6.0" />
 	</ItemGroup>
 </Project>

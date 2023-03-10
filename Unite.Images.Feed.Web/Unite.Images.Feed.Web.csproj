@@ -4,31 +4,6 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
-	<PropertyGroup Condition=" '$(RunConfiguration)' == 'Unite.Radiology.Feed.Web' " />
-	<ItemGroup>
-		<None Remove="Handlers\" />
-		<None Remove="Controllers\" />
-		<None Remove="HostedServices\" />
-		<None Remove="Properties\" />
-		<None Remove="FluentValidation" />
-		<None Remove="Macross.Json.Extensions" />
-		<None Remove="FluentValidation.AspNetCore" />
-	</ItemGroup>
-	<ItemGroup>
-		<Folder Include="Handlers\" />
-		<Folder Include="Controllers\" />
-		<Folder Include="HostedServices\" />
-		<Folder Include="Properties\" />
-	</ItemGroup>
-	<ItemGroup>
-		<Content Remove="Properties\launchSettings.json" />
-	</ItemGroup>
-	<ItemGroup>
-		<None Include="Properties\launchSettings.json">
-			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
-			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-		</None>
-	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Unite.Images.Feed\Unite.Images.Feed.csproj">
 			<GlobalPropertiesToRemove>
