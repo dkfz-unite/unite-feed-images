@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Unite.Data.Entities.Donors;
+using Unite.Data.Entities.Genome.Transcriptomics;
 using Unite.Data.Entities.Genome.Variants;
 using Unite.Data.Entities.Images;
 using Unite.Data.Entities.Specimens;
@@ -67,10 +68,12 @@ namespace Unite.Images.Indices.Services
 
             index.Donor = CreateDonorIndex(image.DonorId);
             index.Specimens = CreateSpecimenIndices(image.DonorId, diagnosisDate);
+            index.NumberOfSpecimens = index.Specimens?.Length ?? 0;
             index.NumberOfGenes = stats.NumberOfGenes;
             index.NumberOfMutations = stats.NumberOfMutations;
             index.NumberOfCopyNumberVariants = stats.NumberOfCopyNumberVariants;
             index.NumberOfStructuralVariants = stats.NumberOfStructuralVariants;
+            index.HasGeneExpressions = stats.HasGeneExpressions;
 
             return index;
         }
@@ -164,7 +167,7 @@ namespace Unite.Images.Indices.Services
         }
 
 
-        private record GenomicStats(int NumberOfGenes, int NumberOfMutations, int NumberOfCopyNumberVariants, int NumberOfStructuralVariants);
+        private record GenomicStats(int NumberOfGenes, int NumberOfMutations, int NumberOfCopyNumberVariants, int NumberOfStructuralVariants, bool HasGeneExpressions);
 
         private GenomicStats LoadGenomicStats(int donorId)
         {
@@ -176,8 +179,9 @@ namespace Unite.Images.Indices.Services
             var cnvGeneIds = LoadGeneIds<CNV.Variant, CNV.AffectedTranscript>(ssmIds);
             var svGeneIds = LoadGeneIds<SV.Variant, SV.AffectedTranscript>(ssmIds);
             var geneIds = ssmGeneIds.Union(cnvGeneIds).Union(svGeneIds).ToArray();
+            var hasGeneExpressions = CheckGeneExpressions(specimenIds);
 
-            return new GenomicStats(geneIds.Length, ssmIds.Length, cnvIds.Length, svIds.Length);
+            return new GenomicStats(geneIds.Length, ssmIds.Length, cnvIds.Length, svIds.Length, hasGeneExpressions);
         }
 
         private int[] LoadSpecimenIds(int donorId)
@@ -219,6 +223,14 @@ namespace Unite.Images.Indices.Services
                 .ToArray();
 
             return ids;
+        }
+
+        private bool CheckGeneExpressions(int[] specimenIds)
+        {
+            var hasExpressions = _dbContext.Set<GeneExpression>()
+            .Any(expression => specimenIds.Contains(expression.AnalysedSample.Sample.SpecimenId));
+
+        return hasExpressions;
         }
     }
 }
