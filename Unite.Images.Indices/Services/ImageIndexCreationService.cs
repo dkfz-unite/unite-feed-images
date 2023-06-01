@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using Unite.Data.Entities.Donors;
 using Unite.Data.Entities.Genome.Transcriptomics;
 using Unite.Data.Entities.Genome.Variants;
@@ -59,8 +60,6 @@ namespace Unite.Images.Indices.Services
         private ImageIndex CreateImageIndex(Image image)
         {
             var diagnosisDate = image.Donor.ClinicalData?.DiagnosisDate;
-            
-            var stats = LoadGenomicStats(image.DonorId);
 
             var index = new ImageIndex();
 
@@ -68,12 +67,14 @@ namespace Unite.Images.Indices.Services
 
             index.Donor = CreateDonorIndex(image.DonorId);
             index.Specimens = CreateSpecimenIndices(image.DonorId, diagnosisDate);
-            index.NumberOfSpecimens = index.Specimens?.Length ?? 0;
+            index.Data = CreateDataIndex(image.DonorId);
+
+            var stats = LoadGenomicStats(image.DonorId);
+
             index.NumberOfGenes = stats.NumberOfGenes;
-            index.NumberOfMutations = stats.NumberOfMutations;
-            index.NumberOfCopyNumberVariants = stats.NumberOfCopyNumberVariants;
-            index.NumberOfStructuralVariants = stats.NumberOfStructuralVariants;
-            index.HasGeneExpressions = stats.HasGeneExpressions;
+            index.NumberOfSSMs = stats.NumberOfSSMs;
+            index.NumberOfCNVs = stats.NumberOfCNVs;
+            index.NumberOfSVs = stats.NumberOfSVs;
 
             return index;
         }
@@ -167,23 +168,45 @@ namespace Unite.Images.Indices.Services
         }
 
 
-        private record GenomicStats(int NumberOfGenes, int NumberOfMutations, int NumberOfCopyNumberVariants, int NumberOfStructuralVariants, bool HasGeneExpressions);
+        private DataIndex CreateDataIndex(int donorId)
+        {
+            var specimenIds = LoadSpecimenIds(donorId);
+
+            var index = new DataIndex();
+
+            index.SSMs = CheckVariants<SSM.Variant, SSM.VariantOccurrence>(specimenIds);
+
+            index.CNVs = CheckVariants<CNV.Variant, CNV.VariantOccurrence>(specimenIds);
+
+            index.SVs = CheckVariants<SV.Variant, SV.VariantOccurrence>(specimenIds);
+
+            index.GeneExp = CheckGeneExp(specimenIds);
+
+            return index;
+        }
+
+
+        private record GenomicStats(int NumberOfGenes, int NumberOfSSMs, int NumberOfCNVs, int NumberOfSVs);
 
         private GenomicStats LoadGenomicStats(int donorId)
         {
             var specimenIds = LoadSpecimenIds(donorId);
             var ssmIds = LoadVariantIds<SSM.Variant, SSM.VariantOccurrence>(specimenIds);
-            var cnvIds = LoadVariantIds<CNV.Variant, CNV.VariantOccurrence>(specimenIds);
+            var cnvIds = LoadVariantIds<CNV.Variant, CNV.VariantOccurrence>(specimenIds, occurrence => occurrence.Variant.TypeId != CNV.Enums.CnvType.Neutral);
             var svIds = LoadVariantIds<SV.Variant, SV.VariantOccurrence>(specimenIds);
             var ssmGeneIds = LoadGeneIds<SSM.Variant, SSM.AffectedTranscript>(ssmIds);
             var cnvGeneIds = LoadGeneIds<CNV.Variant, CNV.AffectedTranscript>(ssmIds);
             var svGeneIds = LoadGeneIds<SV.Variant, SV.AffectedTranscript>(ssmIds);
             var geneIds = ssmGeneIds.Union(cnvGeneIds).Union(svGeneIds).ToArray();
-            var hasGeneExpressions = CheckGeneExpressions(specimenIds);
 
-            return new GenomicStats(geneIds.Length, ssmIds.Length, cnvIds.Length, svIds.Length, hasGeneExpressions);
+            return new GenomicStats(geneIds.Length, ssmIds.Length, cnvIds.Length, svIds.Length);
         }
 
+        /// <summary>
+        /// Loads identifiers of donor derived specimens associated with given donor.
+        /// </summary>
+        /// <param name="donorId">Donor identifier.</param>
+        /// <returns>Array of specimens identifiers.</returns>
         private int[] LoadSpecimenIds(int donorId)
         {
             // Images can be associated only with donor derived tumor tissues
@@ -199,6 +222,13 @@ namespace Unite.Images.Indices.Services
             return ids;
         }
 
+        /// <summary>
+        /// Loads identifiers of genes affected by given variants.
+        /// </summary>
+        /// <param name="variantIds">Varians identifiers.</param>
+        /// <typeparam name="TVariant">Variant type.</typeparam>
+        /// <typeparam name="TAffectedTranscript">Variant affected transcript type.</typeparam>
+        /// <returns>Array of genes identifiers.</returns>
         private int[] LoadGeneIds<TVariant, TAffectedTranscript>(long[] variantIds)
             where TVariant : Variant
             where TAffectedTranscript : VariantAffectedFeature<TVariant, Data.Entities.Genome.Transcript>
@@ -212,12 +242,24 @@ namespace Unite.Images.Indices.Services
             return ids;
         }
 
-        private long[] LoadVariantIds<TVariant, TVariantOccurrence>(int[] specimenIds)
+        /// <summary>
+        /// Loads identifiers of variants of given type occurring in given specimens.
+        /// </summary>
+        /// <param name="specimenIds">Specimens identifiers.</param>
+        /// <param name="filter">Variant occurrence filter.</param>
+        /// <typeparam name="TVariant">Variant type.</typeparam>
+        /// <typeparam name="TVariantOccurrence">Variant occurrence type.</typeparam>
+        /// <returns>Array of variants identifiers.</returns>
+        private long[] LoadVariantIds<TVariant, TVariantOccurrence>(int[] specimenIds, Expression<Func<TVariantOccurrence, bool>> filter = null)
             where TVariant : Variant
             where TVariantOccurrence : VariantOccurrence<TVariant>
         {
+            Expression<Func<TVariantOccurrence, bool>> specimenPredicate = (occurrence => specimenIds.Contains(occurrence.AnalysedSample.Sample.SpecimenId));
+            Expression<Func<TVariantOccurrence, bool>> variantPredicate = filter ?? (occurrence => true);
+
             var ids = _dbContext.Set<TVariantOccurrence>()
-                .Where(occurrence => specimenIds.Contains(occurrence.AnalysedSample.Sample.SpecimenId))
+                .Where(specimenPredicate)
+                .Where(variantPredicate)
                 .Select(occurrence => occurrence.VariantId)
                 .Distinct()
                 .ToArray();
@@ -225,12 +267,33 @@ namespace Unite.Images.Indices.Services
             return ids;
         }
 
-        private bool CheckGeneExpressions(int[] specimenIds)
+        /// <summary>
+        /// Checks if variants data of given type is available for given specimens.
+        /// </summary>
+        /// <param name="specimenIds">Specimen identifiers.</param>
+        /// <typeparam name="TVariant">Variant type.</typeparam>
+        /// <typeparam name="TVariantOccurrence">Variant occurrence type.</typeparam>
+        /// <returns>'true' if variants data exists or 'false' otherwise.</returns>
+        private bool CheckVariants<TVariant, TVariantOccurrence>(int[] specimenIds)
+            where TVariant : Variant
+            where TVariantOccurrence : VariantOccurrence<TVariant>
         {
-            var hasExpressions = _dbContext.Set<GeneExpression>()
-            .Any(expression => specimenIds.Contains(expression.AnalysedSample.Sample.SpecimenId));
+            return _dbContext.Set<TVariantOccurrence>()
+                .Where(occurrence => specimenIds.Contains(occurrence.AnalysedSample.Sample.SpecimenId))
+                .Select(occurrence => occurrence.VariantId)
+                .Distinct()
+                .Any();
+        }
 
-        return hasExpressions;
+        /// <summary>
+        /// Checks if gene expression data is available for given specimens.
+        /// </summary>
+        /// <param name="specimenIds">Specimen identifiers.</param>
+        /// <returns>'true' if gene expression data exists or 'false' otherwise.</returns>
+        private bool CheckGeneExp(int[] specimenIds)
+        {
+            return _dbContext.Set<GeneExpression>()
+                .Any(expression => specimenIds.Contains(expression.AnalysedSample.Sample.SpecimenId));
         }
     }
 }
