@@ -72,9 +72,9 @@ namespace Unite.Images.Indices.Services
             var stats = LoadGenomicStats(image.DonorId);
 
             index.NumberOfGenes = stats.NumberOfGenes;
-            index.NumberOfSSMs = stats.NumberOfSSMs;
-            index.NumberOfCNVs = stats.NumberOfCNVs;
-            index.NumberOfSVs = stats.NumberOfSVs;
+            index.NumberOfSsms = stats.NumberOfSsms;
+            index.NumberOfCnvs = stats.NumberOfCnvs;
+            index.NumberOfSvs = stats.NumberOfSvs;
 
             return index;
         }
@@ -174,11 +174,11 @@ namespace Unite.Images.Indices.Services
 
             var index = new DataIndex();
 
-            index.SSMs = CheckVariants<SSM.Variant, SSM.VariantOccurrence>(specimenIds);
+            index.Ssms = CheckVariants<SSM.Variant, SSM.VariantOccurrence>(specimenIds);
 
-            index.CNVs = CheckVariants<CNV.Variant, CNV.VariantOccurrence>(specimenIds);
+            index.Cnvs = CheckVariants<CNV.Variant, CNV.VariantOccurrence>(specimenIds);
 
-            index.SVs = CheckVariants<SV.Variant, SV.VariantOccurrence>(specimenIds);
+            index.Svs = CheckVariants<SV.Variant, SV.VariantOccurrence>(specimenIds);
 
             index.GeneExp = CheckGeneExp(specimenIds);
 
@@ -186,7 +186,7 @@ namespace Unite.Images.Indices.Services
         }
 
 
-        private record GenomicStats(int NumberOfGenes, int NumberOfSSMs, int NumberOfCNVs, int NumberOfSVs);
+        private record GenomicStats(int NumberOfGenes, int NumberOfSsms, int NumberOfCnvs, int NumberOfSvs);
 
         private GenomicStats LoadGenomicStats(int donorId)
         {
