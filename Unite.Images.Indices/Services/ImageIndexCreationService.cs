@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Unite.Data.Entities.Donors;
+using Unite.Data.Entities.Donors.Clinical;
 using Unite.Data.Entities.Genome.Transcriptomics;
 using Unite.Data.Entities.Genome.Variants;
 using Unite.Data.Entities.Images;
@@ -174,6 +175,28 @@ public class ImageIndexCreationService : IIndexCreationService<ImageIndex>
 
         var index = new DataIndex();
 
+        index.Clinical = _dbContext.Set<ClinicalData>()
+            .Where(clinicalData => clinicalData.DonorId == donorId)
+            .Any();
+
+        index.Treatments = _dbContext.Set<Treatment>()
+            .Where(treatment => treatment.DonorId == donorId)
+            .Any();
+
+        index.Tissues = _dbContext.Set<Specimen>()
+            .Include(specimen => specimen.Tissue)
+            .Where(specimen => specimen.DonorId == donorId)
+            .Where(specimen => specimen.Tissue != null && specimen.Tissue.TypeId != TissueType.Control)
+            .Any();
+
+        index.TissuesMolecular = _dbContext.Set<Specimen>()
+            .Include(specimen => specimen.MolecularData)
+            .Include(specimen => specimen.Tissue)
+            .Where(specimen => specimen.DonorId == donorId)
+            .Where(specimen => specimen.MolecularData != null)
+            .Where(specimen => specimen.Tissue != null && specimen.Tissue.TypeId != TissueType.Control)
+            .Any();
+
         index.Ssms = CheckVariants<SSM.Variant, SSM.VariantOccurrence>(specimenIds);
 
         index.Cnvs = CheckVariants<CNV.Variant, CNV.VariantOccurrence>(specimenIds);
@@ -181,6 +204,8 @@ public class ImageIndexCreationService : IIndexCreationService<ImageIndex>
         index.Svs = CheckVariants<SV.Variant, SV.VariantOccurrence>(specimenIds);
 
         index.GeneExp = CheckGeneExp(specimenIds);
+
+        index.GeneExpSc = false;
 
         return index;
     }
