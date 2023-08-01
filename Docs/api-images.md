@@ -1,24 +1,20 @@
 # Images Data Feed API
 
 ## GET: [api](http://localhost:5104/api)
-
 Health check.
 
-
-**Response**
-
+### Responses
 `"2022-03-17T09:45:10.9359202Z"` - Current UTC date and time in JSON format, if service is up and running
 
 
 ## POST: [api/images](http://localhost:5104/api/images)
-
 Submit images data (including image analysis data).
 
 Request implements **UPSERT** logic:
 - Missing data will be populated
 - Existing data will be updated
 
-**Boby** (_application/json_)
+### Boby - application/json
 ```json
 [
     {
@@ -78,8 +74,8 @@ Request implements **UPSERT** logic:
     }
 ]
 ```
-Fields description can be found [here](https://github.com/dkfz-unite/unite-images-feed/blob/main/Docs/api-images-models.md).
+Fields description can be found [here](api-images-models.md).
 
-**Response**
+### Responses
 - `200` - request was processed successfully
 - `400` - request data didn't pass validation
