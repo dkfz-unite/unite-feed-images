@@ -4,15 +4,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Unite.Images.Feed\Unite.Images.Feed.csproj">
-      <GlobalPropertiesToRemove />
-    </ProjectReference>
-    <ProjectReference Include="..\Unite.Images.Indices\Unite.Images.Indices.csproj">
-      <GlobalPropertiesToRemove />
-    </ProjectReference>
+    <ProjectReference Include="..\Unite.Images.Feed\Unite.Images.Feed.csproj" />
+    <ProjectReference Include="..\Unite.Images.Indices\Unite.Images.Indices.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Macross.Json.Extensions" Version="3.0.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.1.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.10" />
   </ItemGroup>
 </Project>
