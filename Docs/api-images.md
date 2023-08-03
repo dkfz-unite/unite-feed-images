@@ -14,6 +14,9 @@ Request implements **UPSERT** logic:
 - Missing data will be populated
 - Existing data will be updated
 
+### Headers
+- `Authorization: Bearer [token]` - JWT token with `Data.Write` permission.
+
 ### Boby - application/json
 ```json
 [
@@ -79,3 +82,5 @@ Fields description can be found [here](api-images-models.md).
 ### Responses
 - `200` - request was processed successfully
 - `400` - request data didn't pass validation
+- `401` - missing JWT token
+- `403` - missing required permissions
