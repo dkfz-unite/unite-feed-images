@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Unite.Images.Feed.Data;
+using Unite.Images.Feed.Web.Configuration.Constants;
 using Unite.Images.Feed.Web.Models.Images;
 using Unite.Images.Feed.Web.Models.Images.Converters;
 using Unite.Images.Feed.Web.Services;
@@ -8,7 +9,7 @@ using Unite.Images.Feed.Web.Services;
 namespace Unite.Images.Feed.Web.Controllers;
 
 [Route("api/[controller]")]
-[Authorize]
+[Authorize(Policy = Policies.Data.Writer)]
 public class ImagesController : Controller
 {
     private readonly ImageDataWriter _dataWriter;
