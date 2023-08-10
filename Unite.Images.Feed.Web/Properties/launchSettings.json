@@ -29,7 +29,7 @@
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api",
-      "applicationUrl": "http://localhost:5104",
+      "applicationUrl": "http://localhost:5102",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "UNITE_API_KEY": "Defautl32BitApiKeyHasToBeChanged",

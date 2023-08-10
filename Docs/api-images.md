@@ -1,13 +1,13 @@
 # Images Data Feed API
 
-## GET: [api](http://localhost:5104/api)
+## GET: [api](http://localhost:5102/api) - [api/images-feed](http://localhost:5102/api/images-feed)
 Health check.
 
 ### Responses
 `"2022-03-17T09:45:10.9359202Z"` - Current UTC date and time in JSON format, if service is up and running
 
 
-## POST: [api/images](http://localhost:5104/api/images)
+## POST: [api/images](http://localhost:5102/api/images) - [api/images-feed](http://localhost:5102/api/images-feed)
 Submit images data (including image analysis data).
 
 Request implements **UPSERT** logic:
