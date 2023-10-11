@@ -21,31 +21,31 @@ Request implements **UPSERT** logic:
 ```json
 [
     {
-        "Id": "IM1",
-        "DonorId": "DO1",
-        "ScanningDate": null,
-        "ScanningDay": 14,
-        "MriImage": {
-            "WholeTumor": 111.393,
-            "ContrastEnhancing": 902.000,
-            "NonContrastEnhancing": 102.683,
-            "MedianAdcTumor": 1314.861083984375,
-            "MedianAdcCe": 1598.30419921875,
-            "MedianAdcEdema": 1299.1142578125,
-            "MedianCbfTumor": 23.221034049987793,
-            "MedianCbfCe": 23.221034049987793,
-            "MedianCbfEdema": 23.221034049987793,
-            "MedianCbvTumor": 311.923828125,
-            "MedianCbvCe": 359.912109375,
-            "MedianCbvEdema": 327.919921875,
-            "MedianMttTumor": 2599.365234375,
-            "MedianMttCe": 2791.318359375,
-            "MedianMttEdema": 2631.357421875
+        "id": "IM1",
+        "donor_id": "DO1",
+        "scanning_date": null,
+        "scanning_day": 14,
+        "mri_image": {
+            "whole_tumor": 111.393,
+            "contrast_enhancing": 902.000,
+            "non_contrast_enhancing": 102.683,
+            "median_adc_tumor": 1314.861083984375,
+            "median_adc_ce": 1598.30419921875,
+            "median_adc_edema": 1299.1142578125,
+            "median_cbf_tumor": 23.221034049987793,
+            "median_cbf_ce": 23.221034049987793,
+            "median_cbf_edema": 23.221034049987793,
+            "median_cbv_tumor": 311.923828125,
+            "median_cbv_ce": 359.912109375,
+            "median_cbv_edema": 327.919921875,
+            "median_mtt_tumor": 2599.365234375,
+            "median_mtt_ce": 2791.318359375,
+            "median_mtt_edema": 2631.357421875
         },
-        "Analysis": {
-            "Id": "IA1IM1",
-            "Type": "RFE",
-            "Parameters": {
+        "analysis": {
+            "id": "IA1IM1",
+            "type": "RFE",
+            "parameters": {
                 "diagnostics_Versions_PyRadiomics": "v3.0.1",
                 "diagnostics_Versions_Numpy": "1.19.5",
                 "diagnostics_Versions_SimpleITK": "2.0.2",
@@ -54,7 +54,7 @@ Request implements **UPSERT** logic:
                 "diagnostics_Configuration_Settings": "{'minimumROIDimensions': 2, 'minimumROISize': None, 'normalize': False, 'normalizeScale': 1, 'removeOutliers': None, 'resampledPixelSpacing': None, 'interpolator': 'sitkBSpline', 'preCrop': False, 'padDistance': 5, 'distances': [1], 'force2D': False, 'force2Ddimension': 0, 'resegmentRange': None, 'label': 1, 'additionalInfo': True, 'binWidth': 25, 'weightingNorm': None}",
                 "diagnostics_Configuration_EnabledImageTypes": "{'Original': {}}"
             },
-            "Features": {
+            "features": {
                 "diagnostics_Image-original_Hash": "621f7c6ccb82e8694bde90e0918ada64f473799d",
                 "diagnostics_Image-original_Dimensionality": "3D",
                 "diagnostics_Image-original_Spacing": "(1.0, 1.0, 1.0)",
