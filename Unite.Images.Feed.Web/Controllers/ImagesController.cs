@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Unite.Images.Feed.Data;
 using Unite.Images.Feed.Web.Configuration.Constants;
 using Unite.Images.Feed.Web.Models.Images;
+using Unite.Images.Feed.Web.Models.Images.Binders;
 using Unite.Images.Feed.Web.Models.Images.Converters;
 using Unite.Images.Feed.Web.Services;
 
@@ -32,7 +33,24 @@ public class ImagesController : Controller
     }
 
 
+    [HttpPost]
+    [Consumes("application/json", new[] { "application/jsonc" })]
     public IActionResult Post([FromBody] ImageModel[] models)
+    {
+        var dataModels = models.Select(model => _converter.Convert(model));
+
+        _dataWriter.SaveData(dataModels, out var audit);
+
+        _logger.LogInformation(audit.ToString());
+
+        _indexingTasksService.PopulateTasks(audit.Images);
+
+        return Ok();
+    }
+
+    [HttpPost("tsv")]
+    [Consumes("text/tab-separated-values")]
+    public IActionResult PostTsv([ModelBinder(typeof(MriImageTsvModelBinder))] ImageModel[] models)
     {
         var dataModels = models.Select(model => _converter.Convert(model));
 
