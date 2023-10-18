@@ -84,3 +84,28 @@ Fields description can be found [here](api-images-models.md).
 - `400` - request data didn't pass validation
 - `401` - missing JWT token
 - `403` - missing required permissions
+
+
+## POST: [api/images/tsv](http://localhost:5102/api/images/tsv) - [api/images-feed/tsv](https://localhost/api/images-feed/tsv)
+Submit images data (excluding image analysis data).
+
+Request implements **UPSERT** logic:
+- Missing data will be populated
+- Existing data will be updated
+
+### Headers
+- `Authorization: Bearer [token]` - JWT token with `Data.Write` permission.
+
+### Boby - text/tab-separated-values
+```tsv
+id	donor_id	scanning_date	scanning_day	whole_tumor	contrast_enhancing	non_contrast_enhancing	median_adc_tumor	median_adc_ce	median_adc_edema	median_cbf_tumor	median_cbf_ce	median_cbf_edema	median_cbv_tumor	median_cbv_ce	median_cbv_edema	median_mtt_tumor	median_mtt_ce	median_mtt_edema
+IM1	DO1		14	111.393	902.000	102.683	1314.861083984375	1598.30419921875	1299.1142578125	23.221034049987793	23.221034049987793	23.221034049987793	311.923828125	359.912109375	327.919921875	2599.365234375	2791.318359375	2631.357421875
+
+```
+Fields description can be found [here](api-images-models.md).
+
+### Responses
+- `200` - request was processed successfully
+- `400` - request data didn't pass validation
+- `401` - missing JWT token
+- `403` - missing required permissions
