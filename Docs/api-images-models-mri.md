@@ -4,81 +4,81 @@ Includes MRI image data
 
 _At least one field has to be set_
 
-**`WholeTumor`** - Whole tumor volume in cm³.
+**`whole_tumor`** - Whole tumor volume in cm³.
 - Type: _Number_
 - Limitations: Float, greater or equal to 0
 - Example: `111.393`
 
-**`ContrastEnhancing`** - Contrast enhancing volume in cm³.
+**`contrast_enhancing`** - Contrast enhancing volume in cm³.
 - Type: _Number_
 - Limitations: Float, greater or equal to 0
 - Example: `902`
 
-**`NonContrastEnhancing`** - Non contrast enhancing volume in cm³.
+**`non_contrast_enhancing`** - Non contrast enhancing volume in cm³.
 - Type: _Number_
 - Limitations: Float, greater or equal to 0
 - Example: `102.683`
 
 
-**`MedianAdcTumor`** - Median ADC tumor.
+**`median_adc_tumor`** - Median ADC tumor.
 - Type: _Number_
 - Limitations: Float, greater or equal to 0
 - Example: `1314.861083984375`
 
-**`MedianAdcCe`** - Median ADC CE.
+**`median_adc_ce`** - Median ADC CE.
 - Type: _Number_
 - Limitations: Float, greater or equal to 0
 - Example: `1598.30419921875`
 
-**`MedianAdcEdema`** - Median ADC edema.
+**`median_adc_edema`** - Median ADC edema.
 - Type: _Number_
 - Limitations: Float, greater or equal to 0
 - Example: `1299.1142578125`
 
 
-**`MedianCbfTumor`** - Median CBF tumor.
+**`median_cbf_tumor`** - Median CBF tumor.
 - Type: _Number_
 - Limitations: Float, greater or equal to 0
 - Example: `23.221034049987793`
 
-**`MedianCbfCe`** - Median CBF CE.
+**`median_cbf_ce`** - Median CBF CE.
 - Type: _Number_
 - Limitations: Float, greater or equal to 0
 - Example: `23.221034049987793`
 
-**`MedianCbfEdema`** - Median CBF edema.
+**`median_cbf_edema`** - Median CBF edema.
 - Type: _Number_
 - Limitations: Float, greater or equal to 0
 - Example: `23.221034049987793`
 
 
-**`MedianCbvTumor`** - Median CBV tumor.
+**`median_cbv_tumor`** - Median CBV tumor.
 - Type: _Number_
 - Limitations: Float, greater or equal to 0
 - Example: `311.923828125`
 
-**`MedianCbvCe`** - Median CBV CE.
+**`median_cbv_ce`** - Median CBV CE.
 - Type: _Number_
 - Limitations: Float, greater or equal to 0
 - Example: `359.912109375`
 
-**`MedianCbvEdema`** - Median CBV edema.
+**`median_cbv_edema`** - Median CBV edema.
 - Type: _Number_
 - Limitations: Float, greater or equal to 0
 - Example: `327.919921875`
 
 
-**`MedianMttTumor`** - Median MTT tumor.
+**`median_mtt_tumor`** - Median MTT tumor.
 - Type: _Number_
 - Limitations: Float, greater or equal to 0
 - Example: `2599.365234375`
 
-**`MedianMttCe`** - Median MTT CE.
+**`median_mtt_ce`** - Median MTT CE.
 - Type: _Number_
 - Limitations: Float, greater or equal to 0
 - Example: `2791.318359375`
 
-**`MedianMttEdema`** - Median MTT edema.
+**`median_mtt_edema`** - Median MTT edema.
 - Type: _Number_
 - Limitations: Float, greater or equal to 0
 - Example: `2631.357421875`

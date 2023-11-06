@@ -3,17 +3,17 @@
 ## Analysis
 Includes data about image analysis
 
-**`Id`*** - Image analysis identifier.
+**`id`*** - Image analysis identifier.
 - Type: _String_
 - Limitations: Maximum length 255
 - Example: `"IM1AN1"`
 
-**`Type`** - Image analysis type.
+**`type`** - Image analysis type.
 - Type: _String_
 - Possible values: `"RFE"`
 - Example: `"RFE"`
 
-**`Parameters`** - Image analysis parameters.
+**`parameters`** - Image analysis parameters.
 - Type: _Object(Dictionary)_
 - Key type: _String_
 - Key limitations: Maximum length 255
@@ -22,7 +22,7 @@ Includes data about image analysis
 - Limitations - If set, at least one field has to be set; all field should be unique
 - Example: `{ "Key1": "Value1" }`
 
-**`Features`** - Image features revealed during the analysis.
+**`features`** - Image features revealed during the analysis.
 - Type: _Object(Dictionary)_
 - Key type: _String_
 - Key limitations: Maximum length 255
