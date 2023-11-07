@@ -34,7 +34,7 @@ public class ImagesController : Controller
 
 
     [HttpPost]
-    [Consumes("application/json", new[] { "application/jsonc" })]
+    [Consumes("application/json")]
     public IActionResult Post([FromBody] ImageModel[] models)
     {
         var dataModels = models.Select(model => _converter.Convert(model));
