@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Unite.Data.Context;
 using Unite.Data.Entities.Images;
-using Unite.Data.Services;
+using Unite.Data.Entities.Images.Enums;
 using Unite.Images.Feed.Data.Models;
 
 namespace Unite.Images.Feed.Data.Repositories;
@@ -35,6 +36,7 @@ internal class MriImageRepository : ImageRepositoryBase<MriImageModel>
             entity.MriImage = new MriImage();
         }
 
+        entity.TypeId = ImageType.MRI;
         entity.MriImage.ReferenceId = model.ReferenceId;
         entity.MriImage.WholeTumor = model.WholeTumor;
         entity.MriImage.ContrastEnhancing = model.ContrastEnhancing;

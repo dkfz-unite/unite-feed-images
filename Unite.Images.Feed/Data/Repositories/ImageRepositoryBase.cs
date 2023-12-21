@@ -1,5 +1,5 @@
-﻿using Unite.Data.Entities.Images;
-using Unite.Data.Services;
+﻿using Unite.Data.Context;
+using Unite.Data.Entities.Images;
 using Unite.Images.Feed.Data.Models;
 
 namespace Unite.Images.Feed.Data.Repositories;
@@ -21,7 +21,8 @@ internal abstract class ImageRepositoryBase<TModel> where TModel : ImageModel
     {
         var entity = new Image()
         {
-            DonorId = donorId
+            DonorId = donorId,
+            ReferenceId = model.ReferenceId,
         };
 
         Map(model, ref entity);
@@ -43,7 +44,7 @@ internal abstract class ImageRepositoryBase<TModel> where TModel : ImageModel
 
     protected virtual void Map(in TModel model, ref Image entity)
     {
-        entity.ScanningDate = model.ScanningDate;
-        entity.ScanningDay = model.ScanningDay;
+        entity.CreationDate = model.ScanningDate;
+        entity.CreationDay = model.ScanningDay;
     }
 }

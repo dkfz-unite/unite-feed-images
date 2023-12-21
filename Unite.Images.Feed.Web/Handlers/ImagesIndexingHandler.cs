@@ -1,24 +1,25 @@
 ﻿using System.Diagnostics;
+using Unite.Data.Context.Services.Tasks;
 using Unite.Data.Entities.Tasks.Enums;
-using Unite.Data.Services.Tasks;
+using Unite.Images.Indices.Services;
+using Unite.Indices.Context;
 using Unite.Indices.Entities.Images;
-using Unite.Indices.Services;
 
 namespace Unite.Images.Feed.Web.Handlers;
 
-public class IndexingHandler
+public class ImagesIndexingHandler
 {
     private readonly TasksProcessingService _taskProcessingService;
-    private readonly IIndexCreationService<ImageIndex> _indexCreationService;
-    private readonly IIndexingService<ImageIndex> _indexingService;
+    private readonly ImageIndexCreationService _indexCreationService;
+    private readonly IIndexService<ImageIndex> _indexingService;
     private readonly ILogger _logger;
 
 
-    public IndexingHandler(
+    public ImagesIndexingHandler(
         TasksProcessingService taskProcessingService,
-        IIndexCreationService<ImageIndex> indexCreationService,
-        IIndexingService<ImageIndex> indexingService,
-        ILogger<IndexingHandler> logger)
+        ImageIndexCreationService indexCreationService,
+        IIndexService<ImageIndex> indexingService,
+        ILogger<ImagesIndexingHandler> logger)
     {
         _taskProcessingService = taskProcessingService;
         _indexCreationService = indexCreationService;
@@ -29,7 +30,7 @@ public class IndexingHandler
 
     public void Prepare()
     {
-        _indexingService.UpdateMapping().GetAwaiter().GetResult();
+        _indexingService.UpdateIndex().GetAwaiter().GetResult();
     }
 
     public void Handle(int bucketSize)
@@ -49,7 +50,7 @@ public class IndexingHandler
                 return false;
             }
 
-            _logger.LogInformation($"Indexing {tasks.Length} images");
+            _logger.LogInformation("Indexing {number} images", tasks.Length);
 
             stopwatch.Restart();
 
@@ -65,11 +66,11 @@ public class IndexingHandler
 
             }).ToArray();
 
-            _indexingService.IndexMany(indices);
+            _indexingService.AddRange(indices);
 
             stopwatch.Stop();
 
-            _logger.LogInformation($"Indexing of {tasks.Length} images completed in {Math.Round(stopwatch.Elapsed.TotalSeconds, 2)}s");
+            _logger.LogInformation("Indexing of {number} images completed in {time}s", tasks.Length, Math.Round(stopwatch.Elapsed.TotalSeconds, 2));
 
             return true;
         });

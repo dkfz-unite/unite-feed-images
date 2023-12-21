@@ -5,13 +5,13 @@ namespace Unite.Images.Feed.Web.HostedServices;
 
 public class IndexingHostedService : BackgroundService
 {
-    private readonly IndexingOptions _options;
-    private readonly IndexingHandler _handler;
+    private readonly ImagesIndexingOptions _options;
+    private readonly ImagesIndexingHandler _handler;
     private readonly ILogger _logger;
 
     public IndexingHostedService(
-        IndexingOptions options,
-        IndexingHandler handler,
+        ImagesIndexingOptions options,
+        ImagesIndexingHandler handler,
         ILogger<IndexingHostedService> logger)
     {
         _options = options;

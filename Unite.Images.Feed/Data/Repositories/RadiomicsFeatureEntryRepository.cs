@@ -1,34 +1,34 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Unite.Data.Context;
 using Unite.Data.Entities.Images.Features;
-using Unite.Data.Services;
 using Unite.Images.Feed.Data.Models;
 
 namespace Unite.Images.Feed.Data.Repositories;
 
-public class FeatureOccurrenceRepository
+public class RadiomicsFeatureEntryRepository
 {
     private readonly DomainDbContext _dbContext;
-    private readonly FeatureRepository _featureRepository;
+    private readonly RadiomicsFeatureRepository _featureRepository;
 
 
-    public FeatureOccurrenceRepository(DomainDbContext dbContext)
+    public RadiomicsFeatureEntryRepository(DomainDbContext dbContext)
     {
         _dbContext = dbContext;
-        _featureRepository = new FeatureRepository(dbContext);
+        _featureRepository = new RadiomicsFeatureRepository(dbContext);
     }
 
 
-    public FeatureOccurrence Find(int analysedImageId, FeatureModel model)
+    public RadiomicsFeatureEntry Find(int analysedImageId, RadiomicsFeatureModel model)
     {
-        return _dbContext.Set<FeatureOccurrence>()
-            .Include(entity => entity.Feature)
+        return _dbContext.Set<RadiomicsFeatureEntry>()
+            .Include(entity => entity.Entity)
             .FirstOrDefault(entity =>
-                entity.AnalysedImageId == analysedImageId &&
-                entity.Feature.Name == model.Name
+                entity.AnalysedSampleId == analysedImageId &&
+                entity.Entity.Name == model.Name
         );
     }
 
-    public IEnumerable<FeatureOccurrence> CreateOrUpdate(int analysedImageId, IEnumerable<FeatureModel> models)
+    public IEnumerable<RadiomicsFeatureEntry> CreateOrUpdate(int analysedImageId, IEnumerable<RadiomicsFeatureModel> models)
     {
         RemoveRedundant(analysedImageId, models);
 
@@ -39,9 +39,9 @@ public class FeatureOccurrenceRepository
         return Enumerable.Concat(created, updated);
     }
 
-    public IEnumerable<FeatureOccurrence> CreateMissing(int analysedImageId, IEnumerable<FeatureModel> models)
+    public IEnumerable<RadiomicsFeatureEntry> CreateMissing(int analysedImageId, IEnumerable<RadiomicsFeatureModel> models)
     {
-        var entitiesToAdd = new List<FeatureOccurrence>();
+        var entitiesToAdd = new List<RadiomicsFeatureEntry>();
 
         foreach (var model in models)
         {
@@ -51,10 +51,10 @@ public class FeatureOccurrenceRepository
             {
                 var featureId = _featureRepository.FindOrCreate(model.Name).Id;
 
-                entity = new FeatureOccurrence()
+                entity = new RadiomicsFeatureEntry()
                 {
-                    AnalysedImageId = analysedImageId,
-                    FeatureId = featureId
+                    AnalysedSampleId = analysedImageId,
+                    EntityId = featureId
                 };
 
                 Map(model, ref entity);
@@ -72,9 +72,9 @@ public class FeatureOccurrenceRepository
         return entitiesToAdd;
     }
 
-    public IEnumerable<FeatureOccurrence> UpdateExisting(int analysedImageId, IEnumerable<FeatureModel> models)
+    public IEnumerable<RadiomicsFeatureEntry> UpdateExisting(int analysedImageId, IEnumerable<RadiomicsFeatureModel> models)
     {
-        var entitiesToUpdate = new List<FeatureOccurrence>();
+        var entitiesToUpdate = new List<RadiomicsFeatureEntry>();
 
         foreach (var model in models)
         {
@@ -97,13 +97,13 @@ public class FeatureOccurrenceRepository
         return entitiesToUpdate;
     }
 
-    public void RemoveRedundant(int analysedImageId, IEnumerable<FeatureModel> models)
+    public void RemoveRedundant(int analysedImageId, IEnumerable<RadiomicsFeatureModel> models)
     {
         var featureNames = models.Select(model => model.Name);
 
-        var entitiesToRemove = _dbContext.Set<FeatureOccurrence>()
-            .Include(entity => entity.Feature)
-            .Where(entity => entity.AnalysedImageId == analysedImageId && !featureNames.Contains(entity.Feature.Name))
+        var entitiesToRemove = _dbContext.Set<RadiomicsFeatureEntry>()
+            .Include(entity => entity.Entity)
+            .Where(entity => entity.AnalysedSampleId == analysedImageId && !featureNames.Contains(entity.Entity.Name))
             .ToArray();
 
         if (entitiesToRemove.Any())
@@ -114,7 +114,7 @@ public class FeatureOccurrenceRepository
     }
 
 
-    private void Map(in FeatureModel model, ref FeatureOccurrence entity)
+    private static void Map(in RadiomicsFeatureModel model, ref RadiomicsFeatureEntry entity)
     {
         entity.Value = model.Value;
     }

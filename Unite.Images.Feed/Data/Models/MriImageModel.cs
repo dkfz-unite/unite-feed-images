@@ -2,8 +2,6 @@
 
 public class MriImageModel : ImageModel
 {
-    public string ReferenceId { get; set; }
-
     public double? WholeTumor { get; set; }
     public double? ContrastEnhancing { get; set; }
     public double? NonContrastEnhancing { get; set; }

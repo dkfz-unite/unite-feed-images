@@ -1,31 +1,31 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Unite.Data.Entities.Images.Features;
-using Unite.Data.Services;
+using Unite.Data.Context;
+using Unite.Data.Entities.Images.Analysis;
 using Unite.Images.Feed.Data.Models;
 
 namespace Unite.Images.Feed.Data.Repositories;
 
-public class AnalysedImageRepository
+public class AnalysedSampleRepository
 {
     private readonly DomainDbContext _dbContext;
 
 
-    public AnalysedImageRepository(DomainDbContext dbContext)
+    public AnalysedSampleRepository(DomainDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
 
-    public AnalysedImage Find(int imageId, in ImageModel model)
+    public AnalysedSample Find(int imageId, in ImageModel model)
     {
         if (!string.IsNullOrWhiteSpace(model.Analysis.ReferenceId))
         {
             var referenceId = model.Analysis.ReferenceId;
 
-            return _dbContext.Set<AnalysedImage>()
+            return _dbContext.Set<AnalysedSample>()
                 .Include(entity => entity.Analysis)
                 .FirstOrDefault(entity =>
-                    entity.ImageId == imageId &&
+                    entity.TargetSampleId == imageId &&
                     entity.Analysis.ReferenceId == referenceId
                 );
         }
@@ -34,10 +34,10 @@ public class AnalysedImageRepository
             var analysisType = model.Analysis.Type;
             var analysisDate = model.Analysis.Date;
 
-            return _dbContext.Set<AnalysedImage>()
+            return _dbContext.Set<AnalysedSample>()
                 .Include(entity => entity.Analysis)
                 .FirstOrDefault(entity =>
-                    entity.ImageId == imageId &&
+                    entity.TargetSampleId == imageId &&
                     entity.Analysis.ReferenceId == null &&
                     entity.Analysis.TypeId == analysisType &&
                     entity.Analysis.Date == analysisDate
@@ -45,11 +45,11 @@ public class AnalysedImageRepository
         }
     }
 
-    public AnalysedImage Create(int imageId, in ImageModel model)
+    public AnalysedSample Create(int imageId, in ImageModel model)
     {
-        var entity = new AnalysedImage()
+        var entity = new AnalysedSample()
         {
-            ImageId = imageId
+            TargetSampleId = imageId
         };
 
         Map(model, ref entity);
@@ -60,7 +60,7 @@ public class AnalysedImageRepository
         return entity;
     }
 
-    public void Update(ref AnalysedImage entity, in ImageModel model)
+    public void Update(ref AnalysedSample entity, in ImageModel model)
     {
         Map(model, ref entity);
 
@@ -68,7 +68,7 @@ public class AnalysedImageRepository
         _dbContext.SaveChanges();
     }
 
-    public AnalysedImage CreateOrUpdate(int imageId, in ImageModel model)
+    public AnalysedSample CreateOrUpdate(int imageId, in ImageModel model)
     {
         var entity = Find(imageId, model);
 
@@ -85,7 +85,7 @@ public class AnalysedImageRepository
     }
 
 
-    private void Map(in ImageModel model, ref AnalysedImage entity)
+    private static void Map(in ImageModel model, ref AnalysedSample entity)
     {
         if (entity.Analysis == null)
         {
@@ -95,6 +95,7 @@ public class AnalysedImageRepository
         entity.Analysis.ReferenceId = model.Analysis.ReferenceId;
         entity.Analysis.TypeId = model.Analysis.Type;
         entity.Analysis.Date = model.Analysis.Date;
+        entity.Analysis.Day = model.Analysis.Day;
         entity.Analysis.Parameters = model.Analysis.Parameters;
     }
 }

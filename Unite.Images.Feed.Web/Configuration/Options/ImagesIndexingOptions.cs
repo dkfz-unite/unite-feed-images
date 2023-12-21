@@ -1,6 +1,6 @@
 ﻿namespace Unite.Images.Feed.Web.Configuration.Options;
 
-public class IndexingOptions
+public class ImagesIndexingOptions
 {
     /// <summary>
     /// Indexing bucket size

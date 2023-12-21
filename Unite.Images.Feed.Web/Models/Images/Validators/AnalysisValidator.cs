@@ -10,6 +10,11 @@ public class AnalysisValidator : AbstractValidator<AnalysisModel>
             .MaximumLength(255)
             .WithMessage("Maximum length is 255");
 
+        RuleFor(model => model.Day)
+            .GreaterThanOrEqualTo(0)
+            .When(model => model.Day.HasValue)
+            .WithMessage("Should be greater than or equal to 0");
+
         RuleFor(model => model.Parameters)
             .Must(parameters => parameters.Any(IsSet))
             .When(parameters => parameters != null)

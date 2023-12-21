@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using Unite.Data.Services;
-using Unite.Data.Services.Configuration.Options;
-using Unite.Data.Services.Tasks;
+using Unite.Data.Context.Configuration.Extensions;
+using Unite.Data.Context.Configuration.Options;
+using Unite.Data.Context.Services.Tasks;
 using Unite.Images.Feed.Data;
 using Unite.Images.Feed.Web.Configuration.Options;
 using Unite.Images.Feed.Web.Handlers;
@@ -10,9 +10,10 @@ using Unite.Images.Feed.Web.Models.Images;
 using Unite.Images.Feed.Web.Models.Images.Validators;
 using Unite.Images.Feed.Web.Services;
 using Unite.Images.Indices.Services;
+using Unite.Indices.Context;
+using Unite.Indices.Context.Configuration.Extensions;
+using Unite.Indices.Context.Configuration.Options;
 using Unite.Indices.Entities.Images;
-using Unite.Indices.Services;
-using Unite.Indices.Services.Configuration.Options;
 
 namespace Unite.Images.Feed.Web.Configuration.Extensions;
 
@@ -20,22 +21,40 @@ public static class ConfigurationExtensions
 {
     public static void Configure(this IServiceCollection services)
     {
-        services.AddTransient<ApiOptions>();
-        services.AddTransient<ISqlOptions, SqlOptions>();
-        services.AddTransient<IElasticOptions, ElasticOptions>();
-        services.AddTransient<IndexingOptions>();
+        var sqlOptions = new SqlOptions();
 
-        services.AddTransient<IValidator<ImageModel[]>, ImageModelsValidator>();
+        services.AddOptions();
+        services.AddDatabase();
+        services.AddDatabaseFactory(sqlOptions);
+        services.AddIndexServices();
+        services.AddValidators();
 
-        services.AddTransient<DomainDbContext>();
         services.AddTransient<ImageDataWriter>();
 
         services.AddTransient<ImageIndexingTasksService>();
         services.AddTransient<TasksProcessingService>();
 
         services.AddHostedService<IndexingHostedService>();
-        services.AddTransient<IndexingHandler>();
-        services.AddTransient<IIndexCreationService<ImageIndex>, ImageIndexCreationService>();
-        services.AddTransient<IIndexingService<ImageIndex>, ImagesIndexingService>();
+        services.AddTransient<ImagesIndexingOptions>();
+        services.AddTransient<ImagesIndexingHandler>();
+        services.AddTransient<ImageIndexCreationService>();
+        services.AddTransient<IIndexService<ImageIndex>, ImagesIndexService>();
+    }
+
+
+    private static IServiceCollection AddOptions(this IServiceCollection services)
+    {
+        services.AddTransient<ApiOptions>();
+        services.AddTransient<ISqlOptions, SqlOptions>();
+        services.AddTransient<IElasticOptions, ElasticOptions>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddValidators(this IServiceCollection services)
+    {
+        services.AddTransient<IValidator<ImageModel[]>, ImageModelsValidator>();
+
+        return services;
     }
 }
