@@ -158,9 +158,8 @@ public class ImageIndexCreationService
 
         return dbContext.Set<Specimen>()
             .AsNoTracking()
-            .IncludeTissue()
+            .IncludeMaterial()
             .IncludeMolecularData()
-            .IncludeDrugScreeningData()
             .Where(specimen => specimen.DonorId == donorId)
             .Where(Predicates.IsImageRelatedSpecimen)
             .ToArray();
@@ -211,13 +210,13 @@ public class ImageIndexCreationService
             .Where(treatment => treatment.DonorId == donorId)
             .Any();
 
-        index.Tissues = dbContext.Set<Specimen>()
+        index.Materials = dbContext.Set<Specimen>()
             .AsNoTracking()
             .Where(specimen => specimen.DonorId == donorId)
             .Where(Predicates.IsImageRelatedSpecimen)
             .Any();
 
-        index.TissuesMolecular = dbContext.Set<Specimen>()
+        index.MaterialsMolecular = dbContext.Set<Specimen>()
             .AsNoTracking()
             .Include(specimen => specimen.MolecularData)
             .Where(specimen => specimen.DonorId == donorId)
