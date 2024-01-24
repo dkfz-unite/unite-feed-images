@@ -34,7 +34,7 @@ To configure the application, change environment variables in either docker or [
 ### Docker Compose
 The easiest way to install the application is to use docker-compose:
 - Environment configuration and installation scripts: https://github.com/dkfz-unite/unite-environment
-- Donors data feed service configuration and installation scripts: https://github.com/dkfz-unite/unite-environment/tree/main/applications/unite-images-feed
+- Images data feed service configuration and installation scripts: https://github.com/dkfz-unite/unite-environment/tree/main/applications/unite-images-feed
 
 ### Docker
 The image of the service is available in our [registry](https://github.com/dkfz-unite/unite-images-feed/pkgs/container/unite-images-feed) for the following environments:
