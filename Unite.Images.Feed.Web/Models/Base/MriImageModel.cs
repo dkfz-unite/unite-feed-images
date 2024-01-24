@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Unite.Images.Feed.Web.Models.Images;
+namespace Unite.Images.Feed.Web.Models.Base;
 
 public class MriImageModel
 {

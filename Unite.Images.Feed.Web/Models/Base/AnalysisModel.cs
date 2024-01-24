@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using Unite.Data.Entities.Images.Analysis.Enums;
 
-namespace Unite.Images.Feed.Web.Models.Images;
+namespace Unite.Images.Feed.Web.Models.Base;
 
 public class AnalysisModel
 {

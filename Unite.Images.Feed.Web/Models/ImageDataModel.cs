@@ -1,8 +1,9 @@
 ﻿using System.Text.Json.Serialization;
+using Unite.Images.Feed.Web.Models.Base;
 
-namespace Unite.Images.Feed.Web.Models.Images;
+namespace Unite.Images.Feed.Web.Models;
 
-public class ImageModel
+public class ImageDataModel
 {
     private string _id;
     private string _donorId;

@@ -9,6 +9,7 @@ using Unite.Data.Entities.Genome.Analysis;
 using Unite.Data.Entities.Genome.Transcriptomics;
 using Unite.Data.Entities.Genome.Variants;
 using Unite.Data.Entities.Images;
+using Unite.Data.Entities.Images.Enums;
 using Unite.Data.Entities.Specimens;
 using Unite.Indices.Entities;
 using Unite.Indices.Entities.Images;
@@ -64,7 +65,7 @@ public class ImageIndexCreationService
     private ImageIndex CreateImageIndex(Image image)
     {
         var diagnosisDate = image.Donor.ClinicalData?.DiagnosisDate;
-         var stats = LoadGenomicStats(image.DonorId);
+        var stats = LoadGenomicStats(image.DonorId);
 
         var index = new ImageIndex();
 
@@ -74,7 +75,7 @@ public class ImageIndexCreationService
 
         index.Donor = CreateDonorIndex(image.DonorId);
         index.Specimens = CreateSpecimenIndices(image.DonorId, diagnosisDate);
-        index.Data = CreateDataIndex(image.DonorId);
+        index.Data = CreateDataIndex(image.TypeId, image.DonorId);
 
         index.NumberOfGenes = stats.NumberOfGenes;
         index.NumberOfSsms = stats.NumberOfSsms;
@@ -192,7 +193,7 @@ public class ImageIndexCreationService
     }
 
 
-    private DataIndex CreateDataIndex(int donorId)
+    private DataIndex CreateDataIndex(ImageType type, int donorId)
     {
         using var dbContext = _dbContextFactory.CreateDbContext();
 
@@ -200,28 +201,34 @@ public class ImageIndexCreationService
 
         var index = new DataIndex();
 
+        index.Donors = true;
+
         index.Clinical = dbContext.Set<ClinicalData>()
             .AsNoTracking()
-            .Where(clinicalData => clinicalData.DonorId == donorId)
+            .Where(entity => entity.DonorId == donorId)
             .Any();
 
         index.Treatments = dbContext.Set<Treatment>()
             .AsNoTracking()
-            .Where(treatment => treatment.DonorId == donorId)
+            .Where(entity => entity.DonorId == donorId)
             .Any();
+
+        index.Mris = type == ImageType.MRI;
+
+        index.Cts = type == ImageType.CT;
 
         index.Materials = dbContext.Set<Specimen>()
             .AsNoTracking()
-            .Where(specimen => specimen.DonorId == donorId)
             .Where(Predicates.IsImageRelatedSpecimen)
+            .Where(entity => entity.DonorId == donorId)
             .Any();
 
         index.MaterialsMolecular = dbContext.Set<Specimen>()
             .AsNoTracking()
-            .Include(specimen => specimen.MolecularData)
-            .Where(specimen => specimen.DonorId == donorId)
-            .Where(specimen => specimen.MolecularData != null)
+            .Include(entity => entity.MolecularData)
             .Where(Predicates.IsImageRelatedSpecimen)
+            .Where(entity => entity.DonorId == donorId)
+            .Where(entity => entity.MolecularData != null)
             .Any();
 
         index.Ssms = CheckVariants<SSM.Variant, SSM.VariantEntry>(specimenIds);

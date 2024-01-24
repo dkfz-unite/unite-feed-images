@@ -6,8 +6,8 @@ using Unite.Images.Feed.Data;
 using Unite.Images.Feed.Web.Configuration.Options;
 using Unite.Images.Feed.Web.Handlers;
 using Unite.Images.Feed.Web.HostedServices;
-using Unite.Images.Feed.Web.Models.Images;
-using Unite.Images.Feed.Web.Models.Images.Validators;
+using Unite.Images.Feed.Web.Models;
+using Unite.Images.Feed.Web.Models.Validators;
 using Unite.Images.Feed.Web.Services;
 using Unite.Images.Indices.Services;
 using Unite.Indices.Context;
@@ -29,7 +29,7 @@ public static class ConfigurationExtensions
         services.AddIndexServices();
         services.AddValidators();
 
-        services.AddTransient<ImageDataWriter>();
+        services.AddTransient<ImagesDataWriter>();
 
         services.AddTransient<ImageIndexingTasksService>();
         services.AddTransient<TasksProcessingService>();
@@ -53,7 +53,7 @@ public static class ConfigurationExtensions
 
     private static IServiceCollection AddValidators(this IServiceCollection services)
     {
-        services.AddTransient<IValidator<ImageModel[]>, ImageModelsValidator>();
+        services.AddTransient<IValidator<ImageDataModel[]>, ImageModelsValidator>();
 
         return services;
     }

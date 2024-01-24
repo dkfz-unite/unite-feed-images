@@ -1,4 +1,5 @@
-﻿using Unite.Images.Feed.Web.Configuration.Options;
+﻿using Unite.Essentials.Extensions;
+using Unite.Images.Feed.Web.Configuration.Options;
 using Unite.Images.Feed.Web.Handlers;
 
 namespace Unite.Images.Feed.Web.HostedServices;
@@ -34,7 +35,7 @@ public class IndexingHostedService : BackgroundService
         }
         catch (Exception exception)
         {
-            LogError(exception);
+            _logger.LogError("{error}", exception.GetShortMessage());
         }
 
         while (!cancellationToken.IsCancellationRequested)
@@ -45,22 +46,12 @@ public class IndexingHostedService : BackgroundService
             }
             catch (Exception exception)
             {
-                LogError(exception);
+                _logger.LogError("{error}", exception.GetShortMessage());
             }
             finally
             {
                 await Task.Delay(10000, cancellationToken);
             }
-        }
-    }
-
-    private void LogError(Exception exception)
-    {
-        _logger.LogError(exception.Message);
-
-        if (exception.InnerException != null)
-        {
-            _logger.LogError(exception.InnerException.Message);
         }
     }
 }

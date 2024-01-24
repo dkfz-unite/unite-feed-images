@@ -1,14 +1,16 @@
 ﻿using FluentValidation;
+using Unite.Images.Feed.Web.Models.Base;
+using Unite.Images.Feed.Web.Models.Base.Validators;
 
-namespace Unite.Images.Feed.Web.Models.Images.Validators;
+namespace Unite.Images.Feed.Web.Models.Validators;
 
-public class ImageModelValidator : AbstractValidator<ImageModel>
+public class ImageDataModelValidator : AbstractValidator<ImageDataModel>
 {
     private readonly IValidator<MriImageModel> _mriImageModelValidator;
     private readonly IValidator<CtImageModel> _ctImageModelValidator;
     private readonly IValidator<AnalysisModel> _imageAnalysisModelValidator;
 
-    public ImageModelValidator()
+    public ImageDataModelValidator()
     {
         _mriImageModelValidator = new MriImageModelValidator();
         _ctImageModelValidator = new CtImageModelValidator();
@@ -49,7 +51,7 @@ public class ImageModelValidator : AbstractValidator<ImageModel>
     }
 
 
-    private bool HaveModelSet(ImageModel model)
+    private bool HaveModelSet(ImageDataModel model)
     {
         return model.MriImage != null
             || model.CtImage != null;
@@ -57,14 +59,14 @@ public class ImageModelValidator : AbstractValidator<ImageModel>
 }
 
 
-public class ImageModelsValidator : AbstractValidator<ImageModel[]>
+public class ImageModelsValidator : AbstractValidator<ImageDataModel[]>
 {
-    private readonly IValidator<ImageModel> _imageModelValidator;
+    private readonly IValidator<ImageDataModel> _imageModelValidator;
 
 
     public ImageModelsValidator()
     {
-        _imageModelValidator = new ImageModelValidator();
+        _imageModelValidator = new ImageDataModelValidator();
 
 
         RuleForEach(model => model)

@@ -1,7 +1,5 @@
 # Image Data Models
-
-## Image
-Includes general data about the image
+Images upload data model.
 
 **`id`*** - Image identifier.
 - Type: _String_
@@ -26,12 +24,12 @@ Includes general data about the image
 - Example: `7`
 
 **`mri_image`*** - MRI image data.
-- Type: _Object([mri_image](https://github.com/dkfz-unite/unite-images-feed/blob/main/Docs/api-images-models-mri.md))_
+- Type: _Object([mri_image](./api-models-base-mri.md))_
 - Limitations - If set, at least one field has to be set
 - Example: `{...}`
 
 **`analysis`** - Image analysis and features data.
-- Type: _Object([analysis](https://github.com/dkfz-unite/unite-images-feed/blob/main/Docs/api-images-models-analysis.md))_
+- Type: _Object([analysis](./api-models-base-analysis.md))_
 - Limitations - If set, at least one field has to be set
 - Example: `{...}`
 

@@ -1,6 +1,6 @@
-﻿namespace Unite.Images.Feed.Data.Models.Audit;
+﻿namespace Unite.Images.Feed.Data;
 
-public class ImagesUploadAudit
+public class ImagesDataUploadAudit
 {
     public int DonorsCreated;
     public int ImagesCreated;
@@ -11,14 +11,11 @@ public class ImagesUploadAudit
 
     public override string ToString()
     {
-        var messages = new List<string>
-        {
+        return string.Join(Environment.NewLine,[
             $"{DonorsCreated} donors created",
             $"{ImagesCreated} images created",
             $"{ImagesUpdated} images updated",
             $"{ImagesAnalysed} image analysed"
-        };
-
-        return string.Join(Environment.NewLine, messages);
+        ]);
     }
 }

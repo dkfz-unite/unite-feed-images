@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Unite.Images.Feed.Web.Models.Images.Validators;
+namespace Unite.Images.Feed.Web.Models.Base.Validators;
 
 public class CtImageModelValidator : AbstractValidator<CtImageModel>
 {

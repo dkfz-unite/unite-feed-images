@@ -2,12 +2,11 @@
 using Unite.Data.Context;
 using Unite.Data.Context.Services;
 using Unite.Images.Feed.Data.Models;
-using Unite.Images.Feed.Data.Models.Audit;
 using Unite.Images.Feed.Data.Repositories;
 
 namespace Unite.Images.Feed.Data;
 
-public class ImageDataWriter : DataWriter<ImageModel, ImagesUploadAudit>
+public class ImagesDataWriter : DataWriter<ImageModel, ImagesDataUploadAudit>
 {
     private readonly DonorRepository _donorRepository;
     private readonly ImageRepository _imageRepository;
@@ -15,7 +14,7 @@ public class ImageDataWriter : DataWriter<ImageModel, ImagesUploadAudit>
     private readonly RadiomicsFeatureEntryRepository _featureOccurrenceRepository;
 
 
-    public ImageDataWriter(IDbContextFactory<DomainDbContext> dbContextFactory) : base(dbContextFactory)
+    public ImagesDataWriter(IDbContextFactory<DomainDbContext> dbContextFactory) : base(dbContextFactory)
     {
         var dbContext = dbContextFactory.CreateDbContext();
         
@@ -26,7 +25,7 @@ public class ImageDataWriter : DataWriter<ImageModel, ImagesUploadAudit>
     }
 
 
-    protected override void ProcessModel(ImageModel model, ref ImagesUploadAudit audit)
+    protected override void ProcessModel(ImageModel model, ref ImagesDataUploadAudit audit)
     {
         var donor = _donorRepository.Find(model.Donor);
 

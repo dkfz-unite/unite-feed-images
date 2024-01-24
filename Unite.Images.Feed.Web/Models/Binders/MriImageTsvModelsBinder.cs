@@ -1,20 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Unite.Essentials.Tsv;
 
-namespace Unite.Images.Feed.Web.Models.Images.Binders;
+namespace Unite.Images.Feed.Web.Models.Binders;
 
-public class MriImageTsvModelBinder : IModelBinder
+public class MriImageTsvModelsBinder : IModelBinder
 {
     public async Task BindModelAsync(ModelBindingContext bindingContext)
     {
-        if (bindingContext == null)
-            throw new ArgumentNullException(nameof(bindingContext));
+        ArgumentNullException.ThrowIfNull(bindingContext);
 
         using var reader = new StreamReader(bindingContext.HttpContext.Request.Body);
 
         var tsv = await reader.ReadToEndAsync();
 
-        var map = new ClassMap<ImageModel>()
+        var map = new ClassMap<ImageDataModel>()
             .Map(entity => entity.Id, "id")
             .Map(entity => entity.DonorId, "donor_id")
             .Map(entity => entity.ScanningDate, "scanning_date")
@@ -35,9 +34,8 @@ public class MriImageTsvModelBinder : IModelBinder
             .Map(entity => entity.MriImage.MedianMttCe, "median_mtt_ce")
             .Map(entity => entity.MriImage.MedianMttEdema, "median_mtt_edema");
 
-        var model = TsvReader.Read(tsv, map).ToArray();
+        var models = TsvReader.Read(tsv, map).ToArray();
 
-        bindingContext.Result = ModelBindingResult.Success(model);
+        bindingContext.Result = ModelBindingResult.Success(models);
     }
 }
-

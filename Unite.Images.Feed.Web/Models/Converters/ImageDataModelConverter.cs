@@ -1,8 +1,10 @@
-﻿namespace Unite.Images.Feed.Web.Models.Images.Converters;
+﻿using Unite.Images.Feed.Web.Models.Base;
 
-public class ImageModelConverter
+namespace Unite.Images.Feed.Web.Models.Converters;
+
+public class ImageDataModelConverter
 {
-    public Data.Models.ImageModel Convert(ImageModel source)
+    public Data.Models.ImageModel Convert(ImageDataModel source)
     {
         var target = GetImageModel(source);
 
@@ -23,7 +25,7 @@ public class ImageModelConverter
         };
     }
 
-    private static Data.Models.ImageModel GetImageModel(ImageModel source)
+    private static Data.Models.ImageModel GetImageModel(ImageDataModel source)
     {
         if (source.MriImage != null)
         {
@@ -39,7 +41,7 @@ public class ImageModelConverter
         }
     }
 
-    private static Data.Models.MriImageModel GetMriImageModel(ImageModel source)
+    private static Data.Models.MriImageModel GetMriImageModel(ImageDataModel source)
     {
         return new Data.Models.MriImageModel
         {

@@ -1,12 +1,10 @@
 # Image Analysis Data Model
-
-## Analysis
-Includes data about image analysis
+Includes data about image analysis.
 
 **`id`*** - Image analysis identifier.
 - Type: _String_
 - Limitations: Maximum length 255
-- Example: `"IM1AN1"`
+- Example: `"IMA1"`
 
 **`type`** - Image analysis type.
 - Type: _String_
@@ -20,7 +18,7 @@ Includes data about image analysis
 - Value type: _String_
 - Value limitations: Not null
 - Limitations - If set, at least one field has to be set; all field should be unique
-- Example: `{ "Key1": "Value1" }`
+- Example: `{ "key1": "value1" }`
 
 **`features`** - Image features revealed during the analysis.
 - Type: _Object(Dictionary)_
@@ -29,7 +27,7 @@ Includes data about image analysis
 - Value type: _String_
 - Value limitations: Not null
 - Limitations - If set, at least one field has to be set; all fields should be unique
-- Example: `{ "Key1": "Value1" }`
+- Example: `{ "key1": "value1" }`
 
 #### Analysis Type
 Supported analysis types are:

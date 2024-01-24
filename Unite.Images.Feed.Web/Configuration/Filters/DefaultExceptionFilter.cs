@@ -16,7 +16,7 @@ public class DefaultExceptionFilter : IExceptionFilter
 
     public void OnException(ExceptionContext context)
     {
-        _logger.LogError(context.Exception, context.Exception.Message);
+        _logger.LogError(context.Exception, "{error}", context.Exception.Message);
 
         context.Result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
     }
