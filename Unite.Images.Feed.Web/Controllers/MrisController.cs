@@ -21,9 +21,9 @@ public class MrisController : ImagesControllerBase
 
     [HttpPost("tsv")]
     [Consumes("text/tab-separated-values")]
-    public IActionResult PostTsv([ModelBinder(typeof(MriImageTsvModelsBinder))]ImageDataModel[] models)
+    public IActionResult PostTsv([ModelBinder(typeof(MriImagesTsvModelsBinder))]ImageDataModel[] models)
     {
-        var dataModels = models.Select(_converter.Convert).ToArray();
+        var dataModels = _converter.Convert(models);
 
         return PostData(dataModels);
     }

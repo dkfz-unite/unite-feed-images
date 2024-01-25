@@ -3,7 +3,7 @@ using Unite.Essentials.Tsv;
 
 namespace Unite.Images.Feed.Web.Models.Binders;
 
-public class MriImageTsvModelsBinder : IModelBinder
+public class MriImagesTsvModelsBinder : IModelBinder
 {
     public async Task BindModelAsync(ModelBindingContext bindingContext)
     {

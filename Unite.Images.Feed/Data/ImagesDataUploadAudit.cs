@@ -15,7 +15,7 @@ public class ImagesDataUploadAudit
             $"{DonorsCreated} donors created",
             $"{ImagesCreated} images created",
             $"{ImagesUpdated} images updated",
-            $"{ImagesAnalysed} image analysed"
+            $"{ImagesAnalysed} images analysed"
         ]);
     }
 }

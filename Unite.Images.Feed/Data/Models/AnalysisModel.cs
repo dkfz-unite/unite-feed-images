@@ -8,7 +8,7 @@ public class AnalysisModel
     public AnalysisType? Type { get; set; }
     public DateOnly? Date { get; set; }
     public int? Day { get; set; }
+    
     public Dictionary<string, string> Parameters { get; set; }
-
     public IEnumerable<RadiomicsFeatureModel> RadiomicsFeatures { get; set; }
 }

@@ -22,7 +22,7 @@ public class ImagesController : ImagesControllerBase
     [Consumes("application/json")]
     public IActionResult Post([FromBody]ImageDataModel[] models)
     {
-        var dataModels = models.Select(_converter.Convert).ToArray();
+        var dataModels = _converter.Convert(models);
 
         return PostData(dataModels);
     }

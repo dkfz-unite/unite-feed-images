@@ -6,17 +6,12 @@ namespace Unite.Images.Feed.Web.Models.Validators;
 
 public class ImageDataModelValidator : AbstractValidator<ImageDataModel>
 {
-    private readonly IValidator<MriImageModel> _mriImageModelValidator;
-    private readonly IValidator<CtImageModel> _ctImageModelValidator;
-    private readonly IValidator<AnalysisModel> _imageAnalysisModelValidator;
+    private readonly IValidator<MriImageModel> _mriImageModelValidator = new MriImageModelValidator();
+    private readonly IValidator<CtImageModel> _ctImageModelValidator = new CtImageModelValidator();
+    private readonly IValidator<AnalysisModel> _imageAnalysisModelValidator = new AnalysisValidator();
 
     public ImageDataModelValidator()
     {
-        _mriImageModelValidator = new MriImageModelValidator();
-        _ctImageModelValidator = new CtImageModelValidator();
-        _imageAnalysisModelValidator = new AnalysisValidator();
-
-
         RuleFor(model => model.Id)
             .NotEmpty()
             .WithMessage("Should not be empty");
@@ -25,7 +20,6 @@ public class ImageDataModelValidator : AbstractValidator<ImageDataModel>
             .MaximumLength(255)
             .WithMessage("Maximum length is 255");
 
-
         RuleFor(model => model.DonorId)
             .NotEmpty()
             .WithMessage("Should not be empty");
@@ -33,7 +27,6 @@ public class ImageDataModelValidator : AbstractValidator<ImageDataModel>
         RuleFor(model => model.DonorId)
             .MaximumLength(255)
             .WithMessage("Maximum length is 255");
-
 
         RuleFor(model => model)
             .Must(HaveModelSet)
@@ -45,11 +38,9 @@ public class ImageDataModelValidator : AbstractValidator<ImageDataModel>
         RuleFor(model => model.CtImage)
             .SetValidator(_ctImageModelValidator);
 
-
         RuleFor(model => model.Analysis)
             .SetValidator(_imageAnalysisModelValidator);
     }
-
 
     private bool HaveModelSet(ImageDataModel model)
     {
@@ -61,15 +52,15 @@ public class ImageDataModelValidator : AbstractValidator<ImageDataModel>
 
 public class ImageModelsValidator : AbstractValidator<ImageDataModel[]>
 {
-    private readonly IValidator<ImageDataModel> _imageModelValidator;
-
+    private readonly IValidator<ImageDataModel> _modelValidator = new ImageDataModelValidator();
 
     public ImageModelsValidator()
     {
-        _imageModelValidator = new ImageDataModelValidator();
+        RuleFor(models => models)
+            .Must(models => models.Any())
+            .WithMessage("Should not be empty");
 
-
-        RuleForEach(model => model)
-            .SetValidator(_imageModelValidator);
+        RuleForEach(models => models)
+            .SetValidator(_modelValidator);
     }
 }

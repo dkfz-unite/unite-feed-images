@@ -11,7 +11,7 @@ public class ImagesControllerBase : Controller
     protected readonly ImageIndexingTasksService _indexingTasksService;
     protected readonly ILogger _logger;
 
-    protected readonly ImageDataModelConverter _converter;
+    protected readonly ImageDataModelsConverter _converter = new();
 
     public ImagesControllerBase(
         ImagesDataWriter dataWriter, 
@@ -21,8 +21,6 @@ public class ImagesControllerBase : Controller
         _dataWriter = dataWriter;
         _indexingTasksService = indexingTasksService;
         _logger = logger;
-
-        _converter = new ImageDataModelConverter();
     }
 
     protected IActionResult PostData(Data.Models.ImageModel[] models)
