@@ -38,43 +38,41 @@ Supported formats are:
 ##### json - application/json
 ```json
 [
-    {
-        "id": "IM1",
-        "donor_id": "DO1",
-        "scanning_date": null,
-        "scanning_day": 14,
-        "mri_image": {
-            "whole_tumor": 111.393,
-            "contrast_enhancing": 902.000,
-            "non_contrast_enhancing": 102.683,
-            "median_adc_tumor": 1314.861,
-            "median_adc_ce": 1598.304,
-            "median_adc_edema": 1299.114,
-            "median_cbf_tumor": 23.221,
-            "median_cbf_ce": 23.221,
-            "median_cbf_edema": 23.221,
-            "median_cbv_tumor": 311.923,
-            "median_cbv_ce": 359.912,
-            "median_cbv_edema": 327.919,
-            "median_mtt_tumor": 2599.365,
-            "median_mtt_ce": 2791.318,
-            "median_mtt_edema": 2631.357
+  {
+    "id": "MRI1",
+    "donor_id": "Donor1",
+    "scanning_date": "2020-01-07",
+    "scanning_day": 14,
+    "mri_image": {
+        "whole_tumor": 111.393,
+        "contrast_enhancing": 902.000,
+        "non_contrast_enhancing": 102.683,
+        "median_adc_tumor": 1314.861083984375,
+        "median_adc_ce": 1598.30419921875,
+        "median_adc_edema": 1299.1142578125,
+        "median_cbf_tumor": 23.221034049987793,
+        "median_cbf_ce": 23.221034049987793,
+        "median_cbf_edema": 23.221034049987793,
+        "median_cbv_tumor": 311.923828125,
+        "median_cbv_ce": 359.912109375,
+        "median_cbv_edema": 327.919921875,
+        "median_mtt_tumor": 2599.365234375,
+        "median_mtt_ce": 2791.318359375,
+        "median_mtt_edema": 2631.357421875
+    },
+    "analysis": {
+        "id": "MRI1-Analysis1",
+        "type": "RFE",
+        "parameters": {
+            "param_a1": "value_a1",
+            "param_b2": "value_b2"
         },
-        "analysis": {
-            "id": "IMA1",
-            "type": "RFE",
-            "parameters": {
-                "key1": "value1",
-                "key2": "value2",
-                "key3": "value3"
-            },
-            "features": {
-                "key1": "value1",
-                "key2": "value2",
-                "key3": "value3"
-            }
+        "features": {
+            "feature_a1": "feature_a1",
+            "feature_b2": "feature_b2"
         }
     }
+  }
 ]
 ```
 Fields description can be found [here](api-models-images.md).
@@ -98,8 +96,7 @@ For `json` upload see [POST: api/images](#post-apiimages).
 ##### tsv - text/tab-separated-values
 ```tsv
 id	donor_id	scanning_date	scanning_day	whole_tumor	contrast_enhancing	non_contrast_enhancing	median_adc_tumor	median_adc_ce	median_adc_edema	median_cbf_tumor	median_cbf_ce	median_cbf_edema	median_cbv_tumor	median_cbv_ce	median_cbv_edema	median_mtt_tumor	median_mtt_ce	median_mtt_edema
-IM1	DO1		14	111.393	902.000	102.683	1314.861	1598.304	1299.114	23.221	23.221	23.221	311.923	359.912	327.919	2599.365	2791.318	2631.357
-
+MRI1	Donor2	2020-01-07	14	111.393	902.000	102.683	1314.861083984375	1598.30419921875	1299.1142578125	23.221034049987793	23.221034049987793	23.221034049987793	311.923828125	359.912109375	327.919921875	2599.365234375	2791.318359375	2631.357421875
 ```
 Fields description can be found [here](api-models-images.md).
 
