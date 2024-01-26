@@ -1,6 +1,9 @@
 # Image Data Models
 Images upload data model.
 
+>[!NOTE]
+> All exact dates are hiddent and protected. Relative dates are shown instead, if calculation was possible.
+
 **`id`*** - Image identifier.
 - Type: _String_
 - Limitations: Maximum length 255
@@ -12,15 +15,14 @@ Images upload data model.
 - Example: `"Donor1"`
 
 **`scanning_date`** - Date, when image was created.
-- Note: It's hidden and protected. Relative date is shown instead, if calculation was possible.
 - Type: _String_
 - Format: "YYYY-MM-DD"
-- Limitations: Only either 'ScanningDate' or 'ScanningDay' can be set at once, not both
+- Limitations: Only either 'scanning_date' or 'scanning_day' can be set at once, not both
 - Example: `"2020-01-07"`
 
 **`scanning_day`** - Relative number of days since diagnosis statement, when image was created.
 - Type: _Number_
-- Limitations: Integer, greater or equal to 0, only either 'ScanningDate' or 'ScanningDay' can be set at once, not both
+- Limitations: Integer, greater or equal to 1, only either 'scanning_date' or 'scanning_day' can be set at once, not both
 - Example: `7`
 
 **`mri_image`*** - MRI image data.

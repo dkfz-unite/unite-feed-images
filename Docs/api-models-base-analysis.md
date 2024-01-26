@@ -1,6 +1,9 @@
 # Image Analysis Data Model
 Includes data about image analysis.
 
+>[!NOTE]
+> All exact dates are hiddent and protected. Relative dates are shown instead, if calculation was possible.
+
 **`id`*** - Image analysis identifier.
 - Type: _String_
 - Limitations: Maximum length 255
@@ -10,6 +13,17 @@ Includes data about image analysis.
 - Type: _String_
 - Possible values: `"RFE"`
 - Example: `"RFE"`
+
+**`date`** - Image analysis date.
+- Type: _String_
+- Format: "YYYY-MM-DD"
+- Limitations: Only either 'date' or 'day' can be set at once, not both 
+- Example: `"2019-01-01"`
+
+**`day`** - Relative number of days since diagnosis statement, when analysis was performed.
+- Type: _Number_
+- Limitations:  Integer, greater or equal to 1, only either 'date' or 'day' can be set at once, not both
+- Example: `1`
 
 **`parameters`** - Image analysis parameters.
 - Type: _Object(Dictionary)_

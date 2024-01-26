@@ -10,16 +10,25 @@ public class AnalysisValidator : AbstractValidator<AnalysisModel>
             .MaximumLength(255)
             .WithMessage("Maximum length is 255");
 
-        RuleFor(model => model.Day)
-            .GreaterThanOrEqualTo(0)
+        RuleFor(model => model.Date)
+            .Empty()
             .When(model => model.Day.HasValue)
-            .WithMessage("Should be greater than or equal to 0");
+            .WithMessage("Either exact 'date' or relative 'day' should be set, not both");
+
+        RuleFor(model => model.Day)
+            .Empty()
+            .When(model => model.Date.HasValue)
+            .WithMessage("Either exact 'date' or relative 'day' should be set, not both");
+
+        RuleFor(model => model.Day)
+            .GreaterThanOrEqualTo(1)
+            .When(model => model.Day.HasValue)
+            .WithMessage("Should be greater than or equal to 1");
 
         RuleFor(model => model.Parameters)
             .Must(parameters => parameters.Any(IsSet))
             .When(parameters => parameters != null)
             .WithMessage("At least one parameter should be set");
-
 
         RuleFor(model => model.Features)
             .NotEmpty()

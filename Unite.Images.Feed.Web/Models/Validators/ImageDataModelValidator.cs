@@ -28,6 +28,21 @@ public class ImageDataModelValidator : AbstractValidator<ImageDataModel>
             .MaximumLength(255)
             .WithMessage("Maximum length is 255");
 
+        RuleFor(model => model.ScanningDate)
+            .Empty()
+            .When(model => model.ScanningDay.HasValue)
+            .WithMessage("Either exact 'date' or relative 'day' should be set, not both");
+
+        RuleFor(model => model.ScanningDay)
+            .Empty()
+            .When(model => model.ScanningDate.HasValue)
+            .WithMessage("Either exact 'date' or relative 'day' should be set, not both");
+
+        RuleFor(model => model.ScanningDay)
+            .GreaterThanOrEqualTo(1)
+            .When(model => model.ScanningDay.HasValue)
+            .WithMessage("Should be greater than or equal to 1");
+
         RuleFor(model => model)
             .Must(HaveModelSet)
             .WithMessage("Specific image data (MriImage or CtImage) has to be set");
