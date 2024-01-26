@@ -4,7 +4,7 @@ Includes data about image analysis.
 **`id`*** - Image analysis identifier.
 - Type: _String_
 - Limitations: Maximum length 255
-- Example: `"IMA1"`
+- Example: `"MRI1-Analysis1"`
 
 **`type`** - Image analysis type.
 - Type: _String_
