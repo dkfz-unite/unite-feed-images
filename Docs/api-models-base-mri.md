@@ -9,7 +9,7 @@ Includes MRI image data.
 **`contrast_enhancing`** - Contrast enhancing volume in cm³.
 - Type: _Number_
 - Limitations: Float, greater or equal to 0
-- Example: `902`
+- Example: `902.000`
 
 **`non_contrast_enhancing`** - Non contrast enhancing volume in cm³.
 - Type: _Number_
