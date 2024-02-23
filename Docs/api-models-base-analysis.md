@@ -34,7 +34,7 @@ Includes data about image analysis.
 - Limitations - If set, at least one field has to be set; all field should be unique
 - Example: `{ "key1": "value1" }`
 
-**`features`** - Image features revealed during the analysis.
+**`features`*** - Image features revealed during the analysis.
 - Type: _Object(Dictionary)_
 - Key type: _String_
 - Key limitations: Maximum length 255
