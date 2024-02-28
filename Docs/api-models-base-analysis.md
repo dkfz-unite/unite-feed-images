@@ -7,7 +7,7 @@ Includes data about image analysis.
 **`id`*** - Image analysis identifier.
 - Type: _String_
 - Limitations: Maximum length 255
-- Example: `"MRI1-Analysis1"`
+- Example: `"Analysis1"`
 
 **`type`** - Image analysis type.
 - Type: _String_
@@ -32,7 +32,7 @@ Includes data about image analysis.
 - Value type: _String_
 - Value limitations: Not null
 - Limitations - If set, at least one field has to be set; all field should be unique
-- Example: `{ "key1": "value1" }`
+- Example: `{ "param_1": "value_1" }`
 
 **`features`*** - Image features revealed during the analysis.
 - Type: _Object(Dictionary)_
@@ -41,7 +41,7 @@ Includes data about image analysis.
 - Value type: _String_
 - Value limitations: Not null
 - Limitations - If set, at least one field has to be set; all fields should be unique
-- Example: `{ "key1": "value1" }`
+- Example: `{ "feature_1": "value_1" }`
 
 #### Analysis Type
 Supported analysis types are:
