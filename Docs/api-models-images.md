@@ -7,7 +7,7 @@ Images upload data model.
 **`id`*** - Image identifier.
 - Type: _String_
 - Limitations: Maximum length 255
-- Example: `"IM1"`
+- Example: `"MRI1"`
 
 **`donor_id`*** - Image donor identifier.
 - Type: _String_
