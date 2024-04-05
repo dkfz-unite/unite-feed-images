@@ -13,9 +13,10 @@ namespace Unite.Images.Feed.Web.Controllers;
 public class MrisController : ImagesControllerBase
 {
     public MrisController(
-        ImagesDataWriter dataWriter, 
-        ImageIndexingTasksService indexingTasksService, 
-        ILogger<MrisController> logger) : base(dataWriter, indexingTasksService, logger)
+        ImagesDataWriter dataWriter,
+        ImagesDataRemover dataRemover,
+        ImageIndexingTasksService indexingTasksService,
+        ILogger<MrisController> logger) : base(dataWriter, dataRemover, indexingTasksService, logger)
     {
     }
 

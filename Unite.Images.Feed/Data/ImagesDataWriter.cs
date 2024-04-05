@@ -8,22 +8,24 @@ namespace Unite.Images.Feed.Data;
 
 public class ImagesDataWriter : DataWriter<ImageModel, ImagesDataUploadAudit>
 {
-    private readonly DonorRepository _donorRepository;
-    private readonly ImageRepository _imageRepository;
-    private readonly AnalysedSampleRepository _analysedImageRepository;
-    private readonly RadiomicsFeatureEntryRepository _featureOccurrenceRepository;
+    private DonorRepository _donorRepository;
+    private ImageRepository _imageRepository;
+    private AnalysedSampleRepository _analysedImageRepository;
+    private RadiomicsFeatureEntryRepository _featureOccurrenceRepository;
 
 
     public ImagesDataWriter(IDbContextFactory<DomainDbContext> dbContextFactory) : base(dbContextFactory)
     {
-        var dbContext = dbContextFactory.CreateDbContext();
-        
+    }
+
+
+    protected override void Initialize(DomainDbContext dbContext)
+    {
         _donorRepository = new DonorRepository(dbContext);
         _imageRepository = new ImageRepository(dbContext);
         _analysedImageRepository = new AnalysedSampleRepository(dbContext);
         _featureOccurrenceRepository = new RadiomicsFeatureEntryRepository(dbContext);
     }
-
 
     protected override void ProcessModel(ImageModel model, ref ImagesDataUploadAudit audit)
     {

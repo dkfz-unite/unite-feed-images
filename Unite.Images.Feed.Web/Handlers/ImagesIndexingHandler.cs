@@ -45,7 +45,7 @@ public class ImagesIndexingHandler
 
         _taskProcessingService.Process(IndexingTaskType.Image, bucketSize, (tasks) =>
         {
-            if (_taskProcessingService.HasSubmissionTasks() || _taskProcessingService.HasAnnotationTasks())
+            if (_taskProcessingService.HasTasks(WorkerType.Submission) || _taskProcessingService.HasTasks(WorkerType.Annotation))
             {
                 return false;
             }
@@ -54,9 +54,7 @@ public class ImagesIndexingHandler
 
             stopwatch.Restart();
 
-            var grouped = tasks.DistinctBy(task => task.Target);
-
-            var indices = grouped.Select(task =>
+            var indices = tasks.Select(task =>
             {
                 var id = int.Parse(task.Target);
 

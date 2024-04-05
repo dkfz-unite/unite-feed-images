@@ -13,8 +13,9 @@ public class ImagesController : ImagesControllerBase
 {
     public ImagesController(
         ImagesDataWriter dataWriter,
+        ImagesDataRemover dataRemover,
         ImageIndexingTasksService indexingTasksService,
-        ILogger<ImagesController> logger) : base(dataWriter, indexingTasksService, logger)
+        ILogger<ImagesController> logger) : base(dataWriter, dataRemover, indexingTasksService, logger)
     {
     }
 
@@ -25,5 +26,11 @@ public class ImagesController : ImagesControllerBase
         var dataModels = _converter.Convert(models);
 
         return PostData(dataModels);
+    }
+
+    [HttpDelete("{id}")]
+    public IActionResult Delete(int id)
+    {
+        return DeleteData(id);
     }
 }

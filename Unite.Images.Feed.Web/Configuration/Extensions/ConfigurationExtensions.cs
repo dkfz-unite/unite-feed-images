@@ -30,6 +30,7 @@ public static class ConfigurationExtensions
         services.AddValidators();
 
         services.AddTransient<ImagesDataWriter>();
+        services.AddTransient<ImagesDataRemover>();
 
         services.AddTransient<ImageIndexingTasksService>();
         services.AddTransient<TasksProcessingService>();

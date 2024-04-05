@@ -43,6 +43,7 @@ public class ImageIndexingTasksService : IndexingTaskService<Image, int>
     {
         IterateEntities<Image, int>(image => imageIds.Contains(image.Id), image => image.Id, images =>
         {
+            CreateProjectIndexingTasks(images);
             CreateDonorIndexingTasks(images);
             CreateImageIndexingTasks(images);
             CreateSpecimenIndexingTasks(images);
@@ -51,6 +52,11 @@ public class ImageIndexingTasksService : IndexingTaskService<Image, int>
         });
     }
 
+
+    protected override IEnumerable<int> LoadRelatedProjects(IEnumerable<int> keys)
+    {
+        return [];
+    }
 
     protected override IEnumerable<int> LoadRelatedDonors(IEnumerable<int> keys)
     {
