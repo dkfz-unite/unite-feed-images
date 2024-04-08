@@ -5,6 +5,7 @@ using Unite.Images.Feed.Web.Configuration.Constants;
 using Unite.Images.Feed.Web.Models;
 using Unite.Images.Feed.Web.Models.Binders;
 using Unite.Images.Feed.Web.Services;
+using Unite.Images.Indices.Services;
 
 namespace Unite.Images.Feed.Web.Controllers;
 
@@ -15,8 +16,9 @@ public class MrisController : ImagesControllerBase
     public MrisController(
         ImagesDataWriter dataWriter,
         ImagesDataRemover dataRemover,
+        ImageIndexRemovalService indexRemover,
         ImageIndexingTasksService indexingTasksService,
-        ILogger<MrisController> logger) : base(dataWriter, dataRemover, indexingTasksService, logger)
+        ILogger<MrisController> logger) : base(dataWriter, dataRemover, indexRemover, indexingTasksService, logger)
     {
     }
 

@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Unite.Images.Feed.Data;
-using Unite.Images.Feed.Data.Exceptions;
 using Unite.Images.Feed.Web.Models.Converters;
 using Unite.Images.Feed.Web.Services;
+using Unite.Images.Indices.Services;
 
 namespace Unite.Images.Feed.Web.Controllers;
 
@@ -10,6 +10,7 @@ public class ImagesControllerBase : Controller
 {
     protected readonly ImagesDataWriter _dataWriter;
     protected readonly ImagesDataRemover _dataRemover;
+    protected readonly ImageIndexRemovalService _indexRemover;
     protected readonly ImageIndexingTasksService _indexingTasksService;
     protected readonly ILogger _logger;
 
@@ -18,11 +19,13 @@ public class ImagesControllerBase : Controller
     public ImagesControllerBase(
         ImagesDataWriter dataWriter,
         ImagesDataRemover dataRemover,
+        ImageIndexRemovalService indexRemover,
         ImageIndexingTasksService indexingTasksService,
         ILogger<ImagesControllerBase> logger)
     {
         _dataWriter = dataWriter;
         _dataRemover = dataRemover;
+        _indexRemover = indexRemover;
         _indexingTasksService = indexingTasksService;
         _logger = logger;
     }
@@ -40,27 +43,25 @@ public class ImagesControllerBase : Controller
 
     protected IActionResult DeleteData(int id)
     {
-        try
+        var image = _dataRemover.Find(id);
+
+        if (image != null)
         {
             _indexingTasksService.ChangeStatus(false);
-
             _indexingTasksService.PopulateTasks([id]);
+            _indexRemover.DeleteIndex(id);
+            _dataRemover.SaveData(image);
+            _indexingTasksService.ChangeStatus(true);
 
-            _dataRemover.SaveData(id);
-
-            _logger.LogInformation("Deleted specimen `{id}`", id);
+            _logger.LogInformation("Image `{id}` has been deleted", id);
 
             return Ok();
         }
-        catch (NotFoundException exception)
+        else
         {
-            _logger.LogWarning("{error}", exception.Message);
+            _logger.LogWarning("Wrong attempt to delete image `{id}`", id);
 
-            return BadRequest(exception.Message);
-        }
-        finally
-        {
-            _indexingTasksService.ChangeStatus(true);
+            return NotFound();
         }
     }
 }

@@ -26,6 +26,7 @@ public static class ConfigurationExtensions
         services.AddOptions();
         services.AddDatabase();
         services.AddDatabaseFactory(sqlOptions);
+        services.AddRepositories();
         services.AddIndexServices();
         services.AddValidators();
 
@@ -39,6 +40,7 @@ public static class ConfigurationExtensions
         services.AddTransient<ImagesIndexingOptions>();
         services.AddTransient<ImagesIndexingHandler>();
         services.AddTransient<ImageIndexCreationService>();
+        services.AddTransient<ImageIndexRemovalService>();
     }
 
 

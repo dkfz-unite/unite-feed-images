@@ -4,6 +4,7 @@ using Unite.Images.Feed.Data;
 using Unite.Images.Feed.Web.Configuration.Constants;
 using Unite.Images.Feed.Web.Models;
 using Unite.Images.Feed.Web.Services;
+using Unite.Images.Indices.Services;
 
 namespace Unite.Images.Feed.Web.Controllers;
 
@@ -14,8 +15,9 @@ public class ImagesController : ImagesControllerBase
     public ImagesController(
         ImagesDataWriter dataWriter,
         ImagesDataRemover dataRemover,
+        ImageIndexRemovalService indexRemover,
         ImageIndexingTasksService indexingTasksService,
-        ILogger<ImagesController> logger) : base(dataWriter, dataRemover, indexingTasksService, logger)
+        ILogger<ImagesController> logger) : base(dataWriter, dataRemover, indexRemover, indexingTasksService, logger)
     {
     }
 

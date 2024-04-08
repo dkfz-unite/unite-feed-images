@@ -20,6 +20,14 @@ internal class ImageRepository
     }
 
 
+    public Image Find(int id)
+    {
+        return _dbContext.Set<Image>()
+            .FirstOrDefault(entity =>
+                entity.Id == id
+            );
+    }
+
     public Image Find(int donorId, ImageModel model)
     {
         if (model is MriImageModel mriImage)
@@ -56,20 +64,13 @@ internal class ImageRepository
         }
     }
 
-    public void Delete(int id)
+    public void Delete(Image image)
     {
-        var image = _dbContext.Set<Image>()
-            .AsNoTracking()
-            .FirstOrDefault(entity => entity.Id == id);
-
-        if (image == null)
-        {
-            throw new NotFoundException($"Image with id '{id}' was not found");
-        }
-
         var analyses = _dbContext.Set<AnalysedSample>()
             .AsNoTracking()
-            .Where(entity => entity.TargetSampleId == id)
+            .Include(entity => entity.Analysis)
+            .Where(entity => entity.TargetSampleId == image.Id)
+            .Select(entity => entity.Analysis)
             .ToArray();
 
         _dbContext.Remove(image);
