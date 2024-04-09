@@ -71,6 +71,7 @@ internal class ImageRepository
             .Include(entity => entity.Analysis)
             .Where(entity => entity.TargetSampleId == image.Id)
             .Select(entity => entity.Analysis)
+            .Distinct()
             .ToArray();
 
         _dbContext.Remove(image);
