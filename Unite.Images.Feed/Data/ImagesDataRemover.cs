@@ -12,6 +12,9 @@ public class ImagesDataRemover : DataWriter<Image>
 
     public ImagesDataRemover(IDbContextFactory<DomainDbContext> dbContextFactory) : base(dbContextFactory)
     {
+        var dbContext = dbContextFactory.CreateDbContext();
+
+        Initialize(dbContext);
     }
 
 
