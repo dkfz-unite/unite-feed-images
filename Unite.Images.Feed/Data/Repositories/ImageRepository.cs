@@ -74,8 +74,8 @@ internal class ImageRepository
             .Distinct()
             .ToArray();
 
-        _dbContext.Remove(image);
         _dbContext.RemoveRange(analyses);
+        _dbContext.Remove(image);
         _dbContext.SaveChanges();
     }
 }
