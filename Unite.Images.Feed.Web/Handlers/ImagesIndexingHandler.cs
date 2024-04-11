@@ -47,11 +47,7 @@ public class ImagesIndexingHandler
         await _taskProcessingService.Process(IndexingTaskType.Image, bucketSize, async (tasks) =>
         {
             if (_taskProcessingService.HasTasks(WorkerType.Submission) || _taskProcessingService.HasTasks(WorkerType.Annotation))
-            {
                 return false;
-            }
-
-            _logger.LogInformation("Indexing {number} images", tasks.Length);
 
             stopwatch.Restart();
 
@@ -78,7 +74,7 @@ public class ImagesIndexingHandler
 
             stopwatch.Stop();
 
-            _logger.LogInformation("Indexing of {number} images completed in {time}s", tasks.Length, Math.Round(stopwatch.Elapsed.TotalSeconds, 2));
+            _logger.LogInformation("Indexed {number} images in {time}s", tasks.Length, Math.Round(stopwatch.Elapsed.TotalSeconds, 2));
 
             return true;
         });
