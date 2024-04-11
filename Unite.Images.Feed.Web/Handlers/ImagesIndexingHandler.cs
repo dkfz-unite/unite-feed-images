@@ -29,22 +29,22 @@ public class ImagesIndexingHandler
     }
 
 
-    public void Prepare()
+    public async Task Prepare()
     {
-        _indexingService.UpdateIndex().GetAwaiter().GetResult();
+        await _indexingService.UpdateIndex();
     }
 
-    public void Handle(int bucketSize)
+    public async Task Handle(int bucketSize)
     {
-        ProcessImageIndexingTasks(bucketSize);
+        await ProcessImageIndexingTasks(bucketSize);
     }
 
 
-    private void ProcessImageIndexingTasks(int bucketSize)
+    private async Task ProcessImageIndexingTasks(int bucketSize)
     {
         var stopwatch = new Stopwatch();
 
-        _taskProcessingService.Process(IndexingTaskType.Image, bucketSize, (tasks) =>
+        await _taskProcessingService.Process(IndexingTaskType.Image, bucketSize, async (tasks) =>
         {
             if (_taskProcessingService.HasTasks(WorkerType.Submission) || _taskProcessingService.HasTasks(WorkerType.Annotation))
             {
@@ -55,7 +55,7 @@ public class ImagesIndexingHandler
 
             stopwatch.Restart();
 
-            var indicesToRemove = new List<string>();
+            var indicesToDelete = new List<string>();
             var indicesToCreate = new List<ImageIndex>();
 
             tasks.ForEach(task =>
@@ -65,13 +65,16 @@ public class ImagesIndexingHandler
                 var index = _indexCreationService.CreateIndex(id);
 
                 if (index == null)
-                    indicesToRemove.Add($"{id}");
+                    indicesToDelete.Add($"{id}");
                 else
                     indicesToCreate.Add(index);
             });
 
-            _indexingService.DeleteRange(indicesToRemove);
-            _indexingService.AddRange(indicesToCreate);
+            if (indicesToDelete.Any())
+                await _indexingService.DeleteRange(indicesToDelete);
+
+            if (indicesToCreate.Any())
+                await _indexingService.AddRange(indicesToCreate);
 
             stopwatch.Stop();
 

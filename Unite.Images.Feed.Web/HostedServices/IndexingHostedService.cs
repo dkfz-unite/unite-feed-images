@@ -31,7 +31,7 @@ public class IndexingHostedService : BackgroundService
 
         try
         {
-            _handler.Prepare();
+            await _handler.Prepare();
         }
         catch (Exception exception)
         {
@@ -42,7 +42,7 @@ public class IndexingHostedService : BackgroundService
         {
             try
             {
-                _handler.Handle(_options.BucketSize);
+                await _handler.Handle(_options.BucketSize);
             }
             catch (Exception exception)
             {
