@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Unite.Data.Context.Services.Tasks;
 using Unite.Data.Entities.Tasks.Enums;
+using Unite.Essentials.Extensions;
 using Unite.Images.Indices.Services;
 using Unite.Indices.Context;
 using Unite.Indices.Entities.Images;
@@ -28,49 +29,52 @@ public class ImagesIndexingHandler
     }
 
 
-    public void Prepare()
+    public async Task Prepare()
     {
-        _indexingService.UpdateIndex().GetAwaiter().GetResult();
+        await _indexingService.UpdateIndex();
     }
 
-    public void Handle(int bucketSize)
+    public async Task Handle(int bucketSize)
     {
-        ProcessImageIndexingTasks(bucketSize);
+        await ProcessImageIndexingTasks(bucketSize);
     }
 
 
-    private void ProcessImageIndexingTasks(int bucketSize)
+    private async Task ProcessImageIndexingTasks(int bucketSize)
     {
         var stopwatch = new Stopwatch();
 
-        _taskProcessingService.Process(IndexingTaskType.Image, bucketSize, (tasks) =>
+        await _taskProcessingService.Process(IndexingTaskType.Image, bucketSize, async (tasks) =>
         {
-            if (_taskProcessingService.HasSubmissionTasks() || _taskProcessingService.HasAnnotationTasks())
-            {
+            if (_taskProcessingService.HasTasks(WorkerType.Submission) || _taskProcessingService.HasTasks(WorkerType.Annotation))
                 return false;
-            }
-
-            _logger.LogInformation("Indexing {number} images", tasks.Length);
 
             stopwatch.Restart();
 
-            var grouped = tasks.DistinctBy(task => task.Target);
+            var indicesToDelete = new List<string>();
+            var indicesToCreate = new List<ImageIndex>();
 
-            var indices = grouped.Select(task =>
+            tasks.ForEach(task =>
             {
                 var id = int.Parse(task.Target);
 
                 var index = _indexCreationService.CreateIndex(id);
 
-                return index;
+                if (index == null)
+                    indicesToDelete.Add($"{id}");
+                else
+                    indicesToCreate.Add(index);
+            });
 
-            }).ToArray();
+            if (indicesToDelete.Any())
+                await _indexingService.DeleteRange(indicesToDelete);
 
-            _indexingService.AddRange(indices);
+            if (indicesToCreate.Any())
+                await _indexingService.AddRange(indicesToCreate);
 
             stopwatch.Stop();
 
-            _logger.LogInformation("Indexing of {number} images completed in {time}s", tasks.Length, Math.Round(stopwatch.Elapsed.TotalSeconds, 2));
+            _logger.LogInformation("Indexed {number} images in {time}s", tasks.Length, Math.Round(stopwatch.Elapsed.TotalSeconds, 2));
 
             return true;
         });
