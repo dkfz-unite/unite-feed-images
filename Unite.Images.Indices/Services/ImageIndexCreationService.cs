@@ -6,11 +6,13 @@ using Unite.Data.Context.Repositories.Constants;
 using Unite.Data.Entities.Donors;
 using Unite.Data.Entities.Donors.Clinical;
 using Unite.Data.Entities.Genome.Analysis;
+using Unite.Data.Entities.Genome.Analysis.Enums;
 using Unite.Data.Entities.Genome.Transcriptomics;
 using Unite.Data.Entities.Genome.Variants;
 using Unite.Data.Entities.Images;
 using Unite.Data.Entities.Images.Enums;
 using Unite.Data.Entities.Specimens;
+using Unite.Essentials.Extensions;
 using Unite.Indices.Entities;
 using Unite.Indices.Entities.Images;
 using Unite.Mapping;
@@ -178,7 +180,14 @@ public class ImageIndexCreationService
 
     private static AnalysisIndex CreateAnalysisIndex(AnalysedSample analysis, DateOnly? diagnosisDate)
     {
-        return AnalysisIndexMapper.CreateFrom<AnalysisIndex>(analysis, diagnosisDate);
+        var index = AnalysisIndexMapper.CreateFrom<AnalysisIndex>(analysis, diagnosisDate);
+
+        if (index != null && analysis.Resources.IsNotEmpty())
+        {
+            index.Resources = analysis.Resources.Select(resource => ResourceIndexMapper.CreateFrom<ResourceIndex>(resource)).ToArray();
+        }
+
+        return index;
     }
 
     private AnalysedSample[] LoadAnalyses(int specimenId)
@@ -188,6 +197,7 @@ public class ImageIndexCreationService
         return dbContext.Set<AnalysedSample>()
             .AsNoTracking()
             .Include(analysis => analysis.Analysis)
+            .Include(analysis => analysis.Resources)
             .Where(analysis => analysis.TargetSampleId == specimenId)
             .ToArray();
     }
@@ -239,7 +249,7 @@ public class ImageIndexCreationService
 
         index.GeneExp = CheckGeneExp(specimenIds);
 
-        index.GeneExpSc = false;
+        index.GeneExpSc = CheckGeneExpSc(specimenIds);
 
         return index;
     }
@@ -278,10 +288,10 @@ public class ImageIndexCreationService
     }
 
     /// <summary>
-    /// Checks if gene expression data is available for given specimens.
+    /// Checks if bulk gene expression data is available for given specimens.
     /// </summary>
     /// <param name="specimenIds">Specimen identifiers.</param>
-    /// <returns>'true' if gene expression data exists or 'false' otherwise.</returns>
+    /// <returns>'true' if bulk gene expression data exists or 'false' otherwise.</returns>
     private bool CheckGeneExp(int[] specimenIds)
     {
         using var dbContext = _dbContextFactory.CreateDbContext();
@@ -289,5 +299,19 @@ public class ImageIndexCreationService
         return dbContext.Set<BulkExpression>()
             .AsNoTracking()
             .Any(expression => specimenIds.Contains(expression.AnalysedSample.TargetSampleId));
+    }
+
+    /// <summary>
+    /// Checks if single cell gene expression data is available for given specimens.
+    /// </summary>
+    /// <param name="specimenIds">Specimen identifiers
+    /// <returns>'true' if single cell gene expression data exists or 'false' otherwise.</returns>
+    private bool CheckGeneExpSc(int[] specimenIds)
+    {
+        using var dbContext = _dbContextFactory.CreateDbContext();
+
+        return dbContext.Set<AnalysedSample>()
+            .AsNoTracking()
+            .Any(analysedSample => specimenIds.Contains(analysedSample.TargetSampleId) && analysedSample.Analysis.TypeId == AnalysisType.ScRNASeq);
     }
 }
