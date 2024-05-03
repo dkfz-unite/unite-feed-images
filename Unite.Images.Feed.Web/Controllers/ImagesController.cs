@@ -22,7 +22,6 @@ public class ImagesController : ImagesControllerBase
     }
 
     [HttpPost]
-    [Consumes("application/json")]
     public IActionResult Post([FromBody]ImageDataModel[] models)
     {
         var dataModels = _converter.Convert(models);
