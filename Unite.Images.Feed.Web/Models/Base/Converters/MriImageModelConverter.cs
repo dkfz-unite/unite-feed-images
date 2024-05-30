@@ -1,6 +1,6 @@
 namespace Unite.Images.Feed.Web.Models.Base.Converters;
 
-public class MriImageModelsConverter
+public class MriImageModelConverter
 {
     public Data.Models.MriImageModel Convert(string referenceId, in MriImageModel model)
     {

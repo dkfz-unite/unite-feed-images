@@ -14,8 +14,8 @@ namespace Unite.Images.Feed.Web.Controllers;
 public class MrisController : ImagesControllerBase
 {
     public MrisController(
-        ImagesDataWriter dataWriter,
-        ImagesDataRemover dataRemover,
+        ImagesWriter dataWriter,
+        ImagesRemover dataRemover,
         ImageIndexRemovalService indexRemover,
         ImageIndexingTasksService indexingTasksService,
         ILogger<MrisController> logger) : base(dataWriter, dataRemover, indexRemover, indexingTasksService, logger)
@@ -23,7 +23,7 @@ public class MrisController : ImagesControllerBase
     }
 
     [HttpPost("tsv")]
-    public IActionResult PostTsv([ModelBinder(typeof(MriImagesTsvModelsBinder))]ImageDataModel[] models)
+    public IActionResult PostTsv([ModelBinder(typeof(MriImagesTsvModelsBinder))]ImageModel[] models)
     {
         var dataModels = _converter.Convert(models);
 

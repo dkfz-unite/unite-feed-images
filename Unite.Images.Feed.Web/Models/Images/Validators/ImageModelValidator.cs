@@ -4,13 +4,12 @@ using Unite.Images.Feed.Web.Models.Base.Validators;
 
 namespace Unite.Images.Feed.Web.Models.Validators;
 
-public class ImageDataModelValidator : AbstractValidator<ImageDataModel>
+public class ImageModelValidator : AbstractValidator<ImageModel>
 {
     private readonly IValidator<MriImageModel> _mriImageModelValidator = new MriImageModelValidator();
     private readonly IValidator<CtImageModel> _ctImageModelValidator = new CtImageModelValidator();
-    private readonly IValidator<AnalysisModel> _imageAnalysisModelValidator = new AnalysisValidator();
 
-    public ImageDataModelValidator()
+    public ImageModelValidator()
     {
         RuleFor(model => model.Id)
             .NotEmpty()
@@ -28,19 +27,19 @@ public class ImageDataModelValidator : AbstractValidator<ImageDataModel>
             .MaximumLength(255)
             .WithMessage("Maximum length is 255");
 
-        RuleFor(model => model.ScanningDate)
+        RuleFor(model => model.CreationDate)
             .Empty()
-            .When(model => model.ScanningDay.HasValue)
+            .When(model => model.CreationDay.HasValue)
             .WithMessage("Either exact 'date' or relative 'day' should be set, not both");
 
-        RuleFor(model => model.ScanningDay)
+        RuleFor(model => model.CreationDay)
             .Empty()
-            .When(model => model.ScanningDate.HasValue)
+            .When(model => model.CreationDate.HasValue)
             .WithMessage("Either exact 'date' or relative 'day' should be set, not both");
 
-        RuleFor(model => model.ScanningDay)
+        RuleFor(model => model.CreationDay)
             .GreaterThanOrEqualTo(1)
-            .When(model => model.ScanningDay.HasValue)
+            .When(model => model.CreationDay.HasValue)
             .WithMessage("Should be greater than or equal to 1");
 
         RuleFor(model => model)
@@ -52,12 +51,9 @@ public class ImageDataModelValidator : AbstractValidator<ImageDataModel>
 
         RuleFor(model => model.CtImage)
             .SetValidator(_ctImageModelValidator);
-
-        RuleFor(model => model.Analysis)
-            .SetValidator(_imageAnalysisModelValidator);
     }
 
-    private bool HaveModelSet(ImageDataModel model)
+    private bool HaveModelSet(ImageModel model)
     {
         return model.MriImage != null
             || model.CtImage != null;
@@ -65,9 +61,9 @@ public class ImageDataModelValidator : AbstractValidator<ImageDataModel>
 }
 
 
-public class ImageModelsValidator : AbstractValidator<ImageDataModel[]>
+public class ImageModelsValidator : AbstractValidator<ImageModel[]>
 {
-    private readonly IValidator<ImageDataModel> _modelValidator = new ImageDataModelValidator();
+    private readonly IValidator<ImageModel> _modelValidator = new ImageModelValidator();
 
     public ImageModelsValidator()
     {

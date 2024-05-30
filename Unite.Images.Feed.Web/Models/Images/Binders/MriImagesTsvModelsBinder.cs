@@ -13,11 +13,11 @@ public class MriImagesTsvModelsBinder : IModelBinder
 
         var tsv = await reader.ReadToEndAsync();
 
-        var map = new ClassMap<ImageDataModel>()
+        var map = new ClassMap<ImageModel>()
             .Map(entity => entity.Id, "id")
             .Map(entity => entity.DonorId, "donor_id")
-            .Map(entity => entity.ScanningDate, "scanning_date")
-            .Map(entity => entity.ScanningDay, "scanning_day")
+            .Map(entity => entity.CreationDate, "creation_date")
+            .Map(entity => entity.CreationDay, "creation_day")
             .Map(entity => entity.MriImage.WholeTumor, "whole_tumor")
             .Map(entity => entity.MriImage.ContrastEnhancing, "contrast_enhancing")
             .Map(entity => entity.MriImage.NonContrastEnhancing, "non_contrast_enhancing")

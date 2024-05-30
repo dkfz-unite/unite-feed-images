@@ -2,5 +2,5 @@
 
 public class DonorModel
 {
-    public string ReferenceId { get; set; }
+    public string ReferenceId;
 }

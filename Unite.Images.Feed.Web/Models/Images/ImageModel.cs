@@ -3,12 +3,12 @@ using Unite.Images.Feed.Web.Models.Base;
 
 namespace Unite.Images.Feed.Web.Models;
 
-public class ImageDataModel
+public class ImageModel
 {
     private string _id;
     private string _donorId;
-    private DateOnly? _scanningDate;
-    private int? _scanningDay;
+    private DateOnly? _creationDate;
+    private int? _creationDay;
 
 
     [JsonPropertyName("id")]
@@ -17,11 +17,11 @@ public class ImageDataModel
     [JsonPropertyName("donor_id")]
     public string DonorId { get => _donorId?.Trim(); set => _donorId = value; }
 
-    [JsonPropertyName("scanning_date")]
-    public DateOnly? ScanningDate { get => _scanningDate; set => _scanningDate = value; }
+    [JsonPropertyName("creation_date")]
+    public DateOnly? CreationDate { get => _creationDate; set => _creationDate = value; }
 
-    [JsonPropertyName("scanning_day")]
-    public int? ScanningDay { get => _scanningDay; set => _scanningDay = value; }
+    [JsonPropertyName("creation_day")]
+    public int? CreationDay { get => _creationDay; set => _creationDay = value; }
 
 
     [JsonPropertyName("mri_image")]
@@ -29,7 +29,4 @@ public class ImageDataModel
 
     [JsonPropertyName("ct_image")]
     public CtImageModel CtImage { get; set; }
-
-    [JsonPropertyName("analysis")]
-    public AnalysisModel Analysis { get; set; }
 }

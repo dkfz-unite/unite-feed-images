@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Unite.Data.Context;
+﻿using Unite.Data.Context;
 using Unite.Data.Entities.Images;
 using Unite.Data.Entities.Images.Enums;
 using Unite.Images.Feed.Data.Models;
@@ -8,36 +7,23 @@ namespace Unite.Images.Feed.Data.Repositories;
 
 internal class MriImageRepository : ImageRepositoryBase<MriImageModel>
 {
+    protected override ImageType Type => ImageType.MRI;
+
+
     public MriImageRepository(DomainDbContext dbContext) : base(dbContext)
     {
     }
 
 
-    public override Image Find(int donorId, in MriImageModel model)
+    protected override void Map(MriImageModel model, Image entity)
     {
-        var referenceId = model.ReferenceId;
-
-        return _dbContext.Images
-            .Include(entity => entity.MriImage)
-            .FirstOrDefault(entity =>
-                entity.DonorId == donorId &&
-                entity.MriImage != null &&
-                entity.MriImage.ReferenceId == referenceId
-            );
-    }
-
-
-    protected override void Map(in MriImageModel model, ref Image entity)
-    {
-        base.Map(model, ref entity);
+        base.Map(model, entity);
 
         if (entity.MriImage == null)
         {
             entity.MriImage = new MriImage();
         }
 
-        entity.TypeId = ImageType.MRI;
-        entity.MriImage.ReferenceId = model.ReferenceId;
         entity.MriImage.WholeTumor = model.WholeTumor;
         entity.MriImage.ContrastEnhancing = model.ContrastEnhancing;
         entity.MriImage.NonContrastEnhancing = model.NonContrastEnhancing;

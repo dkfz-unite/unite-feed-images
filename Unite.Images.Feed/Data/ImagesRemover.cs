@@ -6,11 +6,11 @@ using Unite.Images.Feed.Data.Repositories;
 
 namespace Unite.Images.Feed.Data;
 
-public class ImagesDataRemover : DataWriter<Image>
+public class ImagesRemover : DataWriter<Image>
 {
     private ImageRepository _imageRepository;
 
-    public ImagesDataRemover(IDbContextFactory<DomainDbContext> dbContextFactory) : base(dbContextFactory)
+    public ImagesRemover(IDbContextFactory<DomainDbContext> dbContextFactory) : base(dbContextFactory)
     {
         var dbContext = dbContextFactory.CreateDbContext();
 

@@ -13,8 +13,8 @@ namespace Unite.Images.Feed.Web.Controllers;
 public class ImagesController : ImagesControllerBase
 {
     public ImagesController(
-        ImagesDataWriter dataWriter,
-        ImagesDataRemover dataRemover,
+        ImagesWriter dataWriter,
+        ImagesRemover dataRemover,
         ImageIndexRemovalService indexRemover,
         ImageIndexingTasksService indexingTasksService,
         ILogger<ImagesController> logger) : base(dataWriter, dataRemover, indexRemover, indexingTasksService, logger)
@@ -22,7 +22,7 @@ public class ImagesController : ImagesControllerBase
     }
 
     [HttpPost]
-    public IActionResult Post([FromBody]ImageDataModel[] models)
+    public IActionResult Post([FromBody]ImageModel[] models)
     {
         var dataModels = _converter.Convert(models);
 

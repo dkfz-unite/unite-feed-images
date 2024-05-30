@@ -8,17 +8,17 @@ namespace Unite.Images.Feed.Web.Controllers;
 
 public class ImagesControllerBase : Controller
 {
-    protected readonly ImagesDataWriter _dataWriter;
-    protected readonly ImagesDataRemover _dataRemover;
+    protected readonly ImagesWriter _dataWriter;
+    protected readonly ImagesRemover _dataRemover;
     protected readonly ImageIndexRemovalService _indexRemover;
     protected readonly ImageIndexingTasksService _indexingTasksService;
     protected readonly ILogger _logger;
 
-    protected readonly ImageDataModelsConverter _converter = new();
+    protected readonly ImageModelConverter _converter = new();
 
     public ImagesControllerBase(
-        ImagesDataWriter dataWriter,
-        ImagesDataRemover dataRemover,
+        ImagesWriter dataWriter,
+        ImagesRemover dataRemover,
         ImageIndexRemovalService indexRemover,
         ImageIndexingTasksService indexingTasksService,
         ILogger<ImagesControllerBase> logger)

@@ -6,9 +6,9 @@ using Unite.Data.Context.Repositories.Constants;
 using Unite.Data.Entities.Donors;
 using Unite.Data.Entities.Donors.Clinical;
 using Unite.Data.Entities.Genome.Analysis;
+using Unite.Data.Entities.Genome.Analysis.Dna;
 using Unite.Data.Entities.Genome.Analysis.Enums;
-using Unite.Data.Entities.Genome.Transcriptomics;
-using Unite.Data.Entities.Genome.Variants;
+using Unite.Data.Entities.Genome.Analysis.Rna;
 using Unite.Data.Entities.Images;
 using Unite.Data.Entities.Images.Enums;
 using Unite.Data.Entities.Specimens;
@@ -17,9 +17,9 @@ using Unite.Indices.Entities;
 using Unite.Indices.Entities.Images;
 using Unite.Mapping;
 
-using CNV = Unite.Data.Entities.Genome.Variants.CNV;
-using SSM = Unite.Data.Entities.Genome.Variants.SSM;
-using SV = Unite.Data.Entities.Genome.Variants.SV;
+using SSM = Unite.Data.Entities.Genome.Analysis.Dna.Ssm;
+using CNV = Unite.Data.Entities.Genome.Analysis.Dna.Cnv;
+using SV = Unite.Data.Entities.Genome.Analysis.Dna.Sv;
 
 namespace Unite.Images.Indices.Services;
 
@@ -150,7 +150,7 @@ public class ImageIndexCreationService
 
         SpecimenIndexMapper.Map(specimen, index, diagnosisDate);
 
-        index.Analyses = CreateAnalysisIndices(specimen.Id, diagnosisDate);
+        index.Samples = CreateSampleIndices(specimen.Id, diagnosisDate);
 
         return index;
     }
@@ -169,36 +169,36 @@ public class ImageIndexCreationService
     }
 
 
-    private AnalysisIndex[] CreateAnalysisIndices(int specimenId, DateOnly? diagnosisDate)
+    private SampleIndex[] CreateSampleIndices(int specimenId, DateOnly? diagnosisDate)
     {
-        var analyses = LoadAnalyses(specimenId);
+        var samples = LoadSamples(specimenId);
 
-        var indices = analyses.Select(analysis => CreateAnalysisIndex(analysis, diagnosisDate));
+        var indices = samples.Select(sample => CreateSampleIndex(sample, diagnosisDate));
 
         return indices.Any() ? indices.ToArray() : null;
     }
 
-    private static AnalysisIndex CreateAnalysisIndex(AnalysedSample analysis, DateOnly? diagnosisDate)
+    private static SampleIndex CreateSampleIndex(Sample sample, DateOnly? diagnosisDate)
     {
-        var index = AnalysisIndexMapper.CreateFrom<AnalysisIndex>(analysis, diagnosisDate);
+        var index = SampleIndexMapper.CreateFrom<SampleIndex>(sample, diagnosisDate);
 
-        if (index != null && analysis.Resources.IsNotEmpty())
+        if (index != null && sample.Resources.IsNotEmpty())
         {
-            index.Resources = analysis.Resources.Select(resource => ResourceIndexMapper.CreateFrom<ResourceIndex>(resource)).ToArray();
+            index.Resources = sample.Resources.Select(resource => ResourceIndexMapper.CreateFrom<ResourceIndex>(resource)).ToArray();
         }
 
         return index;
     }
 
-    private AnalysedSample[] LoadAnalyses(int specimenId)
+    private Sample[] LoadSamples(int specimenId)
     {
         using var dbContext = _dbContextFactory.CreateDbContext();
 
-        return dbContext.Set<AnalysedSample>()
+        return dbContext.Set<Sample>()
             .AsNoTracking()
-            .Include(analysis => analysis.Analysis)
-            .Include(analysis => analysis.Resources)
-            .Where(analysis => analysis.TargetSampleId == specimenId)
+            .Include(sample => sample.Analysis)
+            .Include(sample => sample.Resources)
+            .Where(sample => sample.SpecimenId == specimenId)
             .ToArray();
     }
 
@@ -281,7 +281,7 @@ public class ImageIndexCreationService
 
         return dbContext.Set<TVariantEntry>()
             .AsNoTracking()
-            .Where(entry => specimenIds.Contains(entry.AnalysedSample.TargetSampleId))
+            .Where(entry => specimenIds.Contains(entry.Sample.SpecimenId))
             .Select(entry => entry.EntityId)
             .Distinct()
             .Any();
@@ -296,9 +296,9 @@ public class ImageIndexCreationService
     {
         using var dbContext = _dbContextFactory.CreateDbContext();
 
-        return dbContext.Set<BulkExpression>()
+        return dbContext.Set<GeneExpression>()
             .AsNoTracking()
-            .Any(expression => specimenIds.Contains(expression.AnalysedSample.TargetSampleId));
+            .Any(expression => specimenIds.Contains(expression.Sample.SpecimenId));
     }
 
     /// <summary>
@@ -310,8 +310,8 @@ public class ImageIndexCreationService
     {
         using var dbContext = _dbContextFactory.CreateDbContext();
 
-        return dbContext.Set<AnalysedSample>()
+        return dbContext.Set<Sample>()
             .AsNoTracking()
-            .Any(analysedSample => specimenIds.Contains(analysedSample.TargetSampleId) && analysedSample.Analysis.TypeId == AnalysisType.ScRNASeq);
+            .Any(sample => specimenIds.Contains(sample.SpecimenId) && sample.Analysis.TypeId == AnalysisType.RNASeqSc);
     }
 }
