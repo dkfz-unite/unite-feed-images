@@ -1,14 +1,16 @@
 ﻿using FluentValidation;
+using Unite.Images.Feed.Web.Models.Validators.Base;
 
-namespace Unite.Images.Feed.Web.Models.Base.Validators;
+namespace Unite.Images.Feed.Web.Models.Validators;
 
-public class MriImageModelValidator : AbstractValidator<MriImageModel>
+public class MriImageModelValidator : ImageModelValidator<MriImageModel>
 {
-    public MriImageModelValidator()
+    public MriImageModelValidator() : base()
     {
         RuleFor(model => model.WholeTumor)
-            .NotNull()
-            .WithMessage("Should not be empty");
+            .Must(value => value > 0)
+            .When(model => model.WholeTumor.HasValue)
+            .WithMessage("Should be greater than 0");
 
         RuleFor(model => model.ContrastEnhancing)
             .Must(value => value > 0)
@@ -79,5 +81,17 @@ public class MriImageModelValidator : AbstractValidator<MriImageModel>
             .Must(value => value > 0)
             .When(model => model.MedianMttEdema.HasValue)
             .WithMessage("Should be greater than 0");
+    }
+}
+
+
+public class MriImageModelsValidator : AbstractValidator<MriImageModel[]>
+{
+    private readonly MriImageModelValidator _modelValidator = new();
+
+    public MriImageModelsValidator()
+    {
+        RuleForEach(model => model)
+            .SetValidator(_modelValidator);
     }
 }

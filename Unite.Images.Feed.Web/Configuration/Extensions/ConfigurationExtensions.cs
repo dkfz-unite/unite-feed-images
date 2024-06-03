@@ -13,6 +13,8 @@ using Unite.Images.Indices.Services;
 using Unite.Indices.Context.Configuration.Extensions;
 using Unite.Indices.Context.Configuration.Options;
 
+using Radiomics = Unite.Images.Feed.Web.Models.Radiomics;
+
 namespace Unite.Images.Feed.Web.Configuration.Extensions;
 
 public static class ConfigurationExtensions
@@ -54,7 +56,8 @@ public static class ConfigurationExtensions
 
     private static IServiceCollection AddValidators(this IServiceCollection services)
     {
-        services.AddTransient<IValidator<ImageModel[]>, ImageModelsValidator>();
+        services.AddTransient<IValidator<MriImageModel[]>, MriImageModelsValidator>();
+        services.AddTransient<IValidator<Radiomics.AnalysisModel[]>, Radiomics.Validators.AnalysisModelsValidator>();
 
         return services;
     }

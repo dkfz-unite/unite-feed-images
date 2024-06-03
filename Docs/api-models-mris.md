@@ -1,7 +1,7 @@
-# MRI Image Data Model
-Includes MRI image data.
+# MRI Image Model
+MRI image model. Includes all basic image [data](./api-models-base-image.md).
 
-**`whole_tumor`*** - Whole tumor volume in cm³.
+**`whole_tumor`** - Whole tumor volume in cm³.
 - Type: _Number_
 - Limitations: Float, greater or equal to 0
 - Example: `111.393`
@@ -75,6 +75,3 @@ Includes MRI image data.
 - Type: _Number_
 - Limitations: Float, greater or equal to 0
 - Example: `2631.357`
-
-##
-**`*`** - Required fields

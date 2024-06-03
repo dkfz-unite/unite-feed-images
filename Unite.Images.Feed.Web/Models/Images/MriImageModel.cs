@@ -1,8 +1,9 @@
 ﻿using System.Text.Json.Serialization;
+using Unite.Images.Feed.Web.Models.Base;
 
-namespace Unite.Images.Feed.Web.Models.Base;
+namespace Unite.Images.Feed.Web.Models;
 
-public class MriImageModel
+public class MriImageModel : ImageModel
 {
     [JsonPropertyName("whole_tumor")]
     public double? WholeTumor { get; set; }

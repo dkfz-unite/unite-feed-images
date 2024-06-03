@@ -41,11 +41,12 @@ public class AnalysisWriter : DataWriter<SampleModel, AnalysisWriteAudit>
     {
         var names = featureModels.Select(model => model.Name);
         var features = _radFeatureRepository.CreateMissing(names);
-        audit.RadFeatures.AddRange(features.Select(feature => feature.Id));
         audit.RadFeaturesCreated += features.Count();
 
         var featureEntries = _radFeatureEntryRepository.Recreate(sampleId, featureModels);
-        audit.RadFeatureEntries.AddRange(featureEntries.Select(entry => entry.EntityId));
         audit.RadFeaturesAssociated += featureEntries.Count();
+
+        if (featureEntries.Any())
+            audit.Images.Add(sampleId);
     }
 }

@@ -5,8 +5,7 @@ public class AnalysisWriteAudit
     public int RadFeaturesCreated;
     public int RadFeaturesAssociated;
 
-    public HashSet<int> RadFeatures = [];
-    public HashSet<int> RadFeatureEntries = [];
+    public HashSet<int> Images = [];
 
     public override string ToString()
     {
