@@ -86,8 +86,6 @@ public abstract class AnalysisTsvModelBinder<TModel> : IModelBinder
             return (T)(object)value;
         else if (typeof(T) == typeof(int?))
             return (T)(object)int.Parse(value, NumberStyles.Any, CultureInfo.InvariantCulture);
-        else if (typeof(T) == typeof(double?))
-            return (T)(object)double.Parse(value, NumberStyles.Any, CultureInfo.InvariantCulture);
         else if (typeof(T) == typeof(DateOnly?))
             return (T)(object)DateOnly.Parse(value, CultureInfo.InvariantCulture);
         else if (typeof(T) == typeof(AnalysisType?))

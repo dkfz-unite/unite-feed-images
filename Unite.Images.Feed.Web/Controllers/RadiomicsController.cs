@@ -10,21 +10,21 @@ using Unite.Images.Feed.Web.Services;
 
 namespace Unite.Images.Feed.Web.Controllers;
 
-[Route("api/analysis/drugs")]
+[Route("api/analysis/radiomics")]
 [Authorize(Policy = Policies.Data.Writer)]
-public class DrugsController : Controller
+public class RadiomicsController : Controller
 {
     private readonly AnalysisWriter _dataWriter;
     private readonly ImageIndexingTasksService _taskService;
-    private readonly ILogger<DrugsController> _logger;
+    private readonly ILogger<RadiomicsController> _logger;
 
     private readonly AnalysisModelConverter _converter = new();
 
 
-    public DrugsController(
+    public RadiomicsController(
         AnalysisWriter dataWriter, 
         ImageIndexingTasksService taskService, 
-        ILogger<DrugsController> logger)
+        ILogger<RadiomicsController> logger)
     {
         _dataWriter = dataWriter;
         _taskService = taskService;
@@ -35,18 +35,6 @@ public class DrugsController : Controller
     [HttpPost("")]
     public IActionResult Post([FromBody]AnalysisModel<FeatureModel> model)
     {
-        return PostData(model);
-    }
-
-    [HttpPost("tsv")]
-    public IActionResult PostTsv([ModelBinder(typeof(AnalysisTsvModelBinder))]AnalysisModel<FeatureModel> model)
-    {
-        return PostData(model);
-    }
-
-
-    private IActionResult PostData(AnalysisModel<FeatureModel> model)
-    {
         var data = _converter.Convert(model);
 
         _dataWriter.SaveData(data, out var audit);
@@ -54,5 +42,11 @@ public class DrugsController : Controller
         _logger.LogInformation("{audit}", audit.ToString());
 
         return Ok();
+    }
+
+    [HttpPost("tsv")]
+    public IActionResult PostTsv([ModelBinder(typeof(RadiomicsTsvModelBinder))]AnalysisModel<FeatureModel> model)
+    {
+        return Post(model);
     }
 }

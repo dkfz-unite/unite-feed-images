@@ -33,11 +33,10 @@ public class MriImagesController : Controller
     [HttpPost]
     public IActionResult Post([FromBody]MriImageModel[] models)
     {
-        var dataModels = models.Select(model => _converter.Convert(model)).ToArray();
+        var data = models.Select(model => _converter.Convert(model)).ToArray();
 
-        _dataWriter.SaveData(dataModels, out var audit);
+        _dataWriter.SaveData(data, out var audit);
         _tasksService.PopulateTasks(audit.Images);
-
         _logger.LogInformation("{audit}", audit.ToString());
 
         return Ok();

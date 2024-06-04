@@ -32,22 +32,5 @@ public class SampleModelValidator : AbstractValidator<SampleModel>
             .GreaterThanOrEqualTo(1)
             .When(model => model.AnalysisDay.HasValue)
             .WithMessage("Should be greater than or equal to 1");
-
-
-
-        // RuleFor(model => model.Entry)
-        //     .NotEmpty()
-        //     .WithMessage("Should not be empty");
-
-        // RuleFor(model => model.Entry)
-        //     .Must(features => features.Any(IsSet))
-        //     .When(features => features != null)
-        //     .WithMessage("At least one feature should be set");
-    }
-
-
-    private bool IsSet(KeyValuePair<string, string> property)
-    {
-        return !string.IsNullOrWhiteSpace(property.Key) && !string.IsNullOrWhiteSpace(property.Value);
     }
 }
