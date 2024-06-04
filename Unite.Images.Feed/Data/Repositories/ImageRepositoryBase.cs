@@ -22,7 +22,7 @@ internal abstract class ImageRepositoryBase<TModel> where TModel : ImageModel
 
     public virtual Image Find(TModel model)
     {
-        return _dbContext.Set<Image>().FirstOrDefault(entity =>
+        return GetQuery().FirstOrDefault(entity =>
             entity.Donor.ReferenceId == model.Donor.ReferenceId &&
             entity.ReferenceId == model.ReferenceId &&
             entity.TypeId == Type
@@ -61,6 +61,11 @@ internal abstract class ImageRepositoryBase<TModel> where TModel : ImageModel
         _dbContext.SaveChanges();
     }
 
+
+    protected virtual IQueryable<Image> GetQuery()
+    {
+        return _dbContext.Set<Image>();
+    }
 
     protected virtual void Map(TModel model, Image entity)
     {

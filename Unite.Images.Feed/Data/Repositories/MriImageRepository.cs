@@ -1,4 +1,5 @@
-﻿using Unite.Data.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using Unite.Data.Context;
 using Unite.Data.Entities.Images;
 using Unite.Data.Entities.Images.Enums;
 using Unite.Images.Feed.Data.Models;
@@ -15,29 +16,36 @@ internal class MriImageRepository : ImageRepositoryBase<MriImageModel>
     }
 
 
+    protected override IQueryable<Image> GetQuery()
+    {
+        return base.GetQuery()
+            .Include(image => image.MriImage);
+    }
+
     protected override void Map(MriImageModel model, Image entity)
     {
         base.Map(model, entity);
 
         if (entity.MriImage == null)
         {
-            entity.MriImage = new MriImage();
+            entity.MriImage = new()
+            {
+                WholeTumor = model.WholeTumor,
+                ContrastEnhancing = model.ContrastEnhancing,
+                NonContrastEnhancing = model.NonContrastEnhancing,
+                MedianAdcTumor = model.MedianAdcTumor,
+                MedianAdcCe = model.MedianAdcCe,
+                MedianAdcEdema = model.MedianAdcEdema,
+                MedianCbfTumor = model.MedianCbfTumor,
+                MedianCbfCe = model.MedianCbfCe,
+                MedianCbfEdema = model.MedianCbfEdema,
+                MedianCbvTumor = model.MedianCbvTumor,
+                MedianCbvCe = model.MedianCbvCe,
+                MedianCbvEdema = model.MedianCbvEdema,
+                MedianMttTumor = model.MedianMttTumor,
+                MedianMttCe = model.MedianMttCe,
+                MedianMttEdema = model.MedianMttEdema
+            };
         }
-
-        entity.MriImage.WholeTumor = model.WholeTumor;
-        entity.MriImage.ContrastEnhancing = model.ContrastEnhancing;
-        entity.MriImage.NonContrastEnhancing = model.NonContrastEnhancing;
-        entity.MriImage.MedianAdcTumor = model.MedianAdcTumor;
-        entity.MriImage.MedianAdcCe = model.MedianAdcCe;
-        entity.MriImage.MedianAdcEdema = model.MedianAdcEdema;
-        entity.MriImage.MedianCbfTumor = model.MedianCbfTumor;
-        entity.MriImage.MedianCbfCe = model.MedianCbfCe;
-        entity.MriImage.MedianCbfEdema = model.MedianCbfEdema;
-        entity.MriImage.MedianCbvTumor = model.MedianCbvTumor;
-        entity.MriImage.MedianCbvCe = model.MedianCbvCe;
-        entity.MriImage.MedianCbvEdema = model.MedianCbvEdema;
-        entity.MriImage.MedianMttTumor = model.MedianMttTumor;
-        entity.MriImage.MedianMttCe = model.MedianMttCe;
-        entity.MriImage.MedianMttEdema = model.MedianMttEdema;
     }
 }
