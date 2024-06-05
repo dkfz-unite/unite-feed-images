@@ -1,5 +1,5 @@
 # Image Model
-Includes basic data about image.
+Includes basic image information.
 
 >[!NOTE]
 > All exact dates are hiddent and protected. Relative dates are shown instead, if calculation was possible.

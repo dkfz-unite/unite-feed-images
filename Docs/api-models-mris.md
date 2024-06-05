@@ -1,5 +1,5 @@
-# MRI Image Model
-MRI image model. Includes all basic image [data](./api-models-base-image.md).
+# MRI Image Data Model
+Includes MRI all basic [image](./api-models-image.md) information.
 
 **`whole_tumor`** - Whole tumor volume in cm³.
 - Type: _Number_

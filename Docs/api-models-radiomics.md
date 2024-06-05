@@ -1,5 +1,5 @@
-# Radiomocs Features Extraction Analusis Model
-Includes data about radiomics features extraction analysis and it's results.
+# Radiomocs Features Extraction Analusis Data Model
+Includes information about analysed sample and radiomics features data.
 
 **`sample`*** - Image sample and it's analysis data.
 - Type: [_Object_](./api-models-base-sample.md)
@@ -7,11 +7,12 @@ Includes data about radiomics features extraction analysis and it's results.
 
 **`entries`*** - List of extracted radiomics features.
 - Type: _Array_
-_ Element type: [_Object_](#entry)
+_ Element type: [_Object_](#radiomics-feature)
+- Limitations: Should contain at least one element.
 - Example: `[{...}, {...}]`
 
 
-### Entry
+### Radiomics Feature
 Radiomics feature entry.
 
 **`name`*** - Feature name.

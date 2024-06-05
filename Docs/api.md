@@ -44,7 +44,6 @@ Supported formats are:
     "id": "MRI1",
     "donor_id": "Donor1",
     "creation_date": "2020-01-01",
-    "creation_day": null,
     "whole_tumor": 111.393,
     "contrast_enhancing": 902.000,
     "non_contrast_enhancing": 102.683,
@@ -65,7 +64,6 @@ Supported formats are:
     "id": "MRI1",
     "donor_id": "Donor2",
     "creation_date": "2020-01-01",
-    "creation_day": null,
     "whole_tumor": 133.672,
     "contrast_enhancing": 1082.400,
     "non_contrast_enhancing": 123.219,
@@ -86,7 +84,6 @@ Supported formats are:
     "id": "MRI2",
     "donor_id": "Donor2",
     "creation_date": "2020-03-01",
-    "creation_day": null,
     "whole_tumor": 11.139,
     "contrast_enhancing": 90.200,
     "non_contrast_enhancing": 10.268,
@@ -138,8 +135,7 @@ Supported formats are:
     "image_id": "MRI1",
     "image_type": "MRI",
     "analysis_type": "RFE",
-    "analysis_date": "2020-01-01",
-    "analysis_day": null
+    "analysis_date": "2020-01-01"
   },
   "entries": [
     { "name": "feature_1", "value": "value_1" },
