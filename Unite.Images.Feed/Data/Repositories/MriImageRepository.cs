@@ -1,16 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Unite.Data.Context;
 using Unite.Data.Entities.Images;
-using Unite.Data.Entities.Images.Enums;
 using Unite.Images.Feed.Data.Models;
 
 namespace Unite.Images.Feed.Data.Repositories;
 
 internal class MriImageRepository : ImageRepositoryBase<MriImageModel>
 {
-    protected override ImageType Type => ImageType.MRI;
-
-
     public MriImageRepository(DomainDbContext dbContext) : base(dbContext)
     {
     }

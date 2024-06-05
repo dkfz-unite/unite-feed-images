@@ -1,13 +1,13 @@
-using Unite.Data.Entities.Images.Enums;
 using DataModels = Unite.Images.Feed.Data.Models;
 
 namespace Unite.Images.Feed.Web.Models.Base.Converters;
 
-public abstract class AnalysisModelConverter<TEntry> where TEntry : class, new()
+public abstract class AnalysisModelConverter<TEntry> : ConverterBase
+    where TEntry : class, new()
 {
     public virtual DataModels.SampleModel Convert(AnalysisModel<TEntry> analysisModel)
     {
-        var sample = ConvertSample(analysisModel.Sample);
+        var sample = GetSample(analysisModel.Sample);
 
         MapEntries(analysisModel, sample);
 
@@ -15,24 +15,16 @@ public abstract class AnalysisModelConverter<TEntry> where TEntry : class, new()
     }
 
 
-    private static DataModels.SampleModel ConvertSample(SampleModel sampleModel)
+    private DataModels.SampleModel GetSample(SampleModel sampleModel)
     {
         return new DataModels.SampleModel
         {
-            Image = ConvertImage(sampleModel),
-            Analysis = ConvertAnalysis(sampleModel)
+            Image = GetImage(sampleModel.DonorId, sampleModel.ImageId, sampleModel.ImageType),
+            Analysis = GetAnalysis(sampleModel)
         };
     }
 
-    private static DataModels.ImageModel ConvertImage(SampleModel sampleModel)
-    {
-        if (sampleModel.ImageType == ImageType.MRI)
-            return new DataModels.MriImageModel { ReferenceId = sampleModel.ImageId };
-        else
-            throw new NotImplementedException();
-    }
-
-    private static DataModels.AnalysisModel ConvertAnalysis(SampleModel sampleModel)
+    private static DataModels.AnalysisModel GetAnalysis(SampleModel sampleModel)
     {
         return new DataModels.AnalysisModel
         {

@@ -5,7 +5,7 @@ using Unite.Data.Context.Services.Tasks;
 using Unite.Images.Feed.Data;
 using Unite.Images.Feed.Web.Configuration.Options;
 using Unite.Images.Feed.Web.Handlers;
-using Unite.Images.Feed.Web.HostedServices;
+using Unite.Images.Feed.Web.Workers;
 using Unite.Images.Feed.Web.Models;
 using Unite.Images.Feed.Web.Models.Base;
 using Unite.Images.Feed.Web.Models.Base.Validators;
@@ -40,7 +40,7 @@ public static class ConfigurationExtensions
         services.AddTransient<ImageIndexingTasksService>();
         services.AddTransient<TasksProcessingService>();
 
-        services.AddHostedService<IndexingHostedService>();
+        services.AddHostedService<IndexingWorker>();
         services.AddTransient<ImagesIndexingOptions>();
         services.AddTransient<ImagesIndexingHandler>();
         services.AddTransient<ImageIndexCreationService>();

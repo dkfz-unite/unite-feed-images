@@ -45,7 +45,7 @@ public class RadiomicsController : Controller
     }
 
     [HttpPost("tsv")]
-    public IActionResult PostTsv([ModelBinder(typeof(RadiomicsTsvModelBinder))]AnalysisModel<FeatureModel> model)
+    public IActionResult PostTsv([ModelBinder(typeof(AnalysisTsvModelBinder))]AnalysisModel<FeatureModel> model)
     {
         return Post(model);
     }

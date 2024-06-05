@@ -2,7 +2,7 @@ using Unite.Essentials.Tsv;
 
 namespace Unite.Images.Feed.Web.Models.Radiomics.Binders;
 
-public class RadiomicsTsvModelBinder : Base.Binders.AnalysisTsvModelBinder<FeatureModel>
+public class AnalysisTsvModelBinder : Base.Binders.AnalysisTsvModelBinder<FeatureModel>
 {
     protected override ClassMap<FeatureModel> CreateMap()
     {

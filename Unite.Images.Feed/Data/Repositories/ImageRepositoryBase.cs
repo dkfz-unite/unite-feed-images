@@ -10,8 +10,6 @@ internal abstract class ImageRepositoryBase<TModel> where TModel : ImageModel
     protected readonly DomainDbContext _dbContext;
     protected readonly DonorRepository _donorRepository;
 
-    protected abstract ImageType Type { get; }
-
 
     public ImageRepositoryBase(DomainDbContext dbContext)
     {
@@ -22,22 +20,29 @@ internal abstract class ImageRepositoryBase<TModel> where TModel : ImageModel
 
     public virtual Image Find(TModel model)
     {
+        var type = GetImageType(model);
+        var donor = _donorRepository.Find(model.Donor);
+
+        if (donor == null)
+            return null;
+
         return GetQuery().FirstOrDefault(entity =>
-            entity.Donor.ReferenceId == model.Donor.ReferenceId &&
+            entity.DonorId == donor.Id &&
             entity.ReferenceId == model.ReferenceId &&
-            entity.TypeId == Type
+            entity.TypeId == type
         );
     }
 
     public virtual Image Create(TModel model)
     {
+        var type = GetImageType(model);
         var donor = _donorRepository.FindOrCreate(model.Donor);
 
         var entity = new Image()
         {
             DonorId = donor.Id,
             ReferenceId = model.ReferenceId,
-            TypeId = Type
+            TypeId = type
         };
 
         Map(model, entity);
@@ -71,5 +76,14 @@ internal abstract class ImageRepositoryBase<TModel> where TModel : ImageModel
     {
         entity.CreationDate = model.CreationDate;
         entity.CreationDay = model.CreationDay;
+    }
+
+
+    private static ImageType GetImageType(ImageModel model)
+    {
+        if (model is MriImageModel)
+            return ImageType.MRI;
+        else
+            throw new NotSupportedException("Image type is not supported");
     }
 }

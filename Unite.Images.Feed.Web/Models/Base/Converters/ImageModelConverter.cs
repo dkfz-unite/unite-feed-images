@@ -1,6 +1,6 @@
 namespace Unite.Images.Feed.Web.Models.Base.Converters;
 
-public abstract class ImageModelConverter<TSource, TTarget>
+public abstract class ImageModelConverter<TSource, TTarget> : ConverterBase
     where TSource : ImageModel
     where TTarget : Data.Models.ImageModel, new()
 {
@@ -19,6 +19,6 @@ public abstract class ImageModelConverter<TSource, TTarget>
         target.ReferenceId = source.Id;
         target.CreationDate = source.CreationDate;
         target.CreationDay = source.CreationDay;
-        target.Donor = new Data.Models.DonorModel { ReferenceId = source.DonorId };
+        target.Donor = GetDonor(source.DonorId);
     }
 }

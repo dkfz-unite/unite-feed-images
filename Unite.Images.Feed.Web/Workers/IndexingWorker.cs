@@ -2,18 +2,18 @@
 using Unite.Images.Feed.Web.Configuration.Options;
 using Unite.Images.Feed.Web.Handlers;
 
-namespace Unite.Images.Feed.Web.HostedServices;
+namespace Unite.Images.Feed.Web.Workers;
 
-public class IndexingHostedService : BackgroundService
+public class IndexingWorker : BackgroundService
 {
     private readonly ImagesIndexingOptions _options;
     private readonly ImagesIndexingHandler _handler;
     private readonly ILogger _logger;
 
-    public IndexingHostedService(
+    public IndexingWorker(
         ImagesIndexingOptions options,
         ImagesIndexingHandler handler,
-        ILogger<IndexingHostedService> logger)
+        ILogger<IndexingWorker> logger)
     {
         _options = options;
         _handler = handler;
