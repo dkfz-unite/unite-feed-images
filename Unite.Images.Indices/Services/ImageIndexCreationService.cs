@@ -55,13 +55,9 @@ public class ImageIndexCreationService
         var image = LoadImage(imageId);
 
         if (image == null)
-        {
             return null;
-        }
 
-        var index = CreateImageIndex(image);
-
-        return index;
+        return CreateImageIndex(image);
     }
 
     private ImageIndex CreateImageIndex(Image image)
@@ -105,20 +101,14 @@ public class ImageIndexCreationService
         var donor = LoadDonor(donorId);
 
         if (donor == null)
-        {
             return null;
-        }
 
         return CreateDonorIndex(donor);
     }
 
     private static DonorIndex CreateDonorIndex(Donor donor)
     {
-        var index = new DonorIndex();
-
-        DonorIndexMapper.Map(donor, index);
-
-        return index;
+        return DonorIndexMapper.CreateFrom<DonorIndex>(donor);
     }
 
     private Donor LoadDonor(int donorId)
@@ -139,16 +129,15 @@ public class ImageIndexCreationService
     {
         var specimens = LoadSpecimens(donorId);
 
-        var indices = specimens.Select(specimen => CreateSpecimenIndex(specimen, diagnosisDate));
+        if (specimens.IsEmpty())
+            return null;
 
-        return indices.Any() ? indices.ToArray() : null;
+        return specimens.Select(specimen => CreateSpecimenIndex(specimen, diagnosisDate)).ToArray();
     }
 
     private SpecimenIndex CreateSpecimenIndex(Specimen specimen, DateOnly? diagnosisDate)
     {
-        var index = new SpecimenIndex();
-
-        SpecimenIndexMapper.Map(specimen, index, diagnosisDate);
+        var index = SpecimenIndexMapper.CreateFrom<SpecimenIndex>(specimen, diagnosisDate);
 
         index.Samples = CreateSampleIndices(specimen.Id, diagnosisDate);
 
@@ -163,8 +152,8 @@ public class ImageIndexCreationService
             .AsNoTracking()
             .IncludeMaterial()
             .IncludeMolecularData()
-            .Where(specimen => specimen.DonorId == donorId)
             .Where(Predicates.IsImageRelatedSpecimen)
+            .Where(specimen => specimen.DonorId == donorId)
             .ToArray();
     }
 
@@ -173,19 +162,17 @@ public class ImageIndexCreationService
     {
         var samples = LoadSamples(specimenId);
 
-        var indices = samples.Select(sample => CreateSampleIndex(sample, diagnosisDate));
+        if (samples.IsEmpty())
+            return null;
 
-        return indices.Any() ? indices.ToArray() : null;
+        return samples.Select(sample => CreateSampleIndex(sample, diagnosisDate)).ToArray();
     }
 
     private static SampleIndex CreateSampleIndex(Sample sample, DateOnly? diagnosisDate)
     {
         var index = SampleIndexMapper.CreateFrom<SampleIndex>(sample, diagnosisDate);
 
-        if (index != null && sample.Resources.IsNotEmpty())
-        {
-            index.Resources = sample.Resources.Select(resource => ResourceIndexMapper.CreateFrom<ResourceIndex>(resource)).ToArray();
-        }
+        index.Resources = sample.Resources?.Select(resource => ResourceIndexMapper.CreateFrom<ResourceIndex>(resource)).ToArray();
 
         return index;
     }
@@ -209,49 +196,21 @@ public class ImageIndexCreationService
 
         var specimenIds = _donorsRepository.GetRelatedSpecimens([donorId]).Result;
 
-        var index = new DataIndex();
-
-        index.Donors = true;
-
-        index.Clinical = dbContext.Set<ClinicalData>()
-            .AsNoTracking()
-            .Where(entity => entity.DonorId == donorId)
-            .Any();
-
-        index.Treatments = dbContext.Set<Treatment>()
-            .AsNoTracking()
-            .Where(entity => entity.DonorId == donorId)
-            .Any();
-
-        index.Mris = type == ImageType.MRI;
-
-        index.Cts = type == ImageType.CT;
-
-        index.Materials = dbContext.Set<Specimen>()
-            .AsNoTracking()
-            .Where(Predicates.IsImageRelatedSpecimen)
-            .Where(entity => entity.DonorId == donorId)
-            .Any();
-
-        index.MaterialsMolecular = dbContext.Set<Specimen>()
-            .AsNoTracking()
-            .Include(entity => entity.MolecularData)
-            .Where(Predicates.IsImageRelatedSpecimen)
-            .Where(entity => entity.DonorId == donorId)
-            .Where(entity => entity.MolecularData != null)
-            .Any();
-
-        index.Ssms = CheckVariants<SSM.Variant, SSM.VariantEntry>(specimenIds);
-
-        index.Cnvs = CheckVariants<CNV.Variant, CNV.VariantEntry>(specimenIds);
-
-        index.Svs = CheckVariants<SV.Variant, SV.VariantEntry>(specimenIds);
-
-        index.GeneExp = CheckGeneExp(specimenIds);
-
-        index.GeneExpSc = CheckGeneExpSc(specimenIds);
-
-        return index;
+        return new DataIndex
+        {
+            Donors = true,
+            Clinical = CheckClinicalData(donorId),
+            Treatments = CheckTreatments(donorId),
+            Mris = type == ImageType.MRI,
+            Cts = type == ImageType.CT,
+            Materials = CheckSpecimen(donorId),
+            MaterialsMolecular = CheckMolecularData(donorId),
+            Ssms = CheckVariants<SSM.Variant, SSM.VariantEntry>(specimenIds),
+            Cnvs = CheckVariants<CNV.Variant, CNV.VariantEntry>(specimenIds),
+            Svs = CheckVariants<SV.Variant, SV.VariantEntry>(specimenIds),
+            GeneExp = CheckGeneExp(specimenIds),
+            GeneExpSc = CheckGeneExpSc(specimenIds)
+        };
     }
 
     private GenomicStats LoadGenomicStats(int donorId)
@@ -265,6 +224,50 @@ public class ImageIndexCreationService
         return new GenomicStats(geneIds.Length, ssmIds.Length, cnvIds.Length, svIds.Length);
     }
 
+
+    private bool CheckClinicalData(int donorId)
+    {
+        using var dbContext = _dbContextFactory.CreateDbContext();
+
+        return dbContext.Set<ClinicalData>()
+            .AsNoTracking()
+            .Where(clinical => clinical.DonorId == donorId)
+            .Any();
+    }
+
+    private bool CheckTreatments(int donorId)
+    {
+        using var dbContext = _dbContextFactory.CreateDbContext();
+
+        return dbContext.Set<Treatment>()
+            .AsNoTracking()
+            .Where(treatment => treatment.DonorId == donorId)
+            .Any();
+    }
+
+    private bool CheckSpecimen(int donorId)
+    {
+        using var dbContext = _dbContextFactory.CreateDbContext();
+
+        return dbContext.Set<Specimen>()
+            .AsNoTracking()
+            .Where(Predicates.IsImageRelatedSpecimen)
+            .Where(specimen => specimen.DonorId == donorId)
+            .Any();
+    }
+
+    private bool CheckMolecularData(int donorId)
+    {
+        using var dbContext = _dbContextFactory.CreateDbContext();
+
+        return dbContext.Set<Specimen>()
+            .AsNoTracking()
+            .IncludeMolecularData()
+            .Where(Predicates.IsImageRelatedSpecimen)
+            .Where(specimen => specimen.DonorId == donorId)
+            .Where(specimen => specimen.MolecularData != null)
+            .Any();
+    }
 
     /// <summary>
     /// Checks if variants data of given type is available for given specimens.
