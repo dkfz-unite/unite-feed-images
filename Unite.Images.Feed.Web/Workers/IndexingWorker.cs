@@ -22,9 +22,9 @@ public class IndexingWorker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Indexing service started");
+        _logger.LogInformation("Indexing worker started");
 
-        cancellationToken.Register(() => _logger.LogInformation("Indexing service stopped"));
+        cancellationToken.Register(() => _logger.LogInformation("Indexing worker stopped"));
 
         // Delay 5 seconds to let the web api start working
         await Task.Delay(5000, cancellationToken);
