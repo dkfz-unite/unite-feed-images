@@ -89,7 +89,7 @@ public class ImageIndexCreationService
 
         return dbContext.Set<Image>()
             .AsNoTracking()
-            .Include(image => image.MriImage)
+            .IncludeMriImage()
             .Include(image => image.Donor)
                 .ThenInclude(donor => donor.ClinicalData)
             .FirstOrDefault(image => image.Id == imageId);
