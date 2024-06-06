@@ -166,7 +166,9 @@ public class ImageIndexCreationService
     {
         var index = SampleIndexMapper.CreateFrom<SampleIndex>(sample, diagnosisDate);
 
-        return sample.Resources?.Select(resource => ResourceIndexMapper.CreateFrom<ResourceIndex>(resource)).ToArrayOrNull();
+        index.Resources = sample.Resources?.Select(resource => ResourceIndexMapper.CreateFrom<ResourceIndex>(resource)).ToArray();
+
+        return index;
     }
 
     private Sample[] LoadSamples(int specimenId)
