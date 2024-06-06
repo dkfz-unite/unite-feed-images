@@ -26,7 +26,8 @@ public class SampleRepository
 
     public Sample Find(SampleModel model)
     {
-        return _dbContext.Set<Sample>().AsNoTracking().FirstOrDefault(entity => 
+        return _dbContext.Set<Sample>().AsNoTracking().FirstOrDefault(entity =>
+            entity.Specimen.Donor.ReferenceId == model.Image.Donor.ReferenceId &&
             entity.Specimen.ReferenceId == model.Image.ReferenceId &&
             entity.Analysis.TypeId == model.Analysis.Type
         );
