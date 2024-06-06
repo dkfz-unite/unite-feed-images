@@ -90,6 +90,7 @@ public class ImageIndexCreationService
         return dbContext.Set<Image>()
             .AsNoTracking()
             .IncludeMriImage()
+            .IncludeRadiomicsFeatures()
             .Include(image => image.Donor)
                 .ThenInclude(donor => donor.ClinicalData)
             .FirstOrDefault(image => image.Id == imageId);
