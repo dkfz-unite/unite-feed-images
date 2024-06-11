@@ -12,14 +12,14 @@ namespace Unite.Images.Feed.Web.Controllers;
 public class ImageController : Controller
 {
     protected readonly ImagesRemover _dataRemover;
-    protected readonly ImageIndexRemovalService _indexRemover;
+    protected readonly ImageIndexRemover _indexRemover;
     protected readonly ImageIndexingTasksService _tasksService;
     protected readonly ILogger _logger;
 
 
     public ImageController(
         ImagesRemover dataRemover,
-        ImageIndexRemovalService indexRemover,
+        ImageIndexRemover indexRemover,
         ImageIndexingTasksService tasksService,
         ILogger<ImageController> logger)
     {

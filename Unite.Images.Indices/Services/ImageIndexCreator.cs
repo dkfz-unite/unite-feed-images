@@ -23,7 +23,7 @@ using SV = Unite.Data.Entities.Genome.Analysis.Dna.Sv;
 
 namespace Unite.Images.Indices.Services;
 
-public class ImageIndexCreationService
+public class ImageIndexCreator
 {
     private record GenomicStats(int NumberOfGenes, int NumberOfSsms, int NumberOfCnvs, int NumberOfSvs);
 
@@ -33,7 +33,7 @@ public class ImageIndexCreationService
     private readonly SpecimensRepository _specimensRepository;
 
 
-    public ImageIndexCreationService(IDbContextFactory<DomainDbContext> dbContextFactory)
+    public ImageIndexCreator(IDbContextFactory<DomainDbContext> dbContextFactory)
     {
         _dbContextFactory = dbContextFactory;
         _donorsRepository = new DonorsRepository(dbContextFactory);

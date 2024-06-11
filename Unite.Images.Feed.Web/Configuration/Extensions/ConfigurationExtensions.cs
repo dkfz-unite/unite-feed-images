@@ -43,8 +43,8 @@ public static class ConfigurationExtensions
         services.AddHostedService<IndexingWorker>();
         services.AddTransient<ImagesIndexingOptions>();
         services.AddTransient<ImagesIndexingHandler>();
-        services.AddTransient<ImageIndexCreationService>();
-        services.AddTransient<ImageIndexRemovalService>();
+        services.AddTransient<ImageIndexCreator>();
+        services.AddTransient<ImageIndexRemover>();
     }
 
 

@@ -3,12 +3,12 @@ using Unite.Indices.Entities.Images;
 
 namespace Unite.Images.Indices.Services;
 
-public class ImageIndexRemovalService
+public class ImageIndexRemover
 {
     private readonly IIndexService<ImageIndex> _indexService;
 
 
-    public ImageIndexRemovalService(IIndexService<ImageIndex> indexService)
+    public ImageIndexRemover(IIndexService<ImageIndex> indexService)
     {
         _indexService = indexService;
     }

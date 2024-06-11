@@ -11,19 +11,19 @@ namespace Unite.Images.Feed.Web.Handlers;
 public class ImagesIndexingHandler
 {
     private readonly TasksProcessingService _taskProcessingService;
-    private readonly ImageIndexCreationService _indexCreationService;
+    private readonly ImageIndexCreator _indexCreator;
     private readonly IIndexService<ImageIndex> _indexingService;
     private readonly ILogger _logger;
 
 
     public ImagesIndexingHandler(
         TasksProcessingService taskProcessingService,
-        ImageIndexCreationService indexCreationService,
+        ImageIndexCreator indexCreator,
         IIndexService<ImageIndex> indexingService,
         ILogger<ImagesIndexingHandler> logger)
     {
         _taskProcessingService = taskProcessingService;
-        _indexCreationService = indexCreationService;
+        _indexCreator = indexCreator;
         _indexingService = indexingService;
         _logger = logger;
     }
@@ -58,7 +58,7 @@ public class ImagesIndexingHandler
             {
                 var id = int.Parse(task.Target);
 
-                var index = _indexCreationService.CreateIndex(id);
+                var index = _indexCreator.CreateIndex(id);
 
                 if (index == null)
                     indicesToDelete.Add($"{id}");
