@@ -17,7 +17,7 @@ public class IndexingController : Controller
         _tasksService = tasksService;
     }
 
-    [HttpPost()]
+    [HttpPost]
     public IActionResult Post()
     {
         _tasksService.CreateTasks();
