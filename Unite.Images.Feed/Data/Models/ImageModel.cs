@@ -2,10 +2,9 @@
 
 public abstract class ImageModel
 {
-    public string ReferenceId { get; set; }
-    public DateOnly? ScanningDate { get; set; }
-    public int? ScanningDay { get; set; }
+    public string ReferenceId;
+    public DateOnly? CreationDate;
+    public int? CreationDay;
 
-    public DonorModel Donor { get; set; }
-    public AnalysisModel Analysis { get; set; }
+    public DonorModel Donor;
 }

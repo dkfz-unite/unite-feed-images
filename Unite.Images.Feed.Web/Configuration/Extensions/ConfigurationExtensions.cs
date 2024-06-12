@@ -5,15 +5,18 @@ using Unite.Data.Context.Services.Tasks;
 using Unite.Images.Feed.Data;
 using Unite.Images.Feed.Web.Configuration.Options;
 using Unite.Images.Feed.Web.Handlers;
-using Unite.Images.Feed.Web.HostedServices;
+using Unite.Images.Feed.Web.Workers;
 using Unite.Images.Feed.Web.Models;
+using Unite.Images.Feed.Web.Models.Base;
+using Unite.Images.Feed.Web.Models.Base.Validators;
 using Unite.Images.Feed.Web.Models.Validators;
 using Unite.Images.Feed.Web.Services;
 using Unite.Images.Indices.Services;
-using Unite.Indices.Context;
 using Unite.Indices.Context.Configuration.Extensions;
 using Unite.Indices.Context.Configuration.Options;
-using Unite.Indices.Entities.Images;
+
+using RadFeatureModel = Unite.Images.Feed.Web.Models.Radiomics.FeatureModel;
+using RadFeatureModelValidator = Unite.Images.Feed.Web.Models.Radiomics.Validators.FeatureModelValidator;
 
 namespace Unite.Images.Feed.Web.Configuration.Extensions;
 
@@ -30,17 +33,18 @@ public static class ConfigurationExtensions
         services.AddIndexServices();
         services.AddValidators();
 
-        services.AddTransient<ImagesDataWriter>();
-        services.AddTransient<ImagesDataRemover>();
+        services.AddTransient<ImagesWriter>();
+        services.AddTransient<ImagesRemover>();
+        services.AddTransient<AnalysisWriter>();
 
         services.AddTransient<ImageIndexingTasksService>();
         services.AddTransient<TasksProcessingService>();
 
-        services.AddHostedService<IndexingHostedService>();
+        services.AddHostedService<IndexingWorker>();
         services.AddTransient<ImagesIndexingOptions>();
         services.AddTransient<ImagesIndexingHandler>();
-        services.AddTransient<ImageIndexCreationService>();
-        services.AddTransient<ImageIndexRemovalService>();
+        services.AddTransient<ImageIndexCreator>();
+        services.AddTransient<ImageIndexRemover>();
     }
 
 
@@ -55,7 +59,8 @@ public static class ConfigurationExtensions
 
     private static IServiceCollection AddValidators(this IServiceCollection services)
     {
-        services.AddTransient<IValidator<ImageDataModel[]>, ImageModelsValidator>();
+        services.AddTransient<IValidator<MriImageModel[]>, MriImageModelsValidator>();
+        services.AddTransient<IValidator<AnalysisModel<RadFeatureModel>>, AnalysisModelValidator<RadFeatureModel, RadFeatureModelValidator>>();
 
         return services;
     }

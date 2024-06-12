@@ -1,28 +1,26 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Unite.Images.Feed.Web.Configuration.Constants;
 using Unite.Images.Feed.Web.Services;
 
 namespace Unite.Images.Feed.Web.Controllers;
 
-[Route("api/[controller]/[action]")]
-[Authorize(Roles = Roles.Admin)]
+[Route("api/[controller]")]
+[Authorize(Policy = Policies.Data.Writer)]
 public class IndexingController : Controller
 {
-    private readonly ImageIndexingTasksService _indexingTasksService;
+    private readonly ImageIndexingTasksService _tasksService;
 
-
-    public IndexingController(ImageIndexingTasksService indexingTasksService)
+    public IndexingController(
+        ImageIndexingTasksService tasksService)
     {
-        _indexingTasksService = indexingTasksService;
+        _tasksService = tasksService;
     }
-
 
     [HttpPost]
-    public IActionResult Images()
+    public IActionResult Post()
     {
-        _indexingTasksService.CreateTasks();
-
+        _tasksService.CreateTasks();
         return Ok();
-    }
+    } 
 }

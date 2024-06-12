@@ -15,6 +15,11 @@ public class DonorRepository
     }
 
 
+    public Donor FindOrCreate(DonorModel model)
+    {
+        return Find(model) ?? Create(model);
+    }
+
     public Donor Find(DonorModel model)
     {
         var donor = _dbContext.Donors.FirstOrDefault(entity =>
