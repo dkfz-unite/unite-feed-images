@@ -14,9 +14,10 @@ All data submision request implement **UPSERT** logic:
 
 ## Overview
 - get:[api](#get-api) - health check.
-- post:[api/mris/{type?}](#post-apimristype) - submit MRI images data in given type.
-- post:[api/analysis/radiomics/{type?}](#post-apianalysisradiomicstype) - submit radiomics features extraction data in given type.
-- delete:[api/image/{id}](#delete-apiimageid) - delete image data.
+- post:[api/entries/mri/{type?}](#post-apientriesmritype) - submit MRI images data in given type.
+- post:[api/entries/ct/{type?}](#post-apientriescttype) - submit CT images data in given type (**not supported yet**).
+- post:[api/analysis/radiomics/{type?}](#post-apianalysisradiomicstype) - submit radiomics features extraction analysis data in given type.
+- delete:[api/entry/{id}](#delete-apientryid) - delete image data.
 
 > [!Note]
 > **Json** is default data type for all requests and will be used if no data type is specified.
@@ -29,7 +30,7 @@ Health check.
 `"2022-03-17T09:45:10.9359202Z"` - Current UTC date and time in JSON format, if service is up and running
 
 
-## POST: [api/mris/{type?}](http://localhost:5102/api/mris)
+## POST: [api/entries/mri/{type?}](http://localhost:5102/api/entries/mri)
 Submit MRI images data.
 
 ### Boby
@@ -166,7 +167,7 @@ Fields description can be found [here](api-models-radiomics.md).
 - `403` - missing required permissions
 
 
-## DELETE: [api/image/{id}](http://localhost:5102/api/image/1)
+## DELETE: [api/entry/{id}](http://localhost:5102/api/entry/1)
 Delete image data.
 
 ### Parameters

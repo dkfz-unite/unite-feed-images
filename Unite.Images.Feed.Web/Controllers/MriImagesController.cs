@@ -9,7 +9,7 @@ using Unite.Images.Feed.Web.Services;
 
 namespace Unite.Images.Feed.Web.Controllers;
 
-[Route("api/mris")]
+[Route("api/entries/mri")]
 [Authorize(Policy = Policies.Data.Writer)]
 public class MriImagesController : Controller
 {

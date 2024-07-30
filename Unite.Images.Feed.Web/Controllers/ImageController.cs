@@ -7,7 +7,7 @@ using Unite.Images.Indices.Services;
 
 namespace Unite.Images.Feed.Web.Controllers;
 
-[Route("api/image")]
+[Route("api/entry")]
 [Authorize(Policy = Policies.Data.Writer)]
 public class ImageController : Controller
 {
