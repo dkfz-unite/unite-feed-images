@@ -2,6 +2,7 @@
 using Unite.Data.Context;
 using Unite.Data.Entities.Images;
 using Unite.Data.Entities.Images.Analysis;
+using Unite.Data.Entities.Images.Enums;
 using Unite.Images.Feed.Data.Models;
 
 namespace Unite.Images.Feed.Data.Repositories;
@@ -26,9 +27,12 @@ public class SampleRepository
 
     public Sample Find(SampleModel model)
     {
+        var imageType = GetImageType(model.Image);
+
         return _dbContext.Set<Sample>().AsNoTracking().FirstOrDefault(entity =>
             entity.Specimen.Donor.ReferenceId == model.Image.Donor.ReferenceId &&
             entity.Specimen.ReferenceId == model.Image.ReferenceId &&
+            entity.Specimen.TypeId == imageType &&
             entity.Analysis.TypeId == model.Analysis.Type
         );
     }
@@ -67,5 +71,14 @@ public class SampleRepository
     private Image FindOrCreate(ImageModel model)
     {
         return _imageRepository.FindOrCreate(model);
+    }
+
+
+    private static ImageType GetImageType(ImageModel model)
+    {
+        if (model is MriImageModel)
+            return ImageType.MRI;
+        else
+            throw new ArgumentException("Unknown image type");
     }
 }
