@@ -15,7 +15,7 @@ RUN dotnet restore "Unite.Images.Indices/Unite.Images.Indices.csproj"
 RUN dotnet restore "Unite.Images.Feed/Unite.Images.Feed.csproj"
 RUN dotnet restore "Unite.Images.Feed.Web/Unite.Images.Feed.Web.csproj"
 
-FROM restore as build
+FROM restore AS build
 COPY . .
 WORKDIR "/src/Unite.Images.Feed.Web"
 RUN dotnet build --no-restore "Unite.Images.Feed.Web.csproj" -c Release
