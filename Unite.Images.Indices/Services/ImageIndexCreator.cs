@@ -166,10 +166,10 @@ public class ImageIndexCreator
     {
         var index = SampleIndexMapper.CreateFrom<SampleIndex>(sample, diagnosisDate);
 
-        var ssm = CheckVariants<SSM.Variant, SSM.VariantEntry>([sample.SpecimenId]);
-        var cnv = CheckVariants<CNV.Variant, CNV.VariantEntry>([sample.SpecimenId]);
-        var sv = CheckVariants<SV.Variant, SV.VariantEntry>([sample.SpecimenId]);
-        var exp = CheckGeneExp([sample.SpecimenId]);
+        var ssm = CheckSampleVariants<SSM.Variant, SSM.VariantEntry>(sample.Id);
+        var cnv = CheckSampleVariants<CNV.Variant, CNV.VariantEntry>(sample.Id);
+        var sv = CheckSampleVariants<SV.Variant, SV.VariantEntry>(sample.Id);
+        var exp = CheckSampleGeneExp(sample.Id);
 
         if (ssm || cnv || sv || exp)
         {
@@ -191,20 +191,33 @@ public class ImageIndexCreator
     {
         using var dbContext = _dbContextFactory.CreateDbContext();
 
-        // var hasSsms = CheckVariants<SSM.Variant, SSM.VariantEntry>([specimenId]);
-        // var hasCnvs = CheckVariants<CNV.Variant, CNV.VariantEntry>([specimenId]);
-        // var hasSvs = CheckVariants<SV.Variant, SV.VariantEntry>([specimenId]);
-        // var hasExp = CheckGeneExp([specimenId]);
-
-        // if (!hasSsms && !hasCnvs && !hasSvs && !hasExp)
-        //     return [];
-
         return dbContext.Set<Sample>()
             .AsNoTracking()
             .Include(sample => sample.Analysis)
             .Include(sample => sample.Resources)
             .Where(sample => sample.SpecimenId == specimenId)
+            .Where(sample => sample.SsmEntries.Any() || sample.CnvEntries.Any() || sample.SvEntries.Any() || sample.GeneExpressions.Any() || sample.Resources.Any())
             .ToArray();
+    }
+
+    private bool CheckSampleVariants<TVariant, TVariantEntry>(int sampleId)
+        where TVariant : Variant
+        where TVariantEntry : VariantEntry<TVariant>
+    {
+        using var dbContext = _dbContextFactory.CreateDbContext();
+
+        return dbContext.Set<TVariantEntry>()
+            .AsNoTracking()
+            .Any(entity => entity.SampleId == sampleId);
+    }
+
+    private bool CheckSampleGeneExp(int sampleId)
+    {
+        using var dbContext = _dbContextFactory.CreateDbContext();
+
+        return dbContext.Set<GeneExpression>()
+            .AsNoTracking()
+            .Any(expression => expression.SampleId == sampleId);
     }
 
 
