@@ -54,7 +54,7 @@ public static class ConfigurationExtensions
 
         // Submissions hosted service
         services.AddHostedService<SubmissionsWorker>();
-         
+        services.AddTransient<MriImagesSubmissionHandler>();
         services.AddTransient<RadiomicsSubmissionHandler>();
     }
 
