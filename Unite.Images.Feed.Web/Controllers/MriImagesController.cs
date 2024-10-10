@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Unite.Images.Feed.Data;
+using Unite.Data.Context.Services.Tasks;
+using Unite.Data.Entities.Tasks.Enums;
 using Unite.Images.Feed.Web.Configuration.Constants;
 using Unite.Images.Feed.Web.Models;
 using Unite.Images.Feed.Web.Models.Binders;
-using Unite.Images.Feed.Web.Models.Converters;
-using Unite.Images.Feed.Web.Services;
+using Unite.Images.Feed.Web.Submissions;
 
 namespace Unite.Images.Feed.Web.Controllers;
 
@@ -13,31 +13,24 @@ namespace Unite.Images.Feed.Web.Controllers;
 [Authorize(Policy = Policies.Data.Writer)]
 public class MriImagesController : Controller
 {
-    private readonly ImagesWriter _dataWriter;
-    private readonly ImageIndexingTasksService _tasksService;
-    private readonly ILogger _logger;
-
-    private readonly MriImageModelConverter _converter = new();
+    private readonly ImagesSubmissionService _submissionService;
+    private readonly SubmissionTaskService _submissionTaskService;
 
     public MriImagesController(
-        ImagesWriter dataWriter,
-        ImageIndexingTasksService tasksService,
-        ILogger<MriImagesController> logger)
+        ImagesSubmissionService submissionService,
+        SubmissionTaskService submissionTaskService)
     {
-        _dataWriter = dataWriter;
-        _tasksService = tasksService;
-        _logger = logger;
+        _submissionService = submissionService;
+        _submissionTaskService = submissionTaskService;
     }
 
 
     [HttpPost]
     public IActionResult Post([FromBody]MriImageModel[] models)
     {
-        var data = models.Select(model => _converter.Convert(model)).ToArray();
+        var submissionId = _submissionService.AddMriImagesSubmission(models);
 
-        _dataWriter.SaveData(data, out var audit);
-        _tasksService.PopulateTasks(audit.Images);
-        _logger.LogInformation("{audit}", audit.ToString());
+        _submissionTaskService.CreateTask(SubmissionTaskType.MRI, submissionId);
 
         return Ok();
     }
