@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Unite.Images.Feed.Data;
+using Unite.Data.Context.Services.Tasks;
+using Unite.Data.Entities.Tasks.Enums;
 using Unite.Images.Feed.Web.Configuration.Constants;
 using Unite.Images.Feed.Web.Models.Base;
 using Unite.Images.Feed.Web.Models.Radiomics;
 using Unite.Images.Feed.Web.Models.Radiomics.Binders;
-using Unite.Images.Feed.Web.Models.Radiomics.Converters;
-using Unite.Images.Feed.Web.Services;
+using Unite.Images.Feed.Web.Submissions;
 
 namespace Unite.Images.Feed.Web.Controllers;
 
@@ -14,32 +14,23 @@ namespace Unite.Images.Feed.Web.Controllers;
 [Authorize(Policy = Policies.Data.Writer)]
 public class RadiomicsController : Controller
 {
-    private readonly AnalysisWriter _dataWriter;
-    private readonly ImageIndexingTasksService _taskService;
-    private readonly ILogger<RadiomicsController> _logger;
-
-    private readonly AnalysisModelConverter _converter = new();
-
+    private readonly ImagesSubmissionService _submissionService;
+    private readonly SubmissionTaskService _submissionTaskService;
 
     public RadiomicsController(
-        AnalysisWriter dataWriter, 
-        ImageIndexingTasksService taskService, 
-        ILogger<RadiomicsController> logger)
+        ImagesSubmissionService submissionService,
+        SubmissionTaskService submissionTaskService)
     {
-        _dataWriter = dataWriter;
-        _taskService = taskService;
-        _logger = logger;
+        _submissionService = submissionService;
+        _submissionTaskService = submissionTaskService;
     }
-
 
     [HttpPost("")]
     public IActionResult Post([FromBody]AnalysisModel<FeatureModel> model)
     {
-        var data = _converter.Convert(model);
+        var submissionId = _submissionService.AddRadiomicsSubmission(model);
 
-        _dataWriter.SaveData(data, out var audit);
-        _taskService.PopulateTasks(audit.Images);
-        _logger.LogInformation("{audit}", audit.ToString());
+        _submissionTaskService.CreateTask(SubmissionTaskType.IMG_RAD, submissionId);
 
         return Ok();
     }

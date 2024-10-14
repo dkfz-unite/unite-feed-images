@@ -13,6 +13,8 @@ public class ImagesWriter : DataWriter<ImageModel, ImagesWriteAudit>
 
     public ImagesWriter(IDbContextFactory<DomainDbContext> dbContextFactory) : base(dbContextFactory)
     {
+        var dbContext = dbContextFactory.CreateDbContext();
+        Initialize(dbContext);
     }
 
 

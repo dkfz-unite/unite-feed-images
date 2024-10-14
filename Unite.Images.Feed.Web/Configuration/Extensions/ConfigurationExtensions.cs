@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Unite.Cache.Configuration.Options;
 using Unite.Data.Context.Configuration.Extensions;
 using Unite.Data.Context.Configuration.Options;
 using Unite.Data.Context.Services.Tasks;
@@ -17,6 +18,8 @@ using Unite.Indices.Context.Configuration.Options;
 
 using RadFeatureModel = Unite.Images.Feed.Web.Models.Radiomics.FeatureModel;
 using RadFeatureModelValidator = Unite.Images.Feed.Web.Models.Radiomics.Validators.FeatureModelValidator;
+using Unite.Images.Feed.Web.Handlers.Submission;
+using Unite.Images.Feed.Web.Submissions;
 
 namespace Unite.Images.Feed.Web.Configuration.Extensions;
 
@@ -37,14 +40,22 @@ public static class ConfigurationExtensions
         services.AddTransient<ImagesRemover>();
         services.AddTransient<AnalysisWriter>();
 
-        services.AddTransient<ImageIndexingTasksService>();
+        services.AddTransient<ImagesSubmissionService>();
         services.AddTransient<TasksProcessingService>();
+
+        services.AddTransient<SubmissionTaskService>();
+        services.AddTransient<ImageIndexingTasksService>();
 
         services.AddHostedService<IndexingWorker>();
         services.AddTransient<ImagesIndexingOptions>();
         services.AddTransient<ImagesIndexingHandler>();
         services.AddTransient<ImageIndexCreator>();
         services.AddTransient<ImageIndexRemover>();
+
+        // Submissions hosted service
+        services.AddHostedService<SubmissionsWorker>();
+        services.AddTransient<MriImagesSubmissionHandler>();
+        services.AddTransient<RadiomicsSubmissionHandler>();
     }
 
 
@@ -52,6 +63,7 @@ public static class ConfigurationExtensions
     {
         services.AddTransient<ApiOptions>();
         services.AddTransient<ISqlOptions, SqlOptions>();
+        services.AddTransient<IMongoOptions, MongoOptions>();
         services.AddTransient<IElasticOptions, ElasticOptions>();
 
         return services;
