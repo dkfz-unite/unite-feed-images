@@ -45,7 +45,7 @@ public class RadiomicsSubmissionHandler
     {
         var stopwatch = new Stopwatch();
 
-        _tasksProcessingService.Process(SubmissionTaskType.IMG_RAD, 1, (tasks) =>
+        _tasksProcessingService.Process(SubmissionTaskType.IMG_RAD, TaskStatusType.Prepared, 1, (tasks) =>
         {
             stopwatch.Restart();
 
