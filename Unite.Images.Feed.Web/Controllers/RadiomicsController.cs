@@ -25,19 +25,31 @@ public class RadiomicsController : Controller
         _submissionTaskService = submissionTaskService;
     }
 
+    [HttpGet("{id}")]
+    public IActionResult Get(long id)
+    {
+        var task = _submissionTaskService.GetTask(id);
+
+        var submission = _submissionService.FindRadiomicsSubmission(task.Target);
+
+        return Ok(submission);
+    }
+
     [HttpPost("")]
-    public IActionResult Post([FromBody]AnalysisModel<FeatureModel> model)
+    public IActionResult Post([FromBody]AnalysisModel<FeatureModel> model, [FromQuery] bool review = true)
     {
         var submissionId = _submissionService.AddRadiomicsSubmission(model);
 
-        _submissionTaskService.CreateTask(SubmissionTaskType.IMG_RAD, submissionId);
+         var taskStatus = review ? TaskStatusType.Preparing : TaskStatusType.Prepared;
 
-        return Ok();
+        long taskId =_submissionTaskService.CreateTask(SubmissionTaskType.IMG_RAD, submissionId, taskStatus);
+
+        return Ok(taskId);
     }
 
     [HttpPost("tsv")]
-    public IActionResult PostTsv([ModelBinder(typeof(AnalysisTsvModelBinder))]AnalysisModel<FeatureModel> model)
+    public IActionResult PostTsv([ModelBinder(typeof(AnalysisTsvModelBinder))]AnalysisModel<FeatureModel> model, [FromQuery] bool review = true)
     {
-        return Post(model);
+        return Post(model, review);
     }
 }
