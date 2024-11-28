@@ -36,11 +36,11 @@ public class RadiomicsController : Controller
     }
 
     [HttpPost("")]
-    public IActionResult Post([FromBody]AnalysisModel<FeatureModel> model, [FromQuery] bool validate = true)
+    public IActionResult Post([FromBody]AnalysisModel<FeatureModel> model, [FromQuery] bool review = true)
     {
         var submissionId = _submissionService.AddRadiomicsSubmission(model);
 
-         var taskStatus = validate ? TaskStatusType.Preparing : TaskStatusType.Prepared;
+         var taskStatus = review ? TaskStatusType.Preparing : TaskStatusType.Prepared;
 
         long taskId =_submissionTaskService.CreateTask(SubmissionTaskType.IMG_RAD, submissionId, taskStatus);
 
@@ -48,8 +48,8 @@ public class RadiomicsController : Controller
     }
 
     [HttpPost("tsv")]
-    public IActionResult PostTsv([ModelBinder(typeof(AnalysisTsvModelBinder))]AnalysisModel<FeatureModel> model, [FromQuery] bool validate = true)
+    public IActionResult PostTsv([ModelBinder(typeof(AnalysisTsvModelBinder))]AnalysisModel<FeatureModel> model, [FromQuery] bool review = true)
     {
-        return Post(model, validate);
+        return Post(model, review);
     }
 }

@@ -35,11 +35,11 @@ public class MriImagesController : Controller
     }
 
     [HttpPost("")]
-    public IActionResult Post([FromBody] MriImageModel[] models, [FromQuery] bool validate = true)
+    public IActionResult Post([FromBody] MriImageModel[] models, [FromQuery] bool review = true)
     {
         var submissionId = _submissionService.AddMriImagesSubmission(models);
 
-        var taskStatus = validate ? TaskStatusType.Preparing : TaskStatusType.Prepared;
+        var taskStatus = review ? TaskStatusType.Preparing : TaskStatusType.Prepared;
 
         var taskId = _submissionTaskService.CreateTask(SubmissionTaskType.MRI, submissionId, taskStatus);
 
@@ -47,8 +47,8 @@ public class MriImagesController : Controller
     }
 
     [HttpPost("tsv")]
-    public IActionResult PostTsv([ModelBinder(typeof(MriImageTsvModelsBinder))] MriImageModel[] models, [FromQuery] bool validate = true)
+    public IActionResult PostTsv([ModelBinder(typeof(MriImageTsvModelsBinder))] MriImageModel[] models, [FromQuery] bool review = true)
     {
-        return Post(models, validate);
+        return Post(models, review);
     }
 }
