@@ -14,8 +14,11 @@ All data submision request implement **UPSERT** logic:
 
 ## Overview
 - get:[api](#get-api) - health check.
+- get:[api/entries/mri/{id}](#get-apientriesmriid) - get MRI data submission document.
 - post:[api/entries/mri/{type?}](#post-apientriesmritype) - submit MRI images data in given type.
+- get:[api/entries/ct/{id}](#get-apientriesctid) - get CT data submission document.
 - post:[api/entries/ct/{type?}](#post-apientriescttype) - submit CT images data in given type (**not supported yet**).
+- get:[api/analysis/radiomics/{id}](#get-apianalysisradiomicsid) - get radiomics features extraction data submission document.
 - post:[api/analysis/radiomics/{type?}](#post-apianalysisradiomicstype) - submit radiomics features extraction analysis data in given type.
 - delete:[api/entry/{id}](#delete-apientryid) - delete image data.
 
@@ -28,6 +31,19 @@ Health check.
 
 ### Responses
 `"2022-03-17T09:45:10.9359202Z"` - Current UTC date and time in JSON format, if service is up and running
+
+
+## GET: [api/entries/mri/{id}](http://localhost:5102/api/entries/mri/1)
+Get MRI data submission document.
+
+### Parameters
+- `id` - Submission ID.
+
+### Responses
+- `200` - submission document in JSON format
+- `401` - missing JWT token
+- `403` - missing required permissions
+- `404` - submission with given ID was not found
 
 
 ## POST: [api/entries/mri/{type?}](http://localhost:5102/api/entries/mri)
@@ -114,10 +130,23 @@ MRI2	Donor2	2020-03-01		11.139	90.200	10.268	131.487	143.473	116.912	2.322	2.322
 Fields description can be found [here](api-models-mris.md).
 
 ### Responses
-- `200` - request was processed successfully
+- `200` - submission ID (can be used to track submission status)
 - `400` - request data didn't pass validation
 - `401` - missing JWT token
 - `403` - missing required permissions
+
+
+## GET: [api/entries/ct/{id}](http://localhost:5102/api/entries/ct/1)
+Get CT data submission document.
+
+### Parameters
+- `id` - Submission ID.
+
+### Responses
+- `200` - submission document in JSON format
+- `401` - missing JWT token
+- `403` - missing required permissions
+- `404` - submission with given ID was not found
 
 
 ## POST: [api/analysis/radiomics/{type?}](http://localhost:5102/api/analysis/radiomics)
@@ -161,7 +190,7 @@ feature_3  value_3
 Fields description can be found [here](api-models-radiomics.md).
 
 ### Responses
-- `200` - request was processed successfully
+- `200` - submission ID (can be used to track submission status)
 - `400` - request data didn't pass validation
 - `401` - missing JWT token
 - `403` - missing required permissions
