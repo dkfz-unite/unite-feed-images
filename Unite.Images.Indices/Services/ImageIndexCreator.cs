@@ -12,9 +12,9 @@ using Unite.Data.Entities.Images;
 using Unite.Data.Entities.Images.Enums;
 using Unite.Data.Entities.Specimens;
 using Unite.Essentials.Extensions;
+using Unite.Images.Indices.Services.Mapping;
 using Unite.Indices.Entities;
 using Unite.Indices.Entities.Images;
-using Unite.Mapping;
 
 using SSM = Unite.Data.Entities.Genome.Analysis.Dna.Ssm;
 using CNV = Unite.Data.Entities.Genome.Analysis.Dna.Cnv;
@@ -24,8 +24,6 @@ namespace Unite.Images.Indices.Services;
 
 public class ImageIndexCreator
 {
-    private record GenomicStats(int NumberOfGenes, int NumberOfSsms, int NumberOfCnvs, int NumberOfSvs);
-
     private readonly IDbContextFactory<DomainDbContext> _dbContextFactory;
     private readonly DonorsRepository _donorsRepository;
     private readonly ImagesRepository _imagesRepository;
@@ -62,22 +60,15 @@ public class ImageIndexCreator
     private ImageIndex CreateImageIndex(Image image)
     {
         var diagnosisDate = image.Donor.ClinicalData?.DiagnosisDate;
-        var stats = LoadGenomicStats(image.DonorId);
 
         var index = new ImageIndex();
 
         ImageIndexMapper.Map(image, index, diagnosisDate);
 
-        index.DonorId = image.DonorId;
-
         index.Donor = CreateDonorIndex(image.DonorId);
         index.Specimens = CreateSpecimenIndices(image.DonorId, diagnosisDate);
+        index.Stats = CreateStatsIndex(image.TypeId, image.DonorId);
         index.Data = CreateDataIndex(image.TypeId, image.DonorId);
-
-        index.NumberOfGenes = stats.NumberOfGenes;
-        index.NumberOfSsms = stats.NumberOfSsms;
-        index.NumberOfCnvs = stats.NumberOfCnvs;
-        index.NumberOfSvs = stats.NumberOfSvs;
 
         return index;
     }
@@ -117,10 +108,6 @@ public class ImageIndexCreator
 
         return dbContext.Set<Donor>()
             .AsNoTracking()
-            .IncludeClinicalData()
-            .IncludeTreatments()
-            .IncludeStudies()
-            .IncludeProjects()
             .FirstOrDefault(donor => donor.Id == donorId);
     }
 
@@ -147,8 +134,6 @@ public class ImageIndexCreator
 
         return dbContext.Set<Specimen>()
             .AsNoTracking()
-            .IncludeMaterial()
-            .IncludeMolecularData()
             .Where(Predicates.IsImageRelatedSpecimen)
             .Where(specimen => specimen.DonorId == donorId)
             .ToArray();
@@ -169,16 +154,20 @@ public class ImageIndexCreator
         var ssm = CheckSampleVariants<SSM.Variant, SSM.VariantEntry>(sample.Id);
         var cnv = CheckSampleVariants<CNV.Variant, CNV.VariantEntry>(sample.Id);
         var sv = CheckSampleVariants<SV.Variant, SV.VariantEntry>(sample.Id);
+        var meth = CheckSampleMethylation(sample.Id);
         var exp = CheckSampleGeneExp(sample.Id);
+        var expSc = CheckSampleGeneExpSc(sample.Id);
 
-        if (ssm || cnv || sv || exp)
+        if (ssm || cnv || sv || meth || exp || expSc)
         {
             index.Data = new Unite.Indices.Entities.Basic.Analysis.SampleDataIndex
             {
                 Ssm = ssm,
                 Cnv = cnv,
                 Sv = sv,
-                Exp = exp
+                Meth = meth,
+                Exp = exp,
+                ExpSc = expSc
             };
         }
 
@@ -211,6 +200,15 @@ public class ImageIndexCreator
             .Any(entity => entity.SampleId == sampleId);
     }
 
+    private bool CheckSampleMethylation(int sampleId)
+    {
+        using var dbContext = _dbContextFactory.CreateDbContext();
+
+        return dbContext.Set<SampleResource>()
+            .AsNoTracking()
+            .Any(resource => resource.SampleId == sampleId && resource.Type == "dna-meth");
+    }
+
     private bool CheckSampleGeneExp(int sampleId)
     {
         using var dbContext = _dbContextFactory.CreateDbContext();
@@ -220,6 +218,32 @@ public class ImageIndexCreator
             .Any(expression => expression.SampleId == sampleId);
     }
 
+    private bool CheckSampleGeneExpSc(int sampleId)
+    {
+        using var dbContext = _dbContextFactory.CreateDbContext();
+
+        return dbContext.Set<SampleResource>()
+            .AsNoTracking()
+            .Any(resource => resource.SampleId == sampleId && resource.Type == "rnasc-exp");
+    }
+
+
+    private StatsIndex CreateStatsIndex(ImageType type, int donorId)
+    {
+        var specimenIds = _donorsRepository.GetRelatedSpecimens([donorId]).Result;
+        var geneIds = _specimensRepository.GetVariantRelatedGenes(specimenIds).Result;
+        var ssmIds = _specimensRepository.GetRelatedVariants<SSM.Variant>(specimenIds).Result;
+        var cnvIds = _specimensRepository.GetRelatedVariants<CNV.Variant>(specimenIds).Result;
+        var svIds = _specimensRepository.GetRelatedVariants<SV.Variant>(specimenIds).Result;
+        
+        return new StatsIndex
+        {
+            Genes = geneIds.Length,
+            Ssms = ssmIds.Length,
+            Cnvs = cnvIds.Length,
+            Svs = svIds.Length
+        };
+    }
 
     private DataIndex CreateDataIndex(ImageType type, int donorId)
     {
@@ -239,20 +263,10 @@ public class ImageIndexCreator
             Ssms = CheckVariants<SSM.Variant, SSM.VariantEntry>(specimenIds),
             Cnvs = CheckVariants<CNV.Variant, CNV.VariantEntry>(specimenIds),
             Svs = CheckVariants<SV.Variant, SV.VariantEntry>(specimenIds),
-            GeneExp = CheckGeneExp(specimenIds),
-            GeneExpSc = CheckGeneExpSc(specimenIds)
+            Meth = CheckMethylation(specimenIds),
+            Exp = CheckGeneExp(specimenIds),
+            ExpSc = CheckGeneExpSc(specimenIds)
         };
-    }
-
-    private GenomicStats LoadGenomicStats(int donorId)
-    {
-        var specimenIds = _donorsRepository.GetRelatedSpecimens([donorId]).Result;
-        var ssmIds = _specimensRepository.GetRelatedVariants<SSM.Variant>(specimenIds).Result;
-        var cnvIds = _specimensRepository.GetRelatedVariants<CNV.Variant>(specimenIds).Result;
-        var svIds = _specimensRepository.GetRelatedVariants<SV.Variant>(specimenIds).Result;
-        var geneIds = _specimensRepository.GetVariantRelatedGenes(specimenIds).Result;
-
-        return new GenomicStats(geneIds.Length, ssmIds.Length, cnvIds.Length, svIds.Length);
     }
 
 
@@ -319,6 +333,20 @@ public class ImageIndexCreator
             .Select(entry => entry.EntityId)
             .Distinct()
             .Any();
+    }
+
+    /// <summary>
+    /// Checks if DNA methylation data is available for given specimens.
+    /// </summary>
+    /// <param name="specimenIds">Specimen identifiers.</param>
+    /// <returns>'true' if DNA methylation data exists or 'false' otherwise.</returns>
+    private bool CheckMethylation(int[] specimenIds)
+    {
+        using var dbContext = _dbContextFactory.CreateDbContext();
+
+        return dbContext.Set<SampleResource>()
+            .AsNoTracking()
+            .Any(resource => specimenIds.Contains(resource.Sample.SpecimenId) && resource.Type == "dna-meth");
     }
 
     /// <summary>
