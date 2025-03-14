@@ -55,7 +55,7 @@ public class ImageIndexingTasksService : IndexingTaskService<Image, int>
 
     protected override IEnumerable<int> LoadRelatedProjects(IEnumerable<int> keys)
     {
-        return [];
+        return _imagesRepository.GetRelatedProjects(keys).Result;
     }
 
     protected override IEnumerable<int> LoadRelatedDonors(IEnumerable<int> keys)

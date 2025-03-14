@@ -18,6 +18,10 @@ public class SampleModelValidator : AbstractValidator<SampleModel>
             .NotEmpty()
             .WithMessage("Should not be empty");
 
+        RuleFor(model => model.AnalysisType)
+            .NotEmpty()
+            .WithMessage("Should not be empty");
+
         RuleFor(model => model.AnalysisDate)
             .Empty()
             .When(model => model.AnalysisDay.HasValue)
