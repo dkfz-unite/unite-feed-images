@@ -1,4 +1,5 @@
-﻿using Unite.Data.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using Unite.Data.Context;
 using Unite.Data.Entities.Donors;
 using Unite.Images.Feed.Data.Models;
 
@@ -31,11 +32,36 @@ public class DonorRepository
 
     public Donor Create(DonorModel model)
     {
-        var entity = new Donor() { ReferenceId = model.ReferenceId };
+        var project = FindOrCreateProject();
+        var projectDonor = new ProjectDonor() { ProjectId = project.Id };
+        var entity = new Donor()
+        { 
+            ReferenceId = model.ReferenceId,
+            DonorProjects = [projectDonor]
+        };
 
         _dbContext.Add(entity);
         _dbContext.SaveChanges();
 
         return entity;
+    }
+
+
+    private Project FindOrCreateProject()
+    {
+        var name = Project.DefaultName;
+        var project = _dbContext.Set<Project>()
+            .AsNoTracking()
+            .FirstOrDefault(entity => entity.Name == name);
+
+        if (project == null)
+        {
+            project = new Project() { Name = name };
+        }
+
+        _dbContext.Add(project);
+        _dbContext.SaveChanges();
+
+        return project;
     }
 }
