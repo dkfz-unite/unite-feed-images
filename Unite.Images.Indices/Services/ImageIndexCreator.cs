@@ -19,6 +19,7 @@ using Unite.Indices.Entities.Images;
 using SSM = Unite.Data.Entities.Genome.Analysis.Dna.Ssm;
 using CNV = Unite.Data.Entities.Genome.Analysis.Dna.Cnv;
 using SV = Unite.Data.Entities.Genome.Analysis.Dna.Sv;
+using Unite.Data.Constants;
 
 namespace Unite.Images.Indices.Services;
 
@@ -206,7 +207,7 @@ public class ImageIndexCreator
 
         return dbContext.Set<SampleResource>()
             .AsNoTracking()
-            .Any(resource => resource.SampleId == sampleId && resource.Type == "dna-meth");
+            .Any(resource => resource.SampleId == sampleId && resource.Type == DataTypes.Genome.Meth.Sample && resource.Format == FileTypes.Sequence.Idat);
     }
 
     private bool CheckSampleGeneExp(int sampleId)
@@ -224,7 +225,7 @@ public class ImageIndexCreator
 
         return dbContext.Set<SampleResource>()
             .AsNoTracking()
-            .Any(resource => resource.SampleId == sampleId && resource.Type == "rnasc-exp");
+            .Any(resource => resource.SampleId == sampleId && resource.Type == DataTypes.Genome.Rnasc.Exp);
     }
 
 
@@ -346,7 +347,7 @@ public class ImageIndexCreator
 
         return dbContext.Set<SampleResource>()
             .AsNoTracking()
-            .Any(resource => specimenIds.Contains(resource.Sample.SpecimenId) && resource.Type == "dna-meth");
+            .Any(resource => specimenIds.Contains(resource.Sample.SpecimenId) && resource.Type == DataTypes.Genome.Meth.Sample && resource.Format == FileTypes.Sequence.Idat);
     }
 
     /// <summary>
@@ -374,6 +375,6 @@ public class ImageIndexCreator
 
         return dbContext.Set<SampleResource>()
             .AsNoTracking()
-            .Any(resource => specimenIds.Contains(resource.Sample.SpecimenId) && resource.Type == "rnasc-exp");
+            .Any(resource => specimenIds.Contains(resource.Sample.SpecimenId) && resource.Type == DataTypes.Genome.Rnasc.Exp);
     }
 }
