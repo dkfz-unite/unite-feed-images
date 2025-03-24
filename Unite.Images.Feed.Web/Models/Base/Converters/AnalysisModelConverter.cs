@@ -28,7 +28,7 @@ public abstract class AnalysisModelConverter<TEntry> : ConverterBase
     {
         return new DataModels.AnalysisModel
         {
-            Type = sampleModel.AnalysisType,
+            Type = sampleModel.AnalysisType.Value,
             Date = sampleModel.AnalysisDate,
             Day = sampleModel.AnalysisDay
         };
