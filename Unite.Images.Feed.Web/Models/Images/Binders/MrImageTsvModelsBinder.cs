@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Unite.Essentials.Tsv;
 
-namespace Unite.Images.Feed.Web.Models.Binders;
+namespace Unite.Images.Feed.Web.Models.Images.Binders;
 
-public class MriImageTsvModelsBinder : IModelBinder
+public class MrImageTsvModelsBinder : IModelBinder
 {
     public async Task BindModelAsync(ModelBindingContext bindingContext)
     {
@@ -13,7 +13,7 @@ public class MriImageTsvModelsBinder : IModelBinder
 
         var tsv = await reader.ReadToEndAsync();
 
-        var map = new ClassMap<MriImageModel>()
+        var map = new ClassMap<MrImageModel>()
             .Map(entity => entity.Id, "id")
             .Map(entity => entity.DonorId, "donor_id")
             .Map(entity => entity.CreationDate, "creation_date")

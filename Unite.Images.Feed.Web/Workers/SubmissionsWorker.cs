@@ -5,15 +5,15 @@ namespace Unite.Images.Feed.Web.Workers;
 
 public class SubmissionsWorker : BackgroundService
 {
-    private readonly MriImagesSubmissionHandler _mriImagesSubmissionHandler;
+    private readonly MrImagesSubmissionHandler _mrImagesSubmissionHandler;
     private readonly RadiomicsSubmissionHandler _radiomicsSubmissionHandler;
     private readonly ILogger _logger;
 
-    public SubmissionsWorker(MriImagesSubmissionHandler mriImagesSubmissionHandler,
+    public SubmissionsWorker(MrImagesSubmissionHandler mrImagesSubmissionHandler,
             RadiomicsSubmissionHandler radiomicsSubmissionHandler,
             ILogger<SubmissionsWorker> logger)
     {
-            _mriImagesSubmissionHandler = mriImagesSubmissionHandler;
+            _mrImagesSubmissionHandler = mrImagesSubmissionHandler;
             _radiomicsSubmissionHandler = radiomicsSubmissionHandler;
             _logger = logger;
     }
@@ -31,7 +31,7 @@ public class SubmissionsWorker : BackgroundService
         {
             try
             {
-                _mriImagesSubmissionHandler.Handle();
+                _mrImagesSubmissionHandler.Handle();
                 _radiomicsSubmissionHandler.Handle();
             }
             catch (Exception exception)

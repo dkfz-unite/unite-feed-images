@@ -1,10 +1,10 @@
 using Unite.Images.Feed.Web.Models.Base.Converters;
 
-namespace Unite.Images.Feed.Web.Models.Converters;
+namespace Unite.Images.Feed.Web.Models.Images.Converters;
 
-public class MriImageModelConverter : ImageModelConverter<MriImageModel, Data.Models.MriImageModel>
+public class MrImageModelConverter : ImageModelConverter<MrImageModel, Data.Models.MrImageModel>
 {
-    protected override void Map(in MriImageModel source, ref Data.Models.MriImageModel target)
+    protected override void Map(in MrImageModel source, ref Data.Models.MrImageModel target)
     {
         base.Map(source, ref target);
 

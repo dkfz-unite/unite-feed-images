@@ -76,8 +76,8 @@ public class SampleRepository
 
     private static ImageType GetImageType(ImageModel model)
     {
-        if (model is MriImageModel)
-            return ImageType.MRI;
+        if (model is MrImageModel)
+            return ImageType.MR;
         else
             throw new ArgumentException("Unknown image type");
     }
