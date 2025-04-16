@@ -207,9 +207,7 @@ public class ImageIndexCreator
 
         return dbContext.Set<SampleResource>()
             .AsNoTracking()
-            .Any(resource => resource.SampleId == sampleId &&
-                ((resource.Type == DataTypes.Genome.Meth.Sample && resource.Format == FileTypes.Sequence.Idat) ||
-                (resource.Type == DataTypes.Genome.Meth.Level)));
+            .Any(resource => resource.SampleId == sampleId && resource.Type == DataTypes.Genome.Meth.Level);
     }
 
     private bool CheckSampleGeneExp(int sampleId)
@@ -349,9 +347,7 @@ public class ImageIndexCreator
 
         return dbContext.Set<SampleResource>()
             .AsNoTracking()
-            .Any(resource => specimenIds.Contains(resource.Sample.SpecimenId) &&
-                ((resource.Type == DataTypes.Genome.Meth.Sample && resource.Format == FileTypes.Sequence.Idat) ||
-                (resource.Type == DataTypes.Genome.Meth.Level)));
+            .Any(resource => specimenIds.Contains(resource.Sample.SpecimenId) && resource.Type == DataTypes.Genome.Meth.Level);
     }
 
     /// <summary>
