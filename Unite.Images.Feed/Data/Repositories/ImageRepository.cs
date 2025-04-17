@@ -11,13 +11,13 @@ internal class ImageRepository
     private const string UnsupportedImageType = "Image type is not yet supported";
 
     private readonly DomainDbContext _dbContext;
-    private readonly ImageRepositoryBase<MriImageModel> _mriImageRepository;
+    private readonly ImageRepositoryBase<MrImageModel> _mrImageRepository;
 
 
     public ImageRepository(DomainDbContext dbContext)
     {
         _dbContext = dbContext;
-        _mriImageRepository = new MriImageRepository(dbContext);
+        _mrImageRepository = new MrImageRepository(dbContext);
     }
 
 
@@ -30,16 +30,16 @@ internal class ImageRepository
 
     public Image Find(ImageModel model)
     {
-        if (model is MriImageModel mriImage)
-            return _mriImageRepository.Find(mriImage);
+        if (model is MrImageModel mrImage)
+            return _mrImageRepository.Find(mrImage);
         else
             throw new NotImplementedException(UnsupportedImageType);
     }
 
     public Image Create(ImageModel model)
     {
-        if (model is MriImageModel mriImage)
-            return _mriImageRepository.Create(mriImage);
+        if (model is MrImageModel mrImage)
+            return _mrImageRepository.Create(mrImage);
         else
             throw new NotImplementedException(UnsupportedImageType);
     }
@@ -51,8 +51,8 @@ internal class ImageRepository
 
     public void Update(Image entity, ImageModel model)
     {
-        if (model is MriImageModel mriImage)
-            _mriImageRepository.Update(entity, mriImage);
+        if (model is MrImageModel mrImage)
+            _mrImageRepository.Update(entity, mrImage);
         else
             throw new NotImplementedException(UnsupportedImageType);
     }

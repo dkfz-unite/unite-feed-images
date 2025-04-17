@@ -81,8 +81,8 @@ internal abstract class ImageRepositoryBase<TModel> where TModel : ImageModel
 
     private static ImageType GetImageType(ImageModel model)
     {
-        if (model is MriImageModel)
-            return ImageType.MRI;
+        if (model is MrImageModel)
+            return ImageType.MR;
         else
             throw new NotSupportedException("Image type is not supported");
     }

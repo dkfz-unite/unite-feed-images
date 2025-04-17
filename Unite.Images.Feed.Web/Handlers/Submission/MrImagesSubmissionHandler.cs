@@ -2,28 +2,30 @@ using System.Diagnostics;
 using Unite.Data.Context.Services.Tasks;
 using Unite.Data.Entities.Tasks.Enums;
 using Unite.Images.Feed.Data;
+using Unite.Images.Feed.Web.Models.Images;
+using Unite.Images.Feed.Web.Models.Images.Converters;
 using Unite.Images.Feed.Web.Services;
 using Unite.Images.Feed.Web.Submissions;
 
 namespace Unite.Images.Feed.Web.Handlers.Submission;
 
-public class MriImagesSubmissionHandler
+public class MrImagesSubmissionHandler
 {
     private readonly ImagesWriter _dataWriter;
     private readonly ImageIndexingTasksService _tasksService;
     private readonly ImagesSubmissionService _submissionService;
     private readonly TasksProcessingService _tasksProcessingService;
 
-    private readonly Models.Converters.MriImageModelConverter _modelConverter;
+    private readonly MrImageModelConverter _modelConverter;
 
     private readonly ILogger _logger;
 
-    public MriImagesSubmissionHandler(
+    public MrImagesSubmissionHandler(
            ImagesWriter dataWriter,
            ImageIndexingTasksService tasksService,
            ImagesSubmissionService submissionService,
            TasksProcessingService tasksProcessingService,
-           ILogger<MriImagesSubmissionHandler> logger)
+           ILogger<MrImagesSubmissionHandler> logger)
     {
         _dataWriter = dataWriter;
         _tasksService = tasksService;
@@ -31,7 +33,7 @@ public class MriImagesSubmissionHandler
         _tasksProcessingService = tasksProcessingService;
         _logger = logger;
 
-        _modelConverter = new Models.Converters.MriImageModelConverter();
+        _modelConverter = new MrImageModelConverter();
     }
 
      public void Handle()
@@ -43,7 +45,7 @@ public class MriImagesSubmissionHandler
     {
         var stopwatch = new Stopwatch();
 
-        _tasksProcessingService.Process(SubmissionTaskType.MRI, TaskStatusType.Prepared, 1, (tasks) =>
+        _tasksProcessingService.Process(SubmissionTaskType.MR, TaskStatusType.Prepared, 1, (tasks) =>
         {
             stopwatch.Restart();
 
@@ -51,7 +53,7 @@ public class MriImagesSubmissionHandler
 
             stopwatch.Stop();
 
-            _logger.LogInformation("Processed MriImages data submission in {time}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2));
+            _logger.LogInformation("Processed MR images data submission in {time}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2));
 
             return true;
         });
@@ -59,12 +61,12 @@ public class MriImagesSubmissionHandler
 
     private void ProcessSubmission(string submissionId)
     {
-        var submittedData = _submissionService.FindMriImagesSubmission(submissionId);
-        var convertedData = submittedData.Select<Models.MriImageModel,Data.Models.ImageModel>((mriModel) => _modelConverter.Convert(mriModel));
+        var submittedData = _submissionService.FindMrImagesSubmission(submissionId);
+        var convertedData = submittedData.Select<MrImageModel, Data.Models.ImageModel>((mriModel) => _modelConverter.Convert(mriModel));
 
         _dataWriter.SaveData(convertedData, out var audit);
         _tasksService.PopulateTasks(audit.Images);
-        _submissionService.DeleteMriImagesSubmission(submissionId);
+        _submissionService.DeleteMrImagesSubmission(submissionId);
 
         _logger.LogInformation("{audit}", audit.ToString());
     }

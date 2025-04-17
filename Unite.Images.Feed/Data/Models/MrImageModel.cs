@@ -1,6 +1,6 @@
 ﻿namespace Unite.Images.Feed.Data.Models;
 
-public class MriImageModel : ImageModel
+public class MrImageModel : ImageModel
 {
     public double? WholeTumor;
     public double? ContrastEnhancing;

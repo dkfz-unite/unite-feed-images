@@ -7,10 +7,8 @@ using Unite.Images.Feed.Data;
 using Unite.Images.Feed.Web.Configuration.Options;
 using Unite.Images.Feed.Web.Handlers;
 using Unite.Images.Feed.Web.Workers;
-using Unite.Images.Feed.Web.Models;
 using Unite.Images.Feed.Web.Models.Base;
 using Unite.Images.Feed.Web.Models.Base.Validators;
-using Unite.Images.Feed.Web.Models.Validators;
 using Unite.Images.Feed.Web.Services;
 using Unite.Images.Indices.Services;
 using Unite.Indices.Context.Configuration.Extensions;
@@ -20,6 +18,8 @@ using RadFeatureModel = Unite.Images.Feed.Web.Models.Radiomics.FeatureModel;
 using RadFeatureModelValidator = Unite.Images.Feed.Web.Models.Radiomics.Validators.FeatureModelValidator;
 using Unite.Images.Feed.Web.Handlers.Submission;
 using Unite.Images.Feed.Web.Submissions;
+using Unite.Images.Feed.Web.Models.Images.Validators;
+using Unite.Images.Feed.Web.Models.Images;
 
 namespace Unite.Images.Feed.Web.Configuration.Extensions;
 
@@ -54,7 +54,7 @@ public static class ConfigurationExtensions
 
         // Submissions hosted service
         services.AddHostedService<SubmissionsWorker>();
-        services.AddTransient<MriImagesSubmissionHandler>();
+        services.AddTransient<MrImagesSubmissionHandler>();
         services.AddTransient<RadiomicsSubmissionHandler>();
     }
 
@@ -71,7 +71,7 @@ public static class ConfigurationExtensions
 
     private static IServiceCollection AddValidators(this IServiceCollection services)
     {
-        services.AddTransient<IValidator<MriImageModel[]>, MriImageModelsValidator>();
+        services.AddTransient<IValidator<MrImageModel[]>, MrImageModelsValidator>();
         services.AddTransient<IValidator<AnalysisModel<RadFeatureModel>>, AnalysisModelValidator<RadFeatureModel, RadFeatureModelValidator>>();
 
         return services;

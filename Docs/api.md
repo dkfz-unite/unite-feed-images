@@ -14,8 +14,8 @@ All data submision request implement **UPSERT** logic:
 
 ## Overview
 - get:[api](#get-api) - health check.
-- get:[api/entries/mri/{id}](#get-apientriesmriid) - get MRI data submission document.
-- post:[api/entries/mri/{type?}](#post-apientriesmritype) - submit MRI images data in given type.
+- get:[api/entries/mr/{id}](#get-apientriesmrid) - get MR data submission document.
+- post:[api/entries/mr/{type?}](#post-apientriesmrtype) - submit MR images data in given type.
 - get:[api/entries/ct/{id}](#get-apientriesctid) - get CT data submission document.
 - post:[api/entries/ct/{type?}](#post-apientriescttype) - submit CT images data in given type (**not supported yet**).
 - get:[api/analysis/radiomics/{id}](#get-apianalysisradiomicsid) - get radiomics features extraction data submission document.
@@ -33,8 +33,8 @@ Health check.
 `"2022-03-17T09:45:10.9359202Z"` - Current UTC date and time in JSON format, if service is up and running
 
 
-## GET: [api/entries/mri/{id}](http://localhost:5102/api/entries/mri/1)
-Get MRI data submission document.
+## GET: [api/entries/mr/{id}](http://localhost:5102/api/entries/mr/1)
+Get MR image data submission document.
 
 ### Parameters
 - `id` - Submission ID.
@@ -46,8 +46,8 @@ Get MRI data submission document.
 - `404` - submission with given ID was not found
 
 
-## POST: [api/entries/mri/{type?}](http://localhost:5102/api/entries/mri)
-Submit MRI images data.
+## POST: [api/entries/mr/{type?}](http://localhost:5102/api/entries/mr)
+Submit MR images data.
 
 ### Boby
 Supported formats are:
@@ -58,7 +58,7 @@ Supported formats are:
 ```json
 [
   {
-    "id": "MRI1",
+    "id": "MR1",
     "donor_id": "Donor1",
     "creation_date": "2020-01-01",
     "whole_tumor": 111.393,
@@ -78,7 +78,7 @@ Supported formats are:
     "median_mtt_edema": 2631.357
   },
   {
-    "id": "MRI1",
+    "id": "MR1",
     "donor_id": "Donor2",
     "creation_date": "2020-01-01",
     "whole_tumor": 133.672,
@@ -98,7 +98,7 @@ Supported formats are:
     "median_mtt_edema": 3157.629
   },
   {
-    "id": "MRI2",
+    "id": "MR2",
     "donor_id": "Donor2",
     "creation_date": "2020-03-01",
     "whole_tumor": 11.139,
@@ -123,11 +123,11 @@ Supported formats are:
 ##### tsv - text/tab-separated-values
 ```tsv
 id	donor_id	creation_date	creation_day	whole_tumor	contrast_enhancing	non_contrast_enhancing	median_adc_tumor	median_adc_ce	median_adc_edema	median_cbf_tumor	median_cbf_ce	median_cbf_edema	median_cbv_tumor	median_cbv_ce	median_cbv_edema	median_mtt_tumor	median_mtt_ce	median_mtt_edema
-MRI1	Donor1	2020-01-01		111.393	902.000	102.683	1314.861	1598.304	1299.114	23.221	23.221	23.221	311.923	359.912	327.919	2599.365	2791.318	2631.357
-MRI1	Donor2	2020-01-01		133.672	1082.400	123.219	1577.833	1917.965	1558.937	27.865	27.865	27.865	374.308	431.894	393.503	3119.238	3349.582	3157.629
-MRI2	Donor2	2020-03-01		11.139	90.200	10.268	131.487	143.473	116.912	2.322	2.322	2.322	31.192	35.991	32.792	233.943	251.172	236.180
+MR1	Donor1	2020-01-01		111.393	902.000	102.683	1314.861	1598.304	1299.114	23.221	23.221	23.221	311.923	359.912	327.919	2599.365	2791.318	2631.357
+MR1	Donor2	2020-01-01		133.672	1082.400	123.219	1577.833	1917.965	1558.937	27.865	27.865	27.865	374.308	431.894	393.503	3119.238	3349.582	3157.629
+MR2	Donor2	2020-03-01		11.139	90.200	10.268	131.487	143.473	116.912	2.322	2.322	2.322	31.192	35.991	32.792	233.943	251.172	236.180
 ```
-Fields description can be found [here](api-models-mris.md).
+Fields description can be found [here](api-models-mrs.md).
 
 ### Responses
 - `200` - submission ID (can be used to track submission status)
@@ -163,7 +163,7 @@ Supported formats are:
   "sample": {
     "donor_id": "Donor1",
     "image_id": "MRI1",
-    "image_type": "MRI",
+    "image_type": "MR",
     "analysis_type": "RFE",
     "analysis_date": "2020-01-01"
   },
@@ -179,7 +179,7 @@ Supported formats are:
 ```tsv
 # donor_id: Donor1
 # image_id: MRI1
-# image_type: MRI
+# image_type: MR
 # analysis_type: RFE
 # analysis_date: 2020-01-01
 name  value

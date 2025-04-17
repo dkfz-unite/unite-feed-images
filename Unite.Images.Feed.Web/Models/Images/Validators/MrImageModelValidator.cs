@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
 using Unite.Images.Feed.Web.Models.Validators.Base;
 
-namespace Unite.Images.Feed.Web.Models.Validators;
+namespace Unite.Images.Feed.Web.Models.Images.Validators;
 
-public class MriImageModelValidator : ImageModelValidator<MriImageModel>
+public class MrImageModelValidator : ImageModelValidator<MrImageModel>
 {
-    public MriImageModelValidator() : base()
+    public MrImageModelValidator() : base()
     {
         RuleFor(model => model.WholeTumor)
             .Must(value => value > 0)
@@ -85,11 +85,11 @@ public class MriImageModelValidator : ImageModelValidator<MriImageModel>
 }
 
 
-public class MriImageModelsValidator : AbstractValidator<MriImageModel[]>
+public class MrImageModelsValidator : AbstractValidator<MrImageModel[]>
 {
-    private readonly MriImageModelValidator _modelValidator = new();
+    private readonly MrImageModelValidator _modelValidator = new();
 
-    public MriImageModelsValidator()
+    public MrImageModelsValidator()
     {
         RuleForEach(model => model)
             .SetValidator(_modelValidator);
