@@ -16,8 +16,8 @@ Includes data about image and it's analysis.
 
 **`image_type`*** - Image type.
 - Type: _String_
-- Possible values: `"MRI"`
-- Example: `"MRI"`
+- Possible values: `"MR"`
+- Example: `"MR"`
 
 **`analysis_type`*** - Image analysis type.
 - Type: _String_
@@ -30,7 +30,7 @@ Includes data about image and it's analysis.
 - Limitations: Only either 'analysis_date' or 'analysis_day' can be set at once, not both
 - Example: `"2019-01-01"`
 
-**`analysis_day`** - Relative number of days since diagnosis statement, when analysis was performed.
+**`analysis_day`** - Relative number of days since donor enrollment, when analysis was performed.
 - Type: _Number_
 - Limitations:  Integer, greater or equal to 1, only either 'analysis_date' or 'analysis_day' can be set at once, not both
 - Example: `1`
@@ -38,7 +38,7 @@ Includes data about image and it's analysis.
 
 #### Image Type
 Supported image types are:
-- `"MRI"` - Magnetic Resonance Imaging
+- `"MR"` - Magnetic Resonance Image
 
 #### Analysis Type
 Supported analysis types are:

@@ -11,8 +11,8 @@ public abstract class ConverterBase
 
         Data.Models.ImageModel image;
 
-        if (imageType == ImageType.MRI)
-            image = new Data.Models.MriImageModel { ReferenceId = imageId };
+        if (imageType == ImageType.MR)
+            image = new Data.Models.MrImageModel { ReferenceId = imageId };
         else
             throw new NotSupportedException($"Image type '{imageType}' is not supported");
 

@@ -3,20 +3,20 @@ using Microsoft.AspNetCore.Mvc;
 using Unite.Data.Context.Services.Tasks;
 using Unite.Data.Entities.Tasks.Enums;
 using Unite.Images.Feed.Web.Configuration.Constants;
-using Unite.Images.Feed.Web.Models;
-using Unite.Images.Feed.Web.Models.Binders;
+using Unite.Images.Feed.Web.Models.Images;
+using Unite.Images.Feed.Web.Models.Images.Binders;
 using Unite.Images.Feed.Web.Submissions;
 
 namespace Unite.Images.Feed.Web.Controllers;
 
-[Route("api/entries/mri")]
+[Route("api/entries/mr")]
 [Authorize(Policy = Policies.Data.Writer)]
-public class MriImagesController : Controller
+public class MrImagesController : Controller
 {
     private readonly ImagesSubmissionService _submissionService;
     private readonly SubmissionTaskService _submissionTaskService;
 
-    public MriImagesController(
+    public MrImagesController(
         ImagesSubmissionService submissionService,
         SubmissionTaskService submissionTaskService)
     {
@@ -29,25 +29,25 @@ public class MriImagesController : Controller
     {
         var task = _submissionTaskService.GetTask(id);
 
-        var submission = _submissionService.FindMriImagesSubmission(task.Target);
+        var submission = _submissionService.FindMrImagesSubmission(task.Target);
 
         return Ok(submission);
     }
 
     [HttpPost("")]
-    public IActionResult Post([FromBody] MriImageModel[] models, [FromQuery] bool review = true)
+    public IActionResult Post([FromBody] MrImageModel[] models, [FromQuery] bool review = true)
     {
-        var submissionId = _submissionService.AddMriImagesSubmission(models);
+        var submissionId = _submissionService.AddMrImagesSubmission(models);
 
         var taskStatus = review ? TaskStatusType.Preparing : TaskStatusType.Prepared;
 
-        var taskId = _submissionTaskService.CreateTask(SubmissionTaskType.MRI, submissionId, taskStatus);
+        var taskId = _submissionTaskService.CreateTask(SubmissionTaskType.MR, submissionId, taskStatus);
 
         return Ok(taskId);
     }
 
     [HttpPost("tsv")]
-    public IActionResult PostTsv([ModelBinder(typeof(MriImageTsvModelsBinder))] MriImageModel[] models, [FromQuery] bool review = true)
+    public IActionResult PostTsv([ModelBinder(typeof(MrImageTsvModelsBinder))] MrImageModel[] models, [FromQuery] bool review = true)
     {
         return Post(models, review);
     }

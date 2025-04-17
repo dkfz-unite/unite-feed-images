@@ -13,10 +13,10 @@ public class ImageIndexMapper
     /// Creates an index from the entity. Returns null if entity is null.
     /// </summary>
     /// <param name="entity">Entity.</param>
-    /// <param name="diagnosisDate">Diagnosis date (anchor date for calculation of relative days).</param>
+    /// <param name="enrollmentDate">Enrollment date (anchor date for calculation of relative days).</param>
     /// <typeparam name="T">Type of the index.</typeparam>
     /// <returns>Index created from the entity.</returns>
-    public static T CreateFrom<T>(in Image entity, DateOnly? diagnosisDate) where T : ImageIndex, new()
+    public static T CreateFrom<T>(in Image entity, DateOnly? enrollmentDate) where T : ImageIndex, new()
     {
         if (entity == null)
         {
@@ -25,7 +25,7 @@ public class ImageIndexMapper
 
         var index = new T();
 
-        Map(entity, index, diagnosisDate);
+        Map(entity, index, enrollmentDate);
 
         return index;
     }
@@ -35,8 +35,8 @@ public class ImageIndexMapper
     /// </summary>
     /// <param name="entity">Entity.</param>
     /// <param name="index">Index.</param>
-    /// <param name="diagnosisDate">Diagnosis date (anchor date for calculation of relative days).</param>
-    public static void Map(in Image entity, ImageIndex index, DateOnly? diagnosisDate)
+    /// <param name="enrollmentDate">Enrollment date (anchor date for calculation of relative days).</param>
+    public static void Map(in Image entity, ImageIndex index, DateOnly? enrollmentDate)
     {
         if (entity == null || index == null)
         {
@@ -47,42 +47,42 @@ public class ImageIndexMapper
         index.ReferenceId = entity.ReferenceId;
         index.Type = entity.TypeId.ToDefinitionString();
 
-        index.Mri = CreateFromMri(entity, diagnosisDate);
+        index.Mr = CreateFromMr(entity, enrollmentDate);
     }
 
 
-    private static MriImageIndex CreateFromMri(in Image entity, DateOnly? diagnosisDate)
+    private static MrImageIndex CreateFromMr(in Image entity, DateOnly? enrollmentDate)
     {
         if (entity == null)
         {   
             return null;
         }
 
-        return new MriImageIndex
+        return new MrImageIndex
         {
             Id = entity.Id,
             ReferenceId = entity.ReferenceId,
-            CreationDay = entity.CreationDay ?? entity.CreationDate?.RelativeFrom(diagnosisDate),
+            CreationDay = entity.CreationDay ?? entity.CreationDate?.RelativeFrom(enrollmentDate),
 
-            WholeTumor = entity.MriImage.WholeTumor,
-            ContrastEnhancing = entity.MriImage.ContrastEnhancing,
-            NonContrastEnhancing = entity.MriImage.NonContrastEnhancing,
+            WholeTumor = entity.MrImage.WholeTumor,
+            ContrastEnhancing = entity.MrImage.ContrastEnhancing,
+            NonContrastEnhancing = entity.MrImage.NonContrastEnhancing,
 
-            MedianAdcTumor = entity.MriImage.MedianAdcTumor,
-            MedianAdcCe = entity.MriImage.MedianAdcCe,
-            MedianAdcEdema = entity.MriImage.MedianAdcEdema,
+            MedianAdcTumor = entity.MrImage.MedianAdcTumor,
+            MedianAdcCe = entity.MrImage.MedianAdcCe,
+            MedianAdcEdema = entity.MrImage.MedianAdcEdema,
 
-            MedianCbfTumor = entity.MriImage.MedianCbfTumor,
-            MedianCbfCe = entity.MriImage.MedianCbfCe,
-            MedianCbfEdema = entity.MriImage.MedianCbfEdema,
+            MedianCbfTumor = entity.MrImage.MedianCbfTumor,
+            MedianCbfCe = entity.MrImage.MedianCbfCe,
+            MedianCbfEdema = entity.MrImage.MedianCbfEdema,
 
-            MedianCbvTumor = entity.MriImage.MedianCbvTumor,
-            MedianCbvCe = entity.MriImage.MedianCbvCe,
-            MedianCbvEdema = entity.MriImage.MedianCbvEdema,
+            MedianCbvTumor = entity.MrImage.MedianCbvTumor,
+            MedianCbvCe = entity.MrImage.MedianCbvCe,
+            MedianCbvEdema = entity.MrImage.MedianCbvEdema,
 
-            MedianMttTumor = entity.MriImage.MedianMttTumor,
-            MedianMttCe = entity.MriImage.MedianMttCe,
-            MedianMttEdema = entity.MriImage.MedianMttEdema,
+            MedianMttTumor = entity.MrImage.MedianMttTumor,
+            MedianMttCe = entity.MrImage.MedianMttCe,
+            MedianMttEdema = entity.MrImage.MedianMttEdema,
 
             RadiomicsFeatures = CreateFrom(entity.Samples?.FirstOrDefault(sample => sample.Analysis.TypeId == AnalysisType.RFE)?.RadiomicsFeatureEntries)
         };

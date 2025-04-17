@@ -1,33 +1,34 @@
 using Unite.Cache.Configuration.Options;
 using Unite.Images.Feed.Web.Models.Base;
+using Unite.Images.Feed.Web.Models.Images;
 using Unite.Images.Feed.Web.Models.Radiomics;
 
 namespace Unite.Images.Feed.Web.Submissions;
 
 public class ImagesSubmissionService
 {
-    private readonly Repositories.MriImagesSubmissionRepository _mriImagesSubmissionRepository;
+    private readonly Repositories.MrImagesSubmissionRepository _mrImagesSubmissionRepository;
     private readonly Repositories.RadiomicsSubmissionRepository _radiomicsSubmissionRepository;
 
     public ImagesSubmissionService(IMongoOptions options)
     {
-        _mriImagesSubmissionRepository = new Repositories.MriImagesSubmissionRepository(options);
+        _mrImagesSubmissionRepository = new Repositories.MrImagesSubmissionRepository(options);
         _radiomicsSubmissionRepository = new Repositories.RadiomicsSubmissionRepository(options);
     }
 
-    public string AddMriImagesSubmission(Models.MriImageModel[] data)
+    public string AddMrImagesSubmission(MrImageModel[] data)
     {
-        return _mriImagesSubmissionRepository.Add(data);
+        return _mrImagesSubmissionRepository.Add(data);
     }
 
-    public Models.MriImageModel[] FindMriImagesSubmission(string id)
+    public MrImageModel[] FindMrImagesSubmission(string id)
     {
-        return _mriImagesSubmissionRepository.Find(id)?.Document;
+        return _mrImagesSubmissionRepository.Find(id)?.Document;
     }
 
-    public void DeleteMriImagesSubmission(string id)
+    public void DeleteMrImagesSubmission(string id)
     {
-        _mriImagesSubmissionRepository.Delete(id); 
+        _mrImagesSubmissionRepository.Delete(id); 
     }
 
     public string AddRadiomicsSubmission(AnalysisModel<FeatureModel> data)
