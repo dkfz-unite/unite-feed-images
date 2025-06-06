@@ -1,4 +1,4 @@
-using Unite.Data.Entities.Genome.Analysis;
+using Unite.Data.Entities.Omics.Analysis;
 using Unite.Indices.Entities.Basic.Analysis;
 
 namespace Unite.Images.Indices.Services.Mapping;
