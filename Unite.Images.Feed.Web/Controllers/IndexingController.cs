@@ -23,10 +23,24 @@ public class IndexingController : Controller
     }
 
     [HttpPost]
-    public IActionResult Post()
+    public async Task<IActionResult> Post()
     {
-        _indexService.DeleteIndex().Wait();
+        await DeleteIndex(_indexService.DeleteIndex());
+
         _tasksService.CreateTasks();
+        
         return Ok();
     } 
+
+    private static async Task DeleteIndex(Task task)
+    {
+        try
+        {
+            await task;
+        }
+        catch
+        {
+            // Ignore errors
+        }
+    }
 }
