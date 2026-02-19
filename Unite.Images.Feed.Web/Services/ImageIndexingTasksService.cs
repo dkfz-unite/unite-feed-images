@@ -48,6 +48,7 @@ public class ImageIndexingTasksService : IndexingTaskService<Image, int>
             CreateImageIndexingTasks(images);
             CreateSpecimenIndexingTasks(images);
             CreateGeneIndexingTasks(images);
+            CreateProteinIndexingTasks(images);
             CreateVariantIndexingTasks(images);
         });
     }
@@ -79,6 +80,11 @@ public class ImageIndexingTasksService : IndexingTaskService<Image, int>
     protected override IEnumerable<int> LoadRelatedGenes(IEnumerable<int> keys)
     {
         return _imagesRepository.GetRelatedGenes(keys).Result;
+    }
+
+    protected override IEnumerable<int> LoadRelatedProteins(IEnumerable<int> keys)
+    {
+        return _imagesRepository.GetRelatedProteins(keys).Result;
     }
 
     protected override IEnumerable<int> LoadRelatedSms(IEnumerable<int> keys)
