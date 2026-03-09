@@ -101,4 +101,10 @@ public class ImageIndexingTasksService : IndexingTaskService<Image, int>
     {
         return _imagesRepository.GetRelatedVariants<SV.Variant>(keys).Result;
     }
+
+    protected override IEnumerable<int> LoadRelatedCnvProfiles(IEnumerable<int> keys)
+    {
+        return [];
+        // return _imagesRepository.GetRelatedCnvProfiles(keys).Result;
+    }
 }
