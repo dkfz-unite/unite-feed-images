@@ -56,7 +56,7 @@ public class DonorRepository
 
         if (project == null)
         {
-            project = new Project() { Name = name };
+            project = new Project() { Name = name, IsPublic = true };
 
             _dbContext.Add(project);
             _dbContext.SaveChanges();
